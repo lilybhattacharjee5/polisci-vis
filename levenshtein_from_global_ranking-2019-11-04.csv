@@ -1,0 +1,181 @@
+,country,levenshtein_from_global_ranking
+0,Afghanistan,47
+1,Albania,46
+2,Algeria,48
+3,Angola,46
+4,Argentina,47
+5,Armenia,50
+6,Australia,45
+7,Austria,46
+8,Azerbaijan,48
+9,Bahamas,47
+10,Bahrain,44
+11,Bangladesh,47
+12,Barbados,47
+13,Belarus,49
+14,Belgium,44
+15,Belize,48
+16,Benin,46
+17,Bermuda,46
+18,Bhutan,48
+19,Bolivia,47
+20,Bosnia and Herzegovina,48
+21,Botswana,46
+22,Brazil,47
+23,Brunei,48
+24,Bulgaria,46
+25,Burkina Faso,48
+26,Burundi,47
+27,Cambodia,47
+28,Cameroon,47
+29,Canada,47
+30,Cape Verde,47
+31,Chile,48
+32,China,50
+33,Colombia,47
+34,Congo,48
+35,Costa Rica,48
+36,Cote d'Ivoire,48
+37,Croatia,47
+38,Cuba,48
+39,Curaçao,46
+40,Cyprus,48
+41,Czech Republic,46
+42,Democratic Republic of Congo,48
+43,Denmark,44
+44,Djibouti,48
+45,Dominican Republic,47
+46,Ecuador,48
+47,Egypt,47
+48,El Salvador,48
+49,Estonia,48
+50,Ethiopia,47
+51,Fiji,48
+52,Finland,44
+53,France,46
+54,French Guiana,48
+55,French Polynesia,47
+56,Gabon,46
+57,Gambia,47
+58,Georgia,49
+59,Germany,47
+60,Ghana,47
+61,Greece,47
+62,Guadeloupe,47
+63,Guam,46
+64,Guatemala,47
+65,Guinea,46
+66,Guyana,47
+67,Haiti,46
+68,Honduras,48
+69,Hong Kong,46
+70,Hungary,46
+71,Iceland,45
+72,India,46
+73,Indonesia,49
+74,Iran,49
+75,Iraq,48
+76,Ireland,43
+77,Israel,45
+78,Italy,45
+79,Jamaica,48
+80,Japan,48
+81,Jordan,48
+82,Kazakhstan,49
+83,Kenya,47
+84,Kuwait,46
+85,Kyrgyzstan,48
+86,Laos,47
+87,Latvia,48
+88,Lebanon,46
+89,Lesotho,47
+90,Liberia,48
+91,Libya,47
+92,Lithuania,48
+93,Luxembourg,44
+94,Macao,45
+95,Macedonia,48
+96,Madagascar,47
+97,Malawi,48
+98,Malaysia,47
+99,Maldives,49
+100,Mali,48
+101,Malta,48
+102,Martinique,48
+103,Mauritania,47
+104,Mauritius,47
+105,Mayotte,48
+106,Mexico,45
+107,Moldova,50
+108,Mongolia,48
+109,Montenegro,47
+110,Morocco,49
+111,Mozambique,46
+112,Myanmar,48
+113,Namibia,47
+114,Nepal,48
+115,Netherlands,46
+116,New Caledonia,47
+117,New Zealand,44
+118,Nicaragua,47
+119,Niger,48
+120,Nigeria,46
+121,Norway,45
+122,Oman,48
+123,Pakistan,46
+124,Palestinian Territory,47
+125,Panama,45
+126,Papua New Guinea,47
+127,Paraguay,48
+128,Peru,47
+129,Philippines,48
+130,Poland,46
+131,Portugal,46
+132,Puerto Rico,42
+133,Qatar,46
+134,Reunion,47
+135,Romania,43
+136,Russia,50
+137,Rwanda,47
+138,Saint Lucia,47
+139,Saudi Arabia,48
+140,Senegal,47
+141,Serbia,44
+142,Seychelles,46
+143,Sierra Leone,47
+144,Singapore,45
+145,Slovakia,48
+146,Slovenia,46
+147,Somalia,48
+148,South Africa,47
+149,South Korea,49
+150,Spain,47
+151,Sri Lanka,48
+152,Sudan,46
+153,Suriname,48
+154,Swaziland,46
+155,Sweden,47
+156,Switzerland,45
+157,Syrian Arab Republic,47
+158,Taiwan,48
+159,Tajikistan,48
+160,Tanzania,47
+161,Thailand,48
+162,Timor-Leste,47
+163,Togo,47
+164,Trinidad and Tobago,46
+165,Tunisia,46
+166,Turkey,48
+167,Turkmenistan,49
+168,Uganda,45
+169,Ukraine,48
+170,United Arab Emirates,48
+171,United Kingdom,43
+172,United States,46
+173,Uruguay,47
+174,Uzbekistan,48
+175,Venezuela,47
+176,Vietnam,47
+177,Yemen,47
+178,Zambia,46
+179,Zimbabwe,47
