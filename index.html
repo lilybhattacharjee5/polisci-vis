@@ -61,10 +61,10 @@
 		</style>
 	</head>
 	<body onload = "modifyGraph(0)">
-		<h1>Web Ranking Levenshtein Distance Demo</h1>
-		<p>Mouse over / drag and drop nodes to see Levenshtein distance metric values. Filter by country to view all links associated with the selected country.</p>
+		<h1>Pair Interoperability Demo</h1>
+		<p>Mouse over / drag and drop nodes to see pair interoperability metric values. Filter by country to view all links associated with the selected country.</p>
 		<script type="text/javascript">
-			var file = "graph_data_2019-06-15.json"
+			var file = "graph_data_01-28-2020.json"
 			//Set margins and sizes
 			var margin = {
 				top: 20,
@@ -73,14 +73,15 @@
 				left: 50
 			};
 			var width = 960 - margin.left - margin.right;
-			var height = 700 - margin.top - margin.bottom;
+			var height = 600 - margin.top - margin.bottom;
 			//Load Color Scale
 			var c10 = d3.scale.category10();
 			//Create an SVG element and append it to the DOM
 			var svgElement = d3.select("body")
 								.append("svg").attr({"width": width+margin.left+margin.right, "height": height+margin.top+margin.bottom})
 								.append("g")
-								.attr("transform","translate("+margin.left+","+margin.top+")");
+								.attr("transform","translate("+margin.left+","+margin.top+")")
+
 			//Load External Data
 			function modifyGraph(country) {
 				country -= 1;
