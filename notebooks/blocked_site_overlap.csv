@@ -1,0 +1,29 @@
+,Country 1,Country 2,Overlap,Country 1 Domains,Country 2 Domains
+0,China,GDPR,47,15911,1361
+1,China,India,0,15911,20
+2,China,Iraq,0,15911,21
+3,China,Pakistan,9,15911,598
+4,China,Russia,9,15911,5184
+5,China,Saudi Arabia,86,15911,1380
+6,China,UAE,117,15911,24537
+7,GDPR,India,0,1361,20
+8,GDPR,Iraq,0,1361,21
+9,GDPR,Pakistan,0,1361,598
+10,GDPR,Russia,0,1361,5184
+11,GDPR,Saudi Arabia,0,1361,1380
+12,GDPR,UAE,3,1361,24537
+13,India,Iraq,0,20,21
+14,India,Pakistan,0,20,598
+15,India,Russia,1,20,5184
+16,India,Saudi Arabia,0,20,1380
+17,India,UAE,9,20,24537
+18,Iraq,Pakistan,0,21,598
+19,Iraq,Russia,0,21,5184
+20,Iraq,Saudi Arabia,0,21,1380
+21,Iraq,UAE,2,21,24537
+22,Pakistan,Russia,3,598,5184
+23,Pakistan,Saudi Arabia,3,598,1380
+24,Pakistan,UAE,63,598,24537
+25,Russia,Saudi Arabia,3,5184,1380
+26,Russia,UAE,25,5184,24537
+27,Saudi Arabia,UAE,41,1380,24537

@@ -1,0 +1,246 @@
+,Country 1,Country 2,Overlap,Country 1 Domains,Country 2 Domains
+0,China,Austria,47,15911,1361
+1,China,Belgium,47,15911,1361
+2,China,Bulgaria,47,15911,1361
+3,China,Croatia,47,15911,1361
+4,China,Cyprus,47,15911,1361
+5,China,Czech Republic,47,15911,1361
+6,China,Denmark,47,15911,1361
+7,China,Estonia,47,15911,1361
+8,China,Finland,47,15911,1361
+9,China,France,47,15911,1361
+10,China,Germany,47,15911,1361
+11,China,Greece,47,15911,1361
+12,China,Hungary,47,15911,1361
+13,China,Ireland,47,15911,1361
+14,China,Italy,47,15911,1361
+15,China,Latvia,47,15911,1361
+16,China,Lithuania,47,15911,1361
+17,China,Luxembourg,47,15911,1361
+18,China,Malta,47,15911,1361
+19,China,the Netherlands,47,15911,1361
+20,China,Poland,47,15911,1361
+21,China,Portugal,47,15911,1361
+22,China,Romania,47,15911,1361
+23,China,Slovakia,47,15911,1361
+24,China,Slovenia,47,15911,1361
+25,China,Spain,47,15911,1361
+26,China,Sweden,47,15911,1361
+27,China,UK,47,15911,1361
+28,China,Iceland,47,15911,1361
+29,China,Lichtenstein,47,15911,1361
+30,China,Norway,47,15911,1361
+31,China,Norway,47,15911,1361
+32,China,India,0,15911,20
+33,China,Iraq,0,15911,21
+34,China,Pakistan,9,15911,598
+35,China,Russia,9,15911,5184
+36,China,Saudi Arabia,86,15911,1380
+37,China,UAE,117,15911,24537
+38,Austria,India,0,1361,20
+39,Belgium,India,0,1361,20
+40,Bulgaria,India,0,1361,20
+41,Croatia,India,0,1361,20
+42,Cyprus,India,0,1361,20
+43,Czech Republic,India,0,1361,20
+44,Denmark,India,0,1361,20
+45,Estonia,India,0,1361,20
+46,Finland,India,0,1361,20
+47,France,India,0,1361,20
+48,Germany,India,0,1361,20
+49,Greece,India,0,1361,20
+50,Hungary,India,0,1361,20
+51,Ireland,India,0,1361,20
+52,Italy,India,0,1361,20
+53,Latvia,India,0,1361,20
+54,Lithuania,India,0,1361,20
+55,Luxembourg,India,0,1361,20
+56,Malta,India,0,1361,20
+57,the Netherlands,India,0,1361,20
+58,Poland,India,0,1361,20
+59,Portugal,India,0,1361,20
+60,Romania,India,0,1361,20
+61,Slovakia,India,0,1361,20
+62,Slovenia,India,0,1361,20
+63,Spain,India,0,1361,20
+64,Sweden,India,0,1361,20
+65,UK,India,0,1361,20
+66,Iceland,India,0,1361,20
+67,Lichtenstein,India,0,1361,20
+68,Norway,India,0,1361,20
+69,Norway,India,0,1361,20
+70,Austria,Iraq,0,1361,21
+71,Belgium,Iraq,0,1361,21
+72,Bulgaria,Iraq,0,1361,21
+73,Croatia,Iraq,0,1361,21
+74,Cyprus,Iraq,0,1361,21
+75,Czech Republic,Iraq,0,1361,21
+76,Denmark,Iraq,0,1361,21
+77,Estonia,Iraq,0,1361,21
+78,Finland,Iraq,0,1361,21
+79,France,Iraq,0,1361,21
+80,Germany,Iraq,0,1361,21
+81,Greece,Iraq,0,1361,21
+82,Hungary,Iraq,0,1361,21
+83,Ireland,Iraq,0,1361,21
+84,Italy,Iraq,0,1361,21
+85,Latvia,Iraq,0,1361,21
+86,Lithuania,Iraq,0,1361,21
+87,Luxembourg,Iraq,0,1361,21
+88,Malta,Iraq,0,1361,21
+89,the Netherlands,Iraq,0,1361,21
+90,Poland,Iraq,0,1361,21
+91,Portugal,Iraq,0,1361,21
+92,Romania,Iraq,0,1361,21
+93,Slovakia,Iraq,0,1361,21
+94,Slovenia,Iraq,0,1361,21
+95,Spain,Iraq,0,1361,21
+96,Sweden,Iraq,0,1361,21
+97,UK,Iraq,0,1361,21
+98,Iceland,Iraq,0,1361,21
+99,Lichtenstein,Iraq,0,1361,21
+100,Norway,Iraq,0,1361,21
+101,Norway,Iraq,0,1361,21
+102,Austria,Pakistan,0,1361,598
+103,Belgium,Pakistan,0,1361,598
+104,Bulgaria,Pakistan,0,1361,598
+105,Croatia,Pakistan,0,1361,598
+106,Cyprus,Pakistan,0,1361,598
+107,Czech Republic,Pakistan,0,1361,598
+108,Denmark,Pakistan,0,1361,598
+109,Estonia,Pakistan,0,1361,598
+110,Finland,Pakistan,0,1361,598
+111,France,Pakistan,0,1361,598
+112,Germany,Pakistan,0,1361,598
+113,Greece,Pakistan,0,1361,598
+114,Hungary,Pakistan,0,1361,598
+115,Ireland,Pakistan,0,1361,598
+116,Italy,Pakistan,0,1361,598
+117,Latvia,Pakistan,0,1361,598
+118,Lithuania,Pakistan,0,1361,598
+119,Luxembourg,Pakistan,0,1361,598
+120,Malta,Pakistan,0,1361,598
+121,the Netherlands,Pakistan,0,1361,598
+122,Poland,Pakistan,0,1361,598
+123,Portugal,Pakistan,0,1361,598
+124,Romania,Pakistan,0,1361,598
+125,Slovakia,Pakistan,0,1361,598
+126,Slovenia,Pakistan,0,1361,598
+127,Spain,Pakistan,0,1361,598
+128,Sweden,Pakistan,0,1361,598
+129,UK,Pakistan,0,1361,598
+130,Iceland,Pakistan,0,1361,598
+131,Lichtenstein,Pakistan,0,1361,598
+132,Norway,Pakistan,0,1361,598
+133,Norway,Pakistan,0,1361,598
+134,Austria,Russia,0,1361,5184
+135,Belgium,Russia,0,1361,5184
+136,Bulgaria,Russia,0,1361,5184
+137,Croatia,Russia,0,1361,5184
+138,Cyprus,Russia,0,1361,5184
+139,Czech Republic,Russia,0,1361,5184
+140,Denmark,Russia,0,1361,5184
+141,Estonia,Russia,0,1361,5184
+142,Finland,Russia,0,1361,5184
+143,France,Russia,0,1361,5184
+144,Germany,Russia,0,1361,5184
+145,Greece,Russia,0,1361,5184
+146,Hungary,Russia,0,1361,5184
+147,Ireland,Russia,0,1361,5184
+148,Italy,Russia,0,1361,5184
+149,Latvia,Russia,0,1361,5184
+150,Lithuania,Russia,0,1361,5184
+151,Luxembourg,Russia,0,1361,5184
+152,Malta,Russia,0,1361,5184
+153,the Netherlands,Russia,0,1361,5184
+154,Poland,Russia,0,1361,5184
+155,Portugal,Russia,0,1361,5184
+156,Romania,Russia,0,1361,5184
+157,Slovakia,Russia,0,1361,5184
+158,Slovenia,Russia,0,1361,5184
+159,Spain,Russia,0,1361,5184
+160,Sweden,Russia,0,1361,5184
+161,UK,Russia,0,1361,5184
+162,Iceland,Russia,0,1361,5184
+163,Lichtenstein,Russia,0,1361,5184
+164,Norway,Russia,0,1361,5184
+165,Norway,Russia,0,1361,5184
+166,Austria,Saudi Arabia,0,1361,1380
+167,Belgium,Saudi Arabia,0,1361,1380
+168,Bulgaria,Saudi Arabia,0,1361,1380
+169,Croatia,Saudi Arabia,0,1361,1380
+170,Cyprus,Saudi Arabia,0,1361,1380
+171,Czech Republic,Saudi Arabia,0,1361,1380
+172,Denmark,Saudi Arabia,0,1361,1380
+173,Estonia,Saudi Arabia,0,1361,1380
+174,Finland,Saudi Arabia,0,1361,1380
+175,France,Saudi Arabia,0,1361,1380
+176,Germany,Saudi Arabia,0,1361,1380
+177,Greece,Saudi Arabia,0,1361,1380
+178,Hungary,Saudi Arabia,0,1361,1380
+179,Ireland,Saudi Arabia,0,1361,1380
+180,Italy,Saudi Arabia,0,1361,1380
+181,Latvia,Saudi Arabia,0,1361,1380
+182,Lithuania,Saudi Arabia,0,1361,1380
+183,Luxembourg,Saudi Arabia,0,1361,1380
+184,Malta,Saudi Arabia,0,1361,1380
+185,the Netherlands,Saudi Arabia,0,1361,1380
+186,Poland,Saudi Arabia,0,1361,1380
+187,Portugal,Saudi Arabia,0,1361,1380
+188,Romania,Saudi Arabia,0,1361,1380
+189,Slovakia,Saudi Arabia,0,1361,1380
+190,Slovenia,Saudi Arabia,0,1361,1380
+191,Spain,Saudi Arabia,0,1361,1380
+192,Sweden,Saudi Arabia,0,1361,1380
+193,UK,Saudi Arabia,0,1361,1380
+194,Iceland,Saudi Arabia,0,1361,1380
+195,Lichtenstein,Saudi Arabia,0,1361,1380
+196,Norway,Saudi Arabia,0,1361,1380
+197,Norway,Saudi Arabia,0,1361,1380
+198,Austria,UAE,3,1361,24537
+199,Belgium,UAE,3,1361,24537
+200,Bulgaria,UAE,3,1361,24537
+201,Croatia,UAE,3,1361,24537
+202,Cyprus,UAE,3,1361,24537
+203,Czech Republic,UAE,3,1361,24537
+204,Denmark,UAE,3,1361,24537
+205,Estonia,UAE,3,1361,24537
+206,Finland,UAE,3,1361,24537
+207,France,UAE,3,1361,24537
+208,Germany,UAE,3,1361,24537
+209,Greece,UAE,3,1361,24537
+210,Hungary,UAE,3,1361,24537
+211,Ireland,UAE,3,1361,24537
+212,Italy,UAE,3,1361,24537
+213,Latvia,UAE,3,1361,24537
+214,Lithuania,UAE,3,1361,24537
+215,Luxembourg,UAE,3,1361,24537
+216,Malta,UAE,3,1361,24537
+217,the Netherlands,UAE,3,1361,24537
+218,Poland,UAE,3,1361,24537
+219,Portugal,UAE,3,1361,24537
+220,Romania,UAE,3,1361,24537
+221,Slovakia,UAE,3,1361,24537
+222,Slovenia,UAE,3,1361,24537
+223,Spain,UAE,3,1361,24537
+224,Sweden,UAE,3,1361,24537
+225,UK,UAE,3,1361,24537
+226,Iceland,UAE,3,1361,24537
+227,Lichtenstein,UAE,3,1361,24537
+228,Norway,UAE,3,1361,24537
+229,Norway,UAE,3,1361,24537
+230,India,Iraq,0,20,21
+231,India,Pakistan,0,20,598
+232,India,Russia,1,20,5184
+233,India,Saudi Arabia,0,20,1380
+234,India,UAE,9,20,24537
+235,Iraq,Pakistan,0,21,598
+236,Iraq,Russia,0,21,5184
+237,Iraq,Saudi Arabia,0,21,1380
+238,Iraq,UAE,2,21,24537
+239,Pakistan,Russia,3,598,5184
+240,Pakistan,Saudi Arabia,3,598,1380
+241,Pakistan,UAE,63,598,24537
+242,Russia,Saudi Arabia,3,5184,1380
+243,Russia,UAE,25,5184,24537
+244,Saudi Arabia,UAE,41,1380,24537
