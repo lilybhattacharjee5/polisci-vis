@@ -18,6 +18,7 @@
   "homepage": "https://github.com/lilybhattacharjee5/interoperability-demo#readme",
   "dependencies": {
     "connect": "^3.7.0",
+    "datamaps": "^0.5.9",
     "giojs": "^2.2.2",
     "json-loader": "^0.5.7",
     "serve": "^11.3.0",
