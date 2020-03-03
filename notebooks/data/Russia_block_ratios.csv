@@ -1,0 +1,38 @@
+,Country 1,Country 2,Overlap,Country 1 Domains,Country 2 Domains,1->2,2->1
+1361,Russia,China,9,5184,15911,0.001736111111111111,0.0005656464081453083
+1362,Russia,Austria,0,5184,1361,0.0,0.0
+1363,Russia,Belgium,0,5184,1361,0.0,0.0
+1364,Russia,Bulgaria,0,5184,1361,0.0,0.0
+1365,Russia,Croatia,0,5184,1361,0.0,0.0
+1366,Russia,Cyprus,0,5184,1361,0.0,0.0
+1367,Russia,Czech Republic,0,5184,1361,0.0,0.0
+1368,Russia,Denmark,0,5184,1361,0.0,0.0
+1369,Russia,Estonia,0,5184,1361,0.0,0.0
+1370,Russia,Finland,0,5184,1361,0.0,0.0
+1371,Russia,France,0,5184,1361,0.0,0.0
+1372,Russia,Germany,0,5184,1361,0.0,0.0
+1373,Russia,Greece,0,5184,1361,0.0,0.0
+1374,Russia,Hungary,0,5184,1361,0.0,0.0
+1375,Russia,Ireland,0,5184,1361,0.0,0.0
+1376,Russia,Italy,0,5184,1361,0.0,0.0
+1377,Russia,Latvia,0,5184,1361,0.0,0.0
+1378,Russia,Lithuania,0,5184,1361,0.0,0.0
+1379,Russia,Luxembourg,0,5184,1361,0.0,0.0
+1380,Russia,Malta,0,5184,1361,0.0,0.0
+1381,Russia,Netherlands,0,5184,1361,0.0,0.0
+1382,Russia,Poland,0,5184,1361,0.0,0.0
+1383,Russia,Portugal,0,5184,1361,0.0,0.0
+1384,Russia,Romania,0,5184,1361,0.0,0.0
+1385,Russia,Slovakia,0,5184,1361,0.0,0.0
+1386,Russia,Slovenia,0,5184,1361,0.0,0.0
+1387,Russia,Spain,0,5184,1361,0.0,0.0
+1388,Russia,Sweden,0,5184,1361,0.0,0.0
+1389,Russia,United Kingdom,0,5184,1361,0.0,0.0
+1390,Russia,Iceland,0,5184,1361,0.0,0.0
+1391,Russia,Lichtenstein,0,5184,1361,0.0,0.0
+1392,Russia,Norway,0,5184,1361,0.0,0.0
+1393,Russia,India,1,5184,20,0.00019290123456790122,0.05
+1394,Russia,Iraq,0,5184,21,0.0,0.0
+1395,Russia,Pakistan,3,5184,598,0.0005787037037037037,0.005016722408026756
+1397,Russia,Saudi Arabia,3,5184,1380,0.0005787037037037037,0.002173913043478261
+1398,Russia,United Arab Emirates,25,5184,24537,0.004822530864197531,0.0010188694624444715

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script src="Gio/three.wx.min.js"></script>
+<script src="Gio/gio.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="included_countries.js"></script>
+
+<style type="text/css">
+
+.land{
+	fill: rgba(0,0,0, 0.17);
+}
+
+.border{
+	stroke: rgba(255,255,255, 0.7);
+	fill: none;
+}
+
+</style>
+</head>
+
+<body>
+	<h1 style="text-align:center">GioJS Demo</h1>
+	<div id="globeArea" style="width: 1000px; height: 1000px; margin:0 auto;"></div>
+	<script>
+		var data = {};
+        var container = document.getElementById( "globeArea" );
+        var controller = new GIO.Controller( container );
+        controller.setInitCountry("US");
+        controller.configure({
+        color: {
+                selected:0xff0000,
+        }
+		});
+		$.ajax( {
+
+        url: "basic-data.json",
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        dataType: "json",
+        success: function ( inputData ) {
+
+            // if received the data, use addData() API to add the the data to the controller
+
+            controller.addData( inputData );
+
+            // call the init() API to show the IO globe in the browser
+
+            controller.init();
+
+        }
+
+    } );
+	</script>
+	<h1 style="text-align:center">Plotly Demo</h1>
+	<div id = "myDiv" style="width: 1000px; height: 1000px; margin:0 auto;"></div>
+	<script>
+		function f(x) {
+			const new_country = x.points[0].location;
+			console.log(new_country);
+			plot_country(new_country);
+		}
+
+		function plot_country(country) {
+			Plotly.d3.csv('notebooks/data/' + country + '_block_ratios.csv', function(err, rows){
+			    function unpack(rows, key) {
+			        return rows.map(function(row) { return row[key]; });
+			    }
+
+			    var data = [{
+			        type: 'choropleth',
+			        locationmode: 'country names',
+			        locations: unpack(rows, 'Country 2'),
+			        z: unpack(rows, 'Overlap'),
+			        text: unpack(rows, 'location'),
+			        autocolorscale: true
+			    }];
+
+			    var layout = {
+			      title: "Blocked Website Overlaps: " + country,
+			      geo: {
+			          projection: {
+			              type: 'robinson'
+			          }
+			      }
+			    };
+
+			    Plotly.newPlot("myDiv", data, layout, {showLink: false})
+			    .then(gd => {
+	  				gd.on('plotly_click', f)
+				});
+
+			});
+		}
+
+		plot_country(includedCountries[0]);
+		
+	</script>
+</body>
+</html>

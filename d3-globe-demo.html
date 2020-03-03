@@ -1,0 +1,101 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+
+        <!-- Latest compiled JavaScript -->
+        <script
+          src="https://code.jquery.com/jquery-3.4.1.min.js"
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+          crossorigin="anonymous"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+        <script src="http://datamaps.github.io/scripts/0.4.4/datamaps.world.min.js"></script>
+    </head>
+    <body>
+        <h1 style="text-align:center">D3 Demo</h1>
+        <div id="basic_chloropleth" style="width: 1200px; height: 800px; margin:0 auto;">
+        <script>
+            function rgbToHex(rgb) { 
+              var hex = Number(rgb).toString(16);
+              if (hex.length < 2) {
+                   hex = "0" + hex;
+              }
+              return hex;
+            }
+
+            function fullColorHex(r,g,b) {
+              console.log(r, g, b); 
+              var red = rgbToHex(r);
+              var green = rgbToHex(g);
+              var blue = rgbToHex(b);
+              return "#" + red+green+blue;
+            }
+
+            function deriveColorScale(data) {
+                var fills = {};
+                var max = -Infinity;
+                var min = Infinity;
+                var curr_similarity;
+                for (var country in data) {
+                    curr_similarity = data[country].similarity;
+                    console.log(country, curr_similarity);
+                    if (curr_similarity > max) {
+                        max = curr_similarity;
+                    }
+                    if (curr_similarity < min) {
+                        min = curr_similarity;
+                    }
+                }
+                console.log("max", max);
+                console.log("min", min);
+                var color_line = [0, 0, 255];
+                var scaled_frac;
+                for (var country in data) {
+                    curr_similarity = data[country].similarity;
+                    scaled_frac = (curr_similarity - min) / (max - min);
+                    curr_hex = fullColorHex(Math.round(scaled_frac * color_line[0]), Math.round(scaled_frac * color_line[1]), Math.round(scaled_frac * color_line[2]));
+                    fills[country] = curr_hex;
+                }
+                fills["defaultFill"] = "#ffffff";
+                return fills;
+            }
+
+            function generateFillKeys(data) {
+                var fillKeys = {};
+                for (var country in data) {
+                    fillKeys[country] = { "fillKey": country, "similarity": data[country].similarity };
+                }
+                return fillKeys;
+            }
+
+            var country = "China";
+            $.ajax( {
+            url: country + "-similarities.json",
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            dataType: "json",
+            success: function ( inputData ) {
+                var fills = deriveColorScale(inputData);
+                var fillKeys = generateFillKeys(inputData);
+                console.log(fills);
+                console.log(fillKeys);
+                var basic_choropleth = new Datamap({
+                  element: document.getElementById("basic_chloropleth"),
+                  projection: 'mercator',
+                  fills: fills,
+                  data: fillKeys,
+                  geographyConfig: {
+                    borderColor: '#b1b1b1',
+                    popupTemplate: function(geography, data) {
+                        return '<div class = "hoverinfo"><strong>' + geography.properties.name + '</strong><br>' + 'Similarity: ' + data.similarity + ' '
+                    },
+                  },
+                });
+            }});
+       </script>
+    </body>
+</html>

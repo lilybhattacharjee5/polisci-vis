@@ -1,0 +1,38 @@
+,Country 1,Country 2,Overlap,Country 1 Domains,Country 2 Domains,1->2,2->1
+1399,Saudi Arabia,China,86,1380,15911,0.06231884057971015,0.005405065677832946
+1400,Saudi Arabia,Austria,0,1380,1361,0.0,0.0
+1401,Saudi Arabia,Belgium,0,1380,1361,0.0,0.0
+1402,Saudi Arabia,Bulgaria,0,1380,1361,0.0,0.0
+1403,Saudi Arabia,Croatia,0,1380,1361,0.0,0.0
+1404,Saudi Arabia,Cyprus,0,1380,1361,0.0,0.0
+1405,Saudi Arabia,Czech Republic,0,1380,1361,0.0,0.0
+1406,Saudi Arabia,Denmark,0,1380,1361,0.0,0.0
+1407,Saudi Arabia,Estonia,0,1380,1361,0.0,0.0
+1408,Saudi Arabia,Finland,0,1380,1361,0.0,0.0
+1409,Saudi Arabia,France,0,1380,1361,0.0,0.0
+1410,Saudi Arabia,Germany,0,1380,1361,0.0,0.0
+1411,Saudi Arabia,Greece,0,1380,1361,0.0,0.0
+1412,Saudi Arabia,Hungary,0,1380,1361,0.0,0.0
+1413,Saudi Arabia,Ireland,0,1380,1361,0.0,0.0
+1414,Saudi Arabia,Italy,0,1380,1361,0.0,0.0
+1415,Saudi Arabia,Latvia,0,1380,1361,0.0,0.0
+1416,Saudi Arabia,Lithuania,0,1380,1361,0.0,0.0
+1417,Saudi Arabia,Luxembourg,0,1380,1361,0.0,0.0
+1418,Saudi Arabia,Malta,0,1380,1361,0.0,0.0
+1419,Saudi Arabia,Netherlands,0,1380,1361,0.0,0.0
+1420,Saudi Arabia,Poland,0,1380,1361,0.0,0.0
+1421,Saudi Arabia,Portugal,0,1380,1361,0.0,0.0
+1422,Saudi Arabia,Romania,0,1380,1361,0.0,0.0
+1423,Saudi Arabia,Slovakia,0,1380,1361,0.0,0.0
+1424,Saudi Arabia,Slovenia,0,1380,1361,0.0,0.0
+1425,Saudi Arabia,Spain,0,1380,1361,0.0,0.0
+1426,Saudi Arabia,Sweden,0,1380,1361,0.0,0.0
+1427,Saudi Arabia,United Kingdom,0,1380,1361,0.0,0.0
+1428,Saudi Arabia,Iceland,0,1380,1361,0.0,0.0
+1429,Saudi Arabia,Lichtenstein,0,1380,1361,0.0,0.0
+1430,Saudi Arabia,Norway,0,1380,1361,0.0,0.0
+1431,Saudi Arabia,India,0,1380,20,0.0,0.0
+1432,Saudi Arabia,Iraq,0,1380,21,0.0,0.0
+1433,Saudi Arabia,Pakistan,3,1380,598,0.002173913043478261,0.005016722408026756
+1434,Saudi Arabia,Russia,3,1380,5184,0.002173913043478261,0.0005787037037037037
+1436,Saudi Arabia,United Arab Emirates,41,1380,24537,0.029710144927536233,0.0016709459184089334
