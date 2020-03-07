@@ -16,8 +16,74 @@
     </head> 
     <body>
         <h1 style="text-align:center">D3 Demo</h1>
-        <div id="basic_chloropleth" style="width: 1200px; height: 800px; margin:0 auto;">
+        <div id="basic_chloropleth" style="width: 1200px; height: 800px; margin:0 auto;"></div>
+        <br />
+        <b><p id = 'selected_country' style="margin: 50px; font-size: 24px;"></p></b>
+        <div id = "domain_table" style="height: 500px; overflow-y: auto; margin: 50px;"></div>
         <script>
+            function getDomainData(country) {
+              $.ajax( {
+                url: "notebooks/common_domains/" + country + "-common-domains.csv",
+                type: "GET",
+                async: true,
+                dataType: "text",
+                error: function () {
+                  document.getElementById("domain_table").innerHTML = '<table class="table table-bordered table-striped">No data available</table>';
+                },
+                success: function ( rawDomainData ) {
+                  var domainData = rawDomainData.split(/\r?\n|\r/);
+                  var tableData = '<table class="table table-bordered table-striped">';
+                  var currCountry;
+                  var countryCount = 0;
+                  var currDomains = [];
+                  var skipRow = false;
+                  for (var count = 0; count < domainData.length - 1; count++) {
+                    var cellData = domainData[count].split(",");
+                    tableData += '<tr>';
+                    if (count == 0) {
+                      tableData += '<th>Country</th>';
+                      tableData += '<th>Count</th>'
+                      tableData += '<th>Domains</th>';
+                    } else {
+                      if (cellData[1] === country || cellData[2] === country) {
+                        var otherCountry = cellData[1];
+                        if (cellData[1] === country) {
+                          otherCountry = cellData[2];
+                        }
+                        if (count == 1) {
+                          currCountry = otherCountry;
+                        }
+                        if (otherCountry === currCountry && count < domainData.length - 2) {
+                          countryCount += 1;
+                          currDomains.push(cellData[3] + '.' + cellData[4]);
+                        } else {
+                          if (count >= domainData.length - 2) {
+                            countryCount += 1;
+                            currDomains.push(cellData[3] + '.' + cellData[4]);
+                          }
+                          if (currCountry) {
+                            tableData += '<td>'+currCountry+'</td>';
+                            tableData += '<td>'+countryCount+'</td>';
+                            tableData += '<td>';
+                            for (var c = 0; c < currDomains.length; c++) {
+                              tableData += currDomains[c] + '<br>';
+                            }
+                            tableData += '</td>';
+                          }
+                          countryCount = 0;
+                          currDomains = [];
+                          currCountry = otherCountry;
+                          countryCount += 1;
+                          currDomains.push(cellData[3] + '.' + cellData[4]);
+                        }
+                      }
+                    }
+                    tableData += '<tr>';
+                  }
+                  document.getElementById("domain_table").innerHTML = tableData;
+              }});
+            }
+
             function rgbToHex(rgb) { 
               var hex = Number(rgb).toString(16);
               if (hex.length < 2) {
@@ -27,7 +93,6 @@
             }
 
             function fullColorHex(r,g,b) {
-              console.log(r, g, b); 
               var red = rgbToHex(r);
               var green = rgbToHex(g);
               var blue = rgbToHex(b);
@@ -40,8 +105,7 @@
                 var min = Infinity;
                 var curr_similarity;
                 for (var country in data) {
-                    curr_similarity = data[country].similarity;
-                    console.log(country, curr_similarity);
+                    curr_similarity = data[country][0].similarity;
                     if (curr_similarity > max) {
                         max = curr_similarity;
                     }
@@ -49,53 +113,77 @@
                         min = curr_similarity;
                     }
                 }
-                console.log("max", max);
-                console.log("min", min);
                 var color_line = [0, 0, 255];
                 var scaled_frac;
                 for (var country in data) {
-                    curr_similarity = data[country].similarity;
+                    curr_similarity = data[country][0].similarity;
                     scaled_frac = (curr_similarity - min) / (max - min);
                     curr_hex = fullColorHex(Math.round(scaled_frac * color_line[0]), Math.round(scaled_frac * color_line[1]), Math.round(scaled_frac * color_line[2]));
                     fills[country] = curr_hex;
                 }
                 fills["defaultFill"] = "#ffffff";
+                fills["selected"] = "#6163e8";
                 return fills;
             }
 
-            function generateFillKeys(data) {
+            function generateFillKeys(country, data) {
                 var fillKeys = {};
-                for (var country in data) {
-                    fillKeys[country] = { "fillKey": country, "similarity": data[country].similarity };
+                var c1;
+                var c2;
+                var split_pair;
+                var uniqueCCs = [];
+                for (var pair in data) {
+                  split_pair = pair.split(", ");
+                  c1 = split_pair[0].slice(2,split_pair[0].length - 1);
+                  c2 = split_pair[1].slice(1,split_pair[1].length - 2);
+                  if (c1 == country) {
+                    fillKeys[c2] = { "fillKey": pair, "similarity": data[pair][0].similarity };
+                  }
                 }
+                fillKeys[country] = { "fillKey": "selected" };
                 return fillKeys;
             }
 
+            function populateMap(country) {
+              $.ajax( {
+                url: "combined-similarities.json",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                dataType: "json",
+                success: function ( inputData ) {
+                    var fills = deriveColorScale(inputData);
+                    var fillKeys = generateFillKeys(country, inputData);
+                    var basic_choropleth = new Datamap({
+                      element: document.getElementById("basic_chloropleth"),
+                      projection: 'mercator',
+                      fills: fills,
+                      data: fillKeys,
+                      done: function(datamap) {
+                        datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+                            var newCountry = geography.properties.name;
+                            // var allCCs = [...document.getElementsByClassName('datamaps-subunit')].map(function getClassList(x) { return x.classList[1]; });
+                            fillKeys = generateFillKeys(newCountry, inputData);
+                            datamap.updateChoropleth(fillKeys, {reset: true});
+                            getDomainData(newCountry);
+                            document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + newCountry + "</div>";
+                        });
+                      },
+                      geographyConfig: {
+                        borderColor: '#b1b1b1',
+                        popupTemplate: function(geography, data) {
+                            return '<div class = "hoverinfo"><strong>' + geography.properties.name + '</strong><br>' + 'Similarity: ' + data.similarity + ' '
+                        },
+                        highlightFillColor: '#61c2e8',
+                      },
+                    });
+              }});
+            }
+
             var country = "China";
-            $.ajax( {
-            url: country + "-similarities.json",
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            async: true,
-            dataType: "json",
-            success: function ( inputData ) {
-                var fills = deriveColorScale(inputData);
-                var fillKeys = generateFillKeys(inputData);
-                console.log(fills);
-                console.log(fillKeys);
-                var basic_choropleth = new Datamap({
-                  element: document.getElementById("basic_chloropleth"),
-                  projection: 'mercator',
-                  fills: fills,
-                  data: fillKeys,
-                  geographyConfig: {
-                    borderColor: '#b1b1b1',
-                    popupTemplate: function(geography, data) {
-                        return '<div class = "hoverinfo"><strong>' + geography.properties.name + '</strong><br>' + 'Similarity: ' + data.similarity + ' '
-                    },
-                  },
-                });
-            }});
+            populateMap(country);
+            getDomainData(country);
+            document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
        </script>
     </body>
 </html>
