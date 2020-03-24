@@ -14,8 +14,15 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
         <script src="datamaps.js"></script>
         <script src="gdpr_countries.js"></script>
+        <script src="included_countries.js"></script>
     </head> 
     <body>
+        <style>
+          .datamaps-subunit:hover {
+            border-top-color: black;
+            border-bottom-color: black;
+          }
+        </style>
         <h1 style="text-align:center">Internationally Blocked Domains Demo</h1>
         <div id="basic_chloropleth" style="width: 1200px; height: 800px; margin:0 auto;"></div>
         <br />
@@ -23,16 +30,19 @@
         <div id = "domain_table" style="height: 500px; overflow-y: auto; margin: 50px;"></div>
         <script>
           var ccMap = {};
+          const gray = "#d3d3d3";
 
           function formatResults(sortedData) {
             var tableData = '<table class="table table-bordered table-striped">';
             tableData += '<th>Country</th>';
-            tableData += '<th>Count</th>'
+            tableData += '<th>Count</th>';
+            tableData += '<th>Similarity</th>';
             tableData += '<th>Domains</th>';
             for (var i = 0; i < sortedData.length; i++) {
               tableData += '<tr>';
               tableData += '<td>'+sortedData[i][0]+'</td>';
               tableData += '<td>'+sortedData[i][1].count+'</td>';
+              tableData += '<td>'+sortedData[i][1].similarity+'</td>';
               tableData += '<td>';
               var allDomains = sortedData[i][1].domains;
               for (var domainCount = 0; domainCount < allDomains.length; domainCount++) {
@@ -51,7 +61,8 @@
             if (GDPRDataArray.length) {
               const GDPRDomains = GDPRDataArray[0][1].domains;
               const GDPRCount = GDPRDataArray[0][1].count;
-              const GDPRElement = [["GDPR", { "count": GDPRCount, "domains": GDPRDomains }]];
+              const GDPRSimilarity = GDPRDataArray[0][1].similarity;
+              const GDPRElement = [["GDPR", { "count": GDPRCount, "domains": GDPRDomains, "similarity": GDPRSimilarity }]];
               const condensedDataArray = nonGDPRDataArray.concat(GDPRElement)
               return condensedDataArray;
             }
@@ -67,7 +78,7 @@
             return data;
           }
 
-          function getDomainData(country) {
+          function getDomainData(country, inputData) {
             $.ajax( {
               url: "notebooks/common_domains/" + country + "-common-domains.csv",
               type: "GET",
@@ -104,7 +115,12 @@
                           currDomains.push(cellData[3] + '.' + cellData[4]);
                         }
                         if (currCountry) {
-                          tableData[currCountry] = {"count": countryCount, "domains": []}
+                          var correctCurrCountry = currCountry;
+                          if (currCountry == 'Lichtenstein') {
+                            correctCurrCountry = 'Liechtenstein';
+                          }
+                          var inputDataKey = "('" + country + "', '" + ccMap['"' + correctCurrCountry + '"'] + "')";
+                          tableData[currCountry] = {"count": countryCount, "domains": [], "similarity": inputData[inputDataKey][0].similarity}
                           for (var c = 0; c < currDomains.length; c++) {
                             tableData[currCountry].domains.push(currDomains[c]);
                           }
@@ -160,7 +176,7 @@
                   curr_hex = fullColorHex(Math.round(scaled_frac * color_line[0]), Math.round(scaled_frac * color_line[1]), Math.round(scaled_frac * color_line[2]));
                   fills[country] = curr_hex;
               }
-              fills["defaultFill"] = "#ffffff";
+              fills["defaultFill"] = gray;
               fills["selected"] = "#6163e8";
               return fills;
           }
@@ -185,6 +201,9 @@
 
           function populateMap(country) {
             const countryCodesURL = "https://raw.githubusercontent.com/daylight-lab/III/master/shared/data/country-codes/countries_codes_and_coordinates.csv";
+            if (!includedCountries.includes(country) && country != 'United States') {
+              return;
+            }
             $.ajax( {
               url: countryCodesURL,
               type: "GET",
@@ -211,6 +230,7 @@
                 success: function ( inputData ) {
                     var fills = deriveColorScale(inputData);
                     var fillKeys = generateFillKeys(country, inputData);
+                    getDomainData(country, inputData);
                     var basic_choropleth = new Datamap({
                       element: document.getElementById("basic_chloropleth"),
                       projection: 'mercator',
@@ -219,18 +239,40 @@
                       done: function(datamap) {
                         datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
                             var newCountry = geography.properties.name;
+                            if (!includedCountries.includes(newCountry)) {
+                              return;
+                            }
                             fillKeys = generateFillKeys(newCountry, inputData);
                             datamap.updateChoropleth(fillKeys, {reset: true});
-                            getDomainData(newCountry);
+                            getDomainData(newCountry, inputData);
                             document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + newCountry + "</div>";
                         });
                       },
                       geographyConfig: {
-                        borderColor: '#b1b1b1',
-                        popupTemplate: function(geography, data) {
-                            return '<div class = "hoverinfo"><strong>' + geography.properties.name + '</strong><br>' + 'Similarity: ' + data.similarity + ' '
+                        borderColor: function(data) {
+                          return '#b1b1b1';
                         },
-                        highlightFillColor: '#61c2e8',
+                        popupTemplate: function(geography, data) {
+                          return;
+                        },
+                        highlightFillColor: function(data) {
+                          if (Object.keys(data).length < 2) {
+                            return gray;
+                          }
+                          return '#61c2e8';
+                        },
+                        highlightBorderColor:  function (data) {
+                          if (Object.keys(data).length < 2) {
+                            return '#b1b1b1';
+                          }
+                          return '#f59ff6';
+                        },
+                        highlightBorderWidth: function (data) {
+                          if (Object.keys(data).length < 2) {
+                            return 1;
+                          }
+                          return 2;
+                        }
                       },
                     });
               }});
@@ -239,7 +281,6 @@
 
           var country = "United States";
           populateMap(country);
-          getDomainData(country);
           document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
        </script>
     </body>
