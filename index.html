@@ -33,6 +33,12 @@
           const gray = "#d3d3d3";
 
           function formatResults(sortedData) {
+            if (!sortedData.length) {
+              document.getElementById("domain_table").innerHTML = "<p>No known blocked websites</p>";
+              document.getElementById("domain_table").style.height = "100px";
+              return;
+            }
+            document.getElementById("domain_table").style.height = "500px";
             var tableData = '<table class="table table-bordered table-striped">';
             tableData += '<th>Country</th>';
             tableData += '<th>Count</th>';
@@ -159,6 +165,7 @@
               var max = -Infinity;
               var min = Infinity;
               var curr_similarity;
+              console.log(data);
               for (var country in data) {
                   curr_similarity = data[country][0].similarity;
                   if (curr_similarity > max) {
@@ -195,13 +202,18 @@
                   fillKeys[c2] = { "fillKey": pair, "similarity": data[pair][0].similarity };
                 }
               }
-              fillKeys[ccMap["\"" + country + "\""]] = { "fillKey": "selected" };
+              if (country == "United States of America") {
+                console.log(ccMap);
+                fillKeys[ccMap["\"United States\""]] = { "fillKey": "selected" };
+              } else {
+                fillKeys[ccMap["\"" + country + "\""]] = { "fillKey": "selected" };
+              }
               return fillKeys;
           }
 
           function populateMap(country) {
             const countryCodesURL = "https://raw.githubusercontent.com/daylight-lab/III/master/shared/data/country-codes/countries_codes_and_coordinates.csv";
-            if (!includedCountries.includes(country) && country != 'United States') {
+            if (!includedCountries.includes(country)) {
               return;
             }
             $.ajax( {
@@ -230,6 +242,7 @@
                 success: function ( inputData ) {
                     var fills = deriveColorScale(inputData);
                     var fillKeys = generateFillKeys(country, inputData);
+                    console.log(fillKeys);
                     getDomainData(country, inputData);
                     var basic_choropleth = new Datamap({
                       element: document.getElementById("basic_chloropleth"),
@@ -238,14 +251,14 @@
                       data: fillKeys,
                       done: function(datamap) {
                         datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                            var newCountry = geography.properties.name;
-                            if (!includedCountries.includes(newCountry)) {
+                            country = geography.properties.name;
+                            if (!includedCountries.includes(country)) {
                               return;
                             }
-                            fillKeys = generateFillKeys(newCountry, inputData);
+                            fillKeys = generateFillKeys(country, inputData);
                             datamap.updateChoropleth(fillKeys, {reset: true});
-                            getDomainData(newCountry, inputData);
-                            document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + newCountry + "</div>";
+                            getDomainData(country, inputData);
+                            document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
                         });
                       },
                       geographyConfig: {
@@ -255,31 +268,14 @@
                         popupTemplate: function(geography, data) {
                           return;
                         },
-                        highlightFillColor: function(data) {
-                          if (Object.keys(data).length < 2) {
-                            return gray;
-                          }
-                          return '#61c2e8';
-                        },
-                        highlightBorderColor:  function (data) {
-                          if (Object.keys(data).length < 2) {
-                            return '#b1b1b1';
-                          }
-                          return '#f59ff6';
-                        },
-                        highlightBorderWidth: function (data) {
-                          if (Object.keys(data).length < 2) {
-                            return 1;
-                          }
-                          return 2;
-                        }
+                        highlightOnHover: false,
                       },
                     });
               }});
             }});
           }
 
-          var country = "United States";
+          var country = "United States of America";
           populateMap(country);
           document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
        </script>

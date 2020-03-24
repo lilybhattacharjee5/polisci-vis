@@ -37,4 +37,5 @@ var includedCountries = [
 	'Russia',
 	'Saudi Arabia',
 	'United Arab Emirates',
+	'United States of America',
 ];
