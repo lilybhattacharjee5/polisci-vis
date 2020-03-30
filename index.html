@@ -18,13 +18,20 @@
     </head> 
     <body>
         <style>
-          .datamaps-subunit:hover {
-            border-top-color: black;
-            border-bottom-color: black;
+          .row_elem {
+            margin-left: 20px;
+            margin-right: 20px;
           }
         </style>
         <h1 style="text-align:center">Internationally Blocked Domains Demo</h1>
-        <div id="basic_chloropleth" style="width: 1200px; height: 800px; margin:0 auto;"></div>
+        <div class = "container" style="text-align:center;padding:20px;">Click on a country to see shared censored website data in other countries across the world.</div>
+        <div style="display:flex;">
+          <div class = "row_elem" id="basic_chloropleth" style="width: 80%; height: 800px;"></div>
+          <div class = "row_elem" id="legend" style="height: 800px;">
+            Legend
+            <div id = "legend_div" style = "height: 100%; width: 100%;"></div>
+          </div>
+        </div>
         <br />
         <b><p id = 'selected_country' style="margin: 50px; font-size: 24px;"></p></b>
         <div id = "domain_table" style="height: 500px; overflow-y: auto; margin: 50px;"></div>
@@ -162,24 +169,38 @@
 
           function deriveColorScale(data) {
               var fills = {};
-              var max = -Infinity;
-              var min = Infinity;
               var curr_similarity;
-              console.log(data);
+              var country_limits = {};
+              var split_country;
+              var start_country;
               for (var country in data) {
+                  split_country = country.split(", ")[0];
+                  start_country = split_country.replace('(', '').replace(/'/g,'');
                   curr_similarity = data[country][0].similarity;
-                  if (curr_similarity > max) {
-                      max = curr_similarity;
-                  }
-                  if (curr_similarity < min) {
-                      min = curr_similarity;
+                  if (country_limits[start_country]) {
+                    var curr_max = country_limits[start_country].max;
+                    var curr_min = country_limits[start_country].min;
+                    if (curr_similarity > curr_max) {
+                      country_limits[start_country].max = curr_similarity;
+                    }
+                    if (curr_similarity < curr_min) {
+                      country_limits[start_country].min = curr_similarity;
+                    }
+                  } else {
+                    country_limits[start_country] = { "max": curr_similarity, "min": curr_similarity };
                   }
               }
               var color_line = [0, 0, 255];
               var scaled_frac;
               for (var country in data) {
+                  split_country = country.split(", ")[0];
+                  start_country = split_country.replace('(', '').replace(/'/g,'');
                   curr_similarity = data[country][0].similarity;
-                  scaled_frac = (curr_similarity - min) / (max - min);
+
+                  var curr_max = country_limits[start_country].max;
+                  var curr_min = country_limits[start_country].min;
+
+                  scaled_frac = (curr_similarity - curr_min) / (curr_max - curr_min);
                   curr_hex = fullColorHex(Math.round(scaled_frac * color_line[0]), Math.round(scaled_frac * color_line[1]), Math.round(scaled_frac * color_line[2]));
                   fills[country] = curr_hex;
               }
@@ -203,12 +224,48 @@
                 }
               }
               if (country == "United States of America") {
-                console.log(ccMap);
                 fillKeys[ccMap["\"United States\""]] = { "fillKey": "selected" };
               } else {
                 fillKeys[ccMap["\"" + country + "\""]] = { "fillKey": "selected" };
               }
               return fillKeys;
+          }
+
+          function drawLegend(country, fills, fillKeys) {
+            console.log(fills, fillKeys);
+            var legend_div = document.getElementById("legend_div");
+            var min_similarity = Infinity;
+            var max_similarity = -Infinity;
+            var min_similarity_key;
+            var max_similarity_key;
+            var max_color;
+            var min_color;
+            var curr_similarity;
+            for (var key in fillKeys) {
+              curr_similarity = fillKeys[key].similarity;
+              if (curr_similarity < min_similarity) {
+                min_similarity = curr_similarity;
+                min_similarity_key = key;
+              }
+              if (curr_similarity > max_similarity) {
+                max_similarity = curr_similarity;
+                max_similarity_key = key;
+              }
+            }
+            var min_key = "('" + country + "', '" + min_similarity_key + "')";
+            var max_key = "('" + country + "', '" + max_similarity_key + "')";
+            min_color = fills[min_key];
+            max_color = fills[max_key];
+            if (min_color == "#NaNNaNNaN") {
+              min_color = "black";
+            }
+            if (max_color == "#NaNNaNNaN") {
+              max_color = "black";
+            }
+            console.log(min_color, max_color);
+            const legend_input = "linear-gradient(to top, " + min_color + ", " + max_color + ")";
+            console.log(legend_input);
+            legend_div.style.backgroundImage = legend_input;
           }
 
           function populateMap(country) {
@@ -242,7 +299,6 @@
                 success: function ( inputData ) {
                     var fills = deriveColorScale(inputData);
                     var fillKeys = generateFillKeys(country, inputData);
-                    console.log(fillKeys);
                     getDomainData(country, inputData);
                     var basic_choropleth = new Datamap({
                       element: document.getElementById("basic_chloropleth"),
@@ -259,6 +315,7 @@
                             datamap.updateChoropleth(fillKeys, {reset: true});
                             getDomainData(country, inputData);
                             document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+                            drawLegend(country, fills, fillKeys);
                         });
                       },
                       geographyConfig: {
@@ -271,6 +328,7 @@
                         highlightOnHover: false,
                       },
                     });
+                    drawLegend(country, fills, fillKeys);
               }});
             }});
           }
