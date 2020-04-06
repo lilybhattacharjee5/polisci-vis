@@ -232,7 +232,6 @@
           }
 
           function drawLegend(country, fills, fillKeys) {
-            console.log(fills, fillKeys);
             var legend_div = document.getElementById("legend_div");
             var min_similarity = Infinity;
             var max_similarity = -Infinity;
@@ -262,9 +261,7 @@
             if (max_color == "#NaNNaNNaN") {
               max_color = "black";
             }
-            console.log(min_color, max_color);
             const legend_input = "linear-gradient(to top, " + min_color + ", " + max_color + ")";
-            console.log(legend_input);
             legend_div.style.backgroundImage = legend_input;
           }
 
