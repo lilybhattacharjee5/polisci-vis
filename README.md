@@ -1,11 +1,19 @@
 # Internationally Blocked Domains Demo
-The code in this repo generates an interactive demo that allows the user to select a country on a world map to visualize common web domains blocked in other countries.
+The code in this repo generates an interactive demo that allows the user to select a country on a world map to visualize common web domains blocked in other countries. The page includes the following features:
+- world map colored according to similarity index values associated with the selected country
+- blocked domains data table for selected country (columns: country, count, similarity, domains)
+The similarity index that defines the colors of the other countries e.g some Country B on the map when a country is selecte (Country A) d and the corresponding value in the data table is calculated using the following formula:
+<p align = "center"><img src="https://render.githubusercontent.com/render/math?math=\frac{\text{number of unique common blocked domains in Country A AND Country B}}{\text{total number of unique domains blocked by Country A OR Country B}}"></p>
 
 Below are explanations of key folders / files:
 - local_country_variables/ : contains a JS file with a list of all countries included in the demo and a JS file with a list of all GDPR countries to prevent multiple unnecessary loads / data file reading delay in the page scripts
 - notebooks/ : contains raw and cleaned data, and starting IPython analysis
--- cleaned_data/ : contains domain data scraped from URLs in Acknowledgements (see `scrape-blocked-websites.ipynb`)
--- common_domains/ : contains subsets of rows from combined_similarities.json in a more readable CSV format, corresponding to specific countries (see `preliminary_blocked_site_overlap.ipynb`)
+  - cleaned_data/ : contains domain data scraped from URLs in Acknowledgements (see `scrape-blocked-websites.ipynb`)
+  - common_domains/ : contains subsets of rows from combined_similarities.json in a more readable CSV format, corresponding to specific countries (see `preliminary_blocked_site_overlap.ipynb`)
+    - Country 1: selected country
+    - Country 2: can be any of the unselected countries with some shared blocked domain
+    - Domain: top-level domain of blocked site (extracted with Python library `tldextract`)
+    - Suffix: e.g. 'com', 'edu', etc.
 - combined_similarities.json : initially-loaded file with country-specific similarity data to generate map colors
 - index.html : main demo page
 
