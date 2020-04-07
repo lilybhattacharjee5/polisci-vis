@@ -2,7 +2,7 @@
 The code in this repo generates an interactive demo that allows the user to select a country on a world map to visualize common web domains blocked in other countries. The page includes the following features:
 - world map colored according to similarity index values associated with the selected country
 - blocked domains data table for selected country (columns: country, count, similarity, domains)
-The similarity index that defines the colors of the other countries e.g some Country B on the map when a country is selecte (Country A) d and the corresponding value in the data table is calculated using the following formula:
+The similarity index that defines the colors of the other countries e.g some Country B on the map when a country is selected (Country A) and the corresponding value in the data table is calculated using the following formula:
 <p align = "center"><img src="https://render.githubusercontent.com/render/math?math=\frac{\text{number of unique common blocked domains in Country A AND Country B}}{\text{total number of unique domains blocked by Country A OR Country B}}"></p>
 
 Below are explanations of key folders / files:
