@@ -27,15 +27,17 @@ BSD-3
 
 ## Acknowledgements
 The following links / sources were used to generate the domain data for currently-enabled countries:
-- [Iraq](https://www.theregister.co.uk/2014/07/01/revealed_the_great_firewall_of_iraq/)
-- [China](https://cyber.harvard.edu/filtering/china/)
-- [Saudi Arabia](https://cyber.harvard.edu/filtering/saudiarabia/)
-- [India](https://www.medianama.com/2012/05/223-isp-wise-list-of-blocked-sites-indiablocks/)
-- [Russia](https://web.archive.org/web/20140710063312/http://www.antizapret.info/)
-- [All EU Nations](https://data.verifiedjoseph.com/dataset/websites-not-available-eu-gdpr)
+- [Iraq](https://www.theregister.co.uk/2014/07/01/revealed_the_great_firewall_of_iraq/) -- updated 2014
+- [China](https://cyber.harvard.edu/filtering/china/) -- updated 2002
+- [Saudi Arabia](https://cyber.harvard.edu/filtering/saudiarabia/) -- updated 2002
+- [India](https://www.medianama.com/2012/05/223-isp-wise-list-of-blocked-sites-indiablocks/) -- updated 2012
+- [Russia](https://web.archive.org/web/20140710063312/http://www.antizapret.info/) -- updated 2014
+- [All EU Nations](https://data.verifiedjoseph.com/dataset/websites-not-available-eu-gdpr) -- updated 2019
 -- Note: This visualization currently applies GDPR regulations to the UK. According to several sources, including [IT Governance](https://www.itgovernance.co.uk/eu-gdpr-uk-dpa-2018-uk-gdpr), EU GDPR will continue to apply to the UK until the Brexit transition period ends, at which point a UK GDPR may be negotiated.
-- [Pakistan](https://propakistani.pk/wp-content/uploads/2010/05/blocked.html)
-- [United Arab Emirates](https://pastehtml.com/view/c3321xhl7.rtxt) (leaked by Anonymous)
+- [Pakistan](https://propakistani.pk/wp-content/uploads/2010/05/blocked.html) -- updated 2010
+- [United Arab Emirates](https://pastehtml.com/view/c3321xhl7.rtxt) (leaked by Anonymous) -- updated 2012
 
 The following country data will be integrated in the future:
-- [North Korea](https://www.npr.org/sections/thetwo-way/2016/09/21/494902997/north-korea-accidentally-reveals-it-only-has-28-websites)
+- [North Korea](https://www.npr.org/sections/thetwo-way/2016/09/21/494902997/north-korea-accidentally-reveals-it-only-has-28-websites) -- updated 2016
+
+⚠️ <b>Note</b>: A current major issue with the demo is the use of old datasets (e.g. China, Saudi Arabia), and non-overlapping timeframes for datasets from different countries making comparisons between countries with this data less meaningful. Finding more recent datasets for all enabled countries is a high priority.
