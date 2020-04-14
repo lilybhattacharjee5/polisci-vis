@@ -155,6 +155,78 @@
           function enableForceDirected() {
             document.getElementById("basic_chloropleth").innerHTML = "";
             document.getElementById("legend").style.display = "none";
+            generateForceDirected();
+          }
+
+          function generateForceDirected() {
+            var svg = d3.select("#basic_chloropleth").append("svg");
+            d3.json("", function(error, graph) {
+              graph = {
+                nodes: [{ 
+                  "id": 0, 
+                  "x":100,
+                  "y":100,
+                  },
+                  {
+                    "id": 1,
+                    "x":50,
+                    "y":50,
+                  }
+                ],
+                links: [
+                  {  
+                    "source":1,
+                    "target":0
+                  }
+                ],
+              }
+              var nodes = graph.nodes;
+              var links = graph.links;
+              // const simulation = d3.forceSimulation()
+              //   .force('charge', d3.forceManyBody().strength(-20)) 
+              //   .force('center', d3.forceCenter(width / 2, height / 2))
+
+              function getNodeColor(node) {
+                return node.level === 1 ? 'red' : 'gray'
+              }
+              const nodeElements = svg.append('g')
+                .selectAll('circle')
+                .data(nodes)
+                .enter().append('circle')
+                  .attr('r', 10)
+                  .attr('fill', getNodeColor)
+                  .attr('cx', node => node.x)
+                  .attr('cy', node => node.y)
+              // const textElements = svg.append('g')
+              //   .selectAll('text')
+              //   .data(nodes)
+              //   .enter().append('text')
+              //     .text(node => node.label)
+              //     .attr('font-size', 15)
+              //     .attr('dx', 15)
+              //     .attr('dy', 4)
+
+              // simulation.nodes(nodes).on('tick', () => {
+              //   nodeElements
+              //     .attr("cx", node => node.x)
+              //     .attr("cy", node => node.y)
+              //   textElements
+              //     .attr("x", node => node.x)
+              //     .attr("y", node => node.y)
+              // });
+            //   var force = d3.layout.force()
+            //     .nodes(nodes)
+            //     .links(links)
+            //     // .size([w, h])
+            //     .linkStrength(0.1)
+            //     .friction(0.9)
+            //     .linkDistance(20)
+            //     .charge(-30)
+            //     .gravity(0.1)
+            //     .theta(0.8)
+            //     .alpha(0.1)
+            //     .start();
+            });
           }
 
           function formatResults(sortedData) {
