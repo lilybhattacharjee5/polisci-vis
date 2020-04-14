@@ -137,6 +137,24 @@
             currModeIdx = 1 - currModeIdx;
             currMode = modes[currModeIdx];
             document.getElementById("curr_mode").innerHTML = currMode;
+            if (currModeIdx == 0) {
+              enableWorldMap();
+            } else {
+              enableForceDirected();
+            }
+          }
+
+          function enableWorldMap() {
+            document.getElementById("basic_chloropleth").innerHTML = "";
+            document.getElementById("legend").style.display = "";
+            var country = "United States of America";
+            populateMap(country);
+            document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+          }
+
+          function enableForceDirected() {
+            document.getElementById("basic_chloropleth").innerHTML = "";
+            document.getElementById("legend").style.display = "none";
           }
 
           function formatResults(sortedData) {
