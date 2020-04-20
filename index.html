@@ -316,7 +316,7 @@
 
           function formatResults(sortedData) {
             if (!sortedData.length) {
-              document.getElementById("domain_table").innerHTML = "<p>No known blocked websites</p>";
+              document.getElementById("domain_table").innerHTML = "<p>No known blocked websites, though website takedowns have been enacted. See <a href = 'https://www.ice.gov/factsheets/ipr-in-our-sites' target = '_blank'>Operation In Our Sites</a>.</p>";
               document.getElementById("domain_table").style.height = "100px";
               return;
             }
@@ -442,6 +442,12 @@
             return "#" + red+green+blue;
           }
 
+          function numToHex(num) {
+            var color_line = [0, 0, 255];
+            curr_hex = fullColorHex(Math.round(num * color_line[0]), Math.round(num * color_line[1]), Math.round(num * color_line[2]));
+            return curr_hex;
+          }
+
           function deriveColorScale(data) {
               var fills = {};
               var curr_similarity;
@@ -465,7 +471,6 @@
                     country_limits[start_country] = { "max": curr_similarity, "min": curr_similarity };
                   }
               }
-              var color_line = [0, 0, 255];
               var scaled_frac;
               for (var country in data) {
                   split_country = country.split(", ")[0];
@@ -476,7 +481,7 @@
                   var curr_min = country_limits[start_country].min;
 
                   scaled_frac = (curr_similarity - curr_min) / (curr_max - curr_min);
-                  curr_hex = fullColorHex(Math.round(scaled_frac * color_line[0]), Math.round(scaled_frac * color_line[1]), Math.round(scaled_frac * color_line[2]));
+                  curr_hex = numToHex(scaled_frac);
                   fills[country] = curr_hex;
               }
               fills["defaultFill"] = gray;
@@ -524,28 +529,48 @@
 
           function drawLegend(country, fills, fillKeys) {
             var legend_div = document.getElementById("legend_div");
-            var min_similarity = Infinity;
+            var min_similarity = 0;
             var max_similarity = -Infinity;
             var min_similarity_key;
             var max_similarity_key;
             var max_color;
             var min_color;
             var curr_similarity;
-            for (var key in fillKeys) {
-              curr_similarity = fillKeys[key].similarity;
-              if (curr_similarity < min_similarity) {
-                min_similarity = curr_similarity;
-                min_similarity_key = key;
-              }
-              if (curr_similarity > max_similarity) {
-                max_similarity = curr_similarity;
-                max_similarity_key = key;
+            // for (var key in fillKeys) {
+            //   curr_similarity = fillKeys[key].similarity;
+            //   if (curr_similarity < min_similarity) {
+            //     min_similarity = curr_similarity;
+            //     min_similarity_key = key;
+            //   }
+            //   if (curr_similarity > max_similarity) {
+            //     max_similarity = curr_similarity;
+            //     max_similarity_key = key;
+            //   }
+            // }
+            var currFill;
+            var newMax = -Infinity;
+            var newMin = Infinity;
+            for (const [key, value] of Object.entries(fills)) {
+              if (value != "#NaNNaNNaN") {
+                currFill = parseInt("0x" + value.slice(1, value.length).toUpperCase());
+                if (currFill > newMax && key != "selected" && key != "defaultFill") {
+                  newMax = currFill;
+                  max_key = key;
+                }
+                if (currFill < newMin && key != "selected" && key != "defaultFill") {
+                  newMin = currFill;
+                  min_key = key;
+                }
               }
             }
-            var min_key = "('" + country + "', '" + min_similarity_key + "')";
-            var max_key = "('" + country + "', '" + max_similarity_key + "')";
-            min_color = fills[min_key];
-            max_color = fills[max_key];
+            // var min_key = "('" + country + "', '" + min_similarity_key + "')";
+            // var max_key = "('" + country + "', '" + max_similarity_key + "')";
+            // min_color = fills[min_key];
+            // max_color = fills[max_key];
+            min_similarity = combined_similarities[min_key][0].similarity;
+            min_color = numToHex(min_similarity / (newMax - newMin));
+            max_similarity = combined_similarities[max_key][0].similarity;
+            max_color = numToHex(max_similarity / (max_similarity - min_similarity));
             if (min_color == "#NaNNaNNaN") {
               min_color = "black";
             }
