@@ -132,6 +132,7 @@
           const modes = ["World Map", "Force-Directed"];
           var currModeIdx = 0;
           var currMode = modes[currModeIdx];
+          var combined_similarities;
 
           function toggleMode() {
             currModeIdx = 1 - currModeIdx;
@@ -158,75 +159,159 @@
             generateForceDirected();
           }
 
+          String.prototype.replaceAll = function(search, replacement) {
+              var target = this;
+              return target.split(search).join(replacement);
+          };
+
+          function calculateForceData() {
+            var forceNodes = [];
+            var forceLinks = [];
+            var uniqueNodes = {};
+            var ccToCountry = {};
+            var possibleNode;
+            var splitKey;
+            var cc;
+            var count = 0;
+            var target;
+            var source;
+            for (const [key, value] of Object.entries(combined_similarities)) {
+              splitKey = key.split(", ");
+              possibleNode = splitKey[0].replace("(", "").replaceAll("'", "\"");
+              strippedPossibleNode = possibleNode.replaceAll("\"", "");
+              if (!possibleNode.includes("\"")) {
+                possibleNode = '"' + possibleNode + '"';
+              }
+
+              if (possibleNode == '"Lichtenstein"') {
+                possibleNode = '"Liechtenstein"';
+              }
+
+              if (possibleNode == '"United States of America"') {
+                possibleNode = '"United States"';
+              }
+              
+              if (!(possibleNode in uniqueNodes)) {
+                if (gdpr_countries.includes(strippedPossibleNode)) {
+                  if (!("GDPR" in uniqueNodes)) {
+                    forceNodes.push({ "character": "GDPR", "id": count, "influence": 40 });
+                    uniqueNodes["GDPR"] = count;
+                    count++;
+                  }
+                } else {
+                  uniqueNodes[possibleNode] = count;
+                  forceNodes.push({ "character": strippedPossibleNode, "id": count, "influence": 40 });
+                  count++;
+                }
+                cc = ccMap[possibleNode];
+                ccToCountry[cc] = strippedPossibleNode;
+              }
+            }
+            for (const [key, value] of Object.entries(combined_similarities)) {
+              splitKey = key.split(", ");
+              o_source = splitKey[0].replaceAll("'", "").replace("(", "");
+              o_target = splitKey[1].replaceAll("'", "").replace(")", "");
+              if (o_source == "United States of America") {
+                o_source = 'United States';
+              }
+              if (o_target == "United States of America") {
+                o_target = 'United States';
+              }
+              if (gdpr_countries.includes(o_source)) {
+                source = uniqueNodes["GDPR"];
+              } else {
+                source = uniqueNodes["\"" + o_source + "\""];
+              }
+              var country_o_target = ccToCountry[o_target];
+              if (gdpr_countries.includes(country_o_target)) {
+                target = uniqueNodes["GDPR"];
+              } else {
+                target = uniqueNodes["\"" + country_o_target + "\""];
+              }
+              var weight = value[0].similarity * 500;
+              if (source != undefined && target != undefined && weight) {
+                var newLink = { "source": source, "target": target, "weight": weight };
+                forceLinks.push(newLink);
+              }
+            }
+            return {
+              "nodes": forceNodes,
+              "links": forceLinks.slice(1,forceLinks.length),
+            }
+          }
+
           function generateForceDirected() {
-            var svg = d3.select("#basic_chloropleth").append("svg");
-            d3.json("", function(error, graph) {
-              graph = {
-                nodes: [{ 
-                  "id": 0, 
-                  "x":100,
-                  "y":100,
-                  },
-                  {
-                    "id": 1,
-                    "x":50,
-                    "y":50,
-                  }
-                ],
-                links: [
-                  {  
-                    "source":1,
-                    "target":0
-                  }
-                ],
-              }
-              var nodes = graph.nodes;
-              var links = graph.links;
-              // const simulation = d3.forceSimulation()
-              //   .force('charge', d3.forceManyBody().strength(-20)) 
-              //   .force('center', d3.forceCenter(width / 2, height / 2))
-
-              function getNodeColor(node) {
-                return node.level === 1 ? 'red' : 'gray'
-              }
-              const nodeElements = svg.append('g')
-                .selectAll('circle')
-                .data(nodes)
-                .enter().append('circle')
-                  .attr('r', 10)
-                  .attr('fill', getNodeColor)
-                  .attr('cx', node => node.x)
-                  .attr('cy', node => node.y)
-              // const textElements = svg.append('g')
-              //   .selectAll('text')
-              //   .data(nodes)
-              //   .enter().append('text')
-              //     .text(node => node.label)
-              //     .attr('font-size', 15)
-              //     .attr('dx', 15)
-              //     .attr('dy', 4)
-
-              // simulation.nodes(nodes).on('tick', () => {
-              //   nodeElements
-              //     .attr("cx", node => node.x)
-              //     .attr("cy", node => node.y)
-              //   textElements
-              //     .attr("x", node => node.x)
-              //     .attr("y", node => node.y)
-              // });
-            //   var force = d3.layout.force()
-            //     .nodes(nodes)
-            //     .links(links)
-            //     // .size([w, h])
-            //     .linkStrength(0.1)
-            //     .friction(0.9)
-            //     .linkDistance(20)
-            //     .charge(-30)
-            //     .gravity(0.1)
-            //     .theta(0.8)
-            //     .alpha(0.1)
-            //     .start();
+            var margin = {
+              top: 20,
+              bottom: 50,
+              right: 30,
+              left: 50
+            };
+            // var width = 960 - margin.left - margin.right;
+            // var height = 700 - margin.top - margin.bottom;
+            var width = $('#basic_chloropleth').width();
+            var height = $('#basic_chloropleth').height();
+            //Create an SVG element and append it to the DOM
+            var svgElement = d3.select("#basic_chloropleth")
+                      .append("svg")
+                      .attr({"width": width, "height": height})
+                      .append("g")
+                      .attr("transform","translate("+margin.left+","+margin.top+")");
+            //Load External Data
+            dataset = calculateForceData();
+            //Extract data from dataset
+            var nodes = dataset.nodes;
+            var links = dataset.links;
+            //Create Force Layout
+            var force = d3.layout.force()
+                    .size([width, height])
+                    .nodes(nodes)
+                    .links(links)
+                    .gravity(0.02)
+                    .charge(-100)
+                    .linkDistance(400);
+            //Add links to SVG
+            var link = svgElement.selectAll(".link")
+                  .data(links)
+                  .enter()
+                  .append("line")
+                  .attr("stroke", "blue")
+                  .attr("stroke-width", function(d){ return d.weight; })
+                  .attr("class", "link");
+            //Add nodes to SVG
+            var node = svgElement.selectAll(".node")
+                  .data(nodes)
+                  .enter()
+                  .append("g")
+                  .attr("class", "node")
+                  .call(force.drag);
+            //Add labels to each node
+            var label = node.append("text")
+                    .attr("dx", 12)
+                    .attr("dy", "0.35em")
+                    .attr("font-size", 14)
+                    .text(function(d){ return d.character; });
+            //Add circles to each node
+            var circle = node.append("circle")
+                    .attr("r", function(d){ return d.influence/2>5 ? d.influence/10 : 5; })
+                    // .attr("fill", function(d){ return c10(d.zone*10); });
+            //This function will be executed for every tick of force layout
+            force.on("tick", function(){
+              //Set X and Y of node
+              node.attr("r", function(d){ return d.influence; })
+                .attr("cx", function(d){ return d.x; })
+                .attr("cy", function(d){ return d.y; });
+              //Set X, Y of link
+              link.attr("x1", function(d){ return d.source.x; })
+              link.attr("y1", function(d){ return d.source.y; })
+              link.attr("x2", function(d){ return d.target.x; })
+              link.attr("y2", function(d){ return d.target.y; });
+              //Shift node a little
+              node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
             });
+            // });
+            //Start the force layout calculation
+            force.start();
           }
 
           function formatResults(sortedData) {
@@ -507,6 +592,7 @@
                 async: true,
                 dataType: "json",
                 success: function ( inputData ) {
+                    combined_similarities = inputData;
                     var fills = deriveColorScale(inputData);
                     var fillKeys = generateFillKeys(country, inputData);
                     getDomainData(country, inputData);
