@@ -155,6 +155,7 @@
 
           function enableForceDirected() {
             document.getElementById("basic_chloropleth").innerHTML = "";
+            document.getElementById("basic_chloropleth").style.width = "100%";
             document.getElementById("legend").style.display = "none";
             generateForceDirected();
           }
@@ -262,6 +263,8 @@
             //Extract data from dataset
             var nodes = dataset.nodes;
             var links = dataset.links;
+            var radius = 6;
+            var padding = 20;
             //Create Force Layout
             var force = d3.layout.force()
                     .size([width, height])
@@ -269,15 +272,17 @@
                     .links(links)
                     .gravity(0.02)
                     .charge(-100)
-                    .linkDistance(400);
+                    // .data(links)
+                    // .enter()
+                    .linkDistance(function(d) { console.log(d); return d.weight * 500; });
             //Add links to SVG
             var link = svgElement.selectAll(".link")
                   .data(links)
                   .enter()
                   .append("line")
-                  .attr("stroke", "blue")
+                  .attr("stroke", "white")
                   .attr("stroke-width", function(d){ return d.weight; })
-                  .attr("class", "link");
+                  // .attr("class", "link");
             //Add nodes to SVG
             var node = svgElement.selectAll(".node")
                   .data(nodes)
@@ -293,21 +298,25 @@
                     .text(function(d){ return d.character; });
             //Add circles to each node
             var circle = node.append("circle")
-                    .attr("r", function(d){ return d.influence/2>5 ? d.influence/10 : 5; })
+                    .attr("r", function(d){ return radius; })
                     // .attr("fill", function(d){ return c10(d.zone*10); });
             //This function will be executed for every tick of force layout
             force.on("tick", function(){
               //Set X and Y of node
               node.attr("r", function(d){ return d.influence; })
-                .attr("cx", function(d){ return d.x; })
-                .attr("cy", function(d){ return d.y; });
+              .attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius - padding, d.x)); })
+              .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius - padding, d.y)); });
+                // .attr("cx", function(d){ return d.x; })
+                // .attr("cy", function(d){ return d.y; });
               //Set X, Y of link
               link.attr("x1", function(d){ return d.source.x; })
               link.attr("y1", function(d){ return d.source.y; })
               link.attr("x2", function(d){ return d.target.x; })
               link.attr("y2", function(d){ return d.target.y; });
               //Shift node a little
-              node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+              node.attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")"; 
+              });
             });
             // });
             //Start the force layout calculation
