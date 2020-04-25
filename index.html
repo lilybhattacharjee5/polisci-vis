@@ -270,8 +270,8 @@
                     .size([width, height])
                     .nodes(nodes)
                     .links(links)
-                    .gravity(0.02)
-                    .charge(-100)
+                    .gravity(0)
+                    .charge(0)
                     // .data(links)
                     // .enter()
                     .linkDistance(function(d) { console.log(d); return d.weight * 500; });
@@ -280,9 +280,9 @@
                   .data(links)
                   .enter()
                   .append("line")
-                  .attr("stroke", "white")
-                  .attr("stroke-width", function(d){ return d.weight; })
-                  // .attr("class", "link");
+                  .attr("stroke", "blue")
+                  .attr("stroke-width", function(d){ console.log(d); return d.weight; })
+                  .attr("class", "link");
             //Add nodes to SVG
             var node = svgElement.selectAll(".node")
                   .data(nodes)
