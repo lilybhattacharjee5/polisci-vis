@@ -1,4 +1,7 @@
 # Internationally Blocked Domains Demo
+
+[Live Demo](https://pair-interoperability-demo.herokuapp.com/)
+
 The code in this repo generates an interactive demo that allows the user to select a country on a world map to visualize common web domains blocked in other countries. The page includes the following features:
 - world map colored according to similarity index values associated with the selected country
 - blocked domains data table for selected country (columns: country, count, similarity, domains)
