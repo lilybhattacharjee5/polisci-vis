@@ -100,7 +100,7 @@
           }
         </style>
         <h1 style="text-align:center">Internationally Blocked Domains Demo</h1>
-        <div class = "container" style="text-align:center;padding:20px;">Click on a country to see shared censored website data in other countries across the world.</div>
+        <div class = "container" style="text-align:center;padding:20px;">Click on a country to see shared censored website data in other countries across the world. To see the data that powers this visualization or find more information about this project, check out our <a href = 'https://github.com/lilybhattacharjee5/interoperability-demo/tree/gh-pages' target = '_blank'>repo</a>!</div>
         <div style="display:flex;">
           <div class = "row_elem" id="basic_chloropleth" style="width: 80%; height: 750px;"></div>
           <div class = "row_elem" id="legend" style="height: 750px;">
@@ -147,6 +147,7 @@
 
           function enableWorldMap() {
             document.getElementById("basic_chloropleth").innerHTML = "";
+            document.getElementById("basic_chloropleth").style.width = "80%";
             document.getElementById("legend").style.display = "";
             var country = "United States of America";
             populateMap(country);
