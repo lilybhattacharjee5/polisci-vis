@@ -274,14 +274,14 @@
                     .charge(0)
                     // .data(links)
                     // .enter()
-                    .linkDistance(function(d) { console.log(d); return d.weight * 500; });
+                    .linkDistance(function(d) { return d.weight * 500; });
             //Add links to SVG
             var link = svgElement.selectAll(".link")
                   .data(links)
                   .enter()
                   .append("line")
                   .attr("stroke", "blue")
-                  .attr("stroke-width", function(d){ console.log(d); return d.weight; })
+                  .attr("stroke-width", function(d){ return d.weight; })
                   .attr("class", "link");
             //Add nodes to SVG
             var node = svgElement.selectAll(".node")
@@ -324,8 +324,10 @@
           }
 
           function formatResults(sortedData) {
+            // console.log(sortedData);
             if (!sortedData.length) {
-              document.getElementById("domain_table").innerHTML = "<p>No known blocked websites, though website takedowns have been enacted. See <a href = 'https://www.ice.gov/factsheets/ipr-in-our-sites' target = '_blank'>Operation In Our Sites</a>.</p>";
+              // document.getElementById("domain_table").innerHTML = "<p>No known blocked websites, though website takedowns have been enacted. See <a href = 'https://www.ice.gov/factsheets/ipr-in-our-sites' target = '_blank'>Operation In Our Sites</a>.</p>";
+              document.getElementById("domain_table").innerHTML = "<p>No common blocked websites with other countries for which data is available.</p>"
               document.getElementById("domain_table").style.height = "100px";
               return;
             }
@@ -353,20 +355,21 @@
 
           function condenseGDPR(data) {
             const dataArray = Object.entries(data);
-            const nonGDPRDataArray = dataArray.filter(x => !gdpr_countries.includes(x[0]));
-            const GDPRDataArray = dataArray.filter(x => gdpr_countries.includes(x[0]));
-            if (GDPRDataArray.length) {
-              const GDPRDomains = GDPRDataArray[0][1].domains;
-              const GDPRCount = GDPRDataArray[0][1].count;
-              const GDPRSimilarity = GDPRDataArray[0][1].similarity;
-              const GDPRElement = [["GDPR", { "count": GDPRCount, "domains": GDPRDomains, "similarity": GDPRSimilarity }]];
-              const condensedDataArray = nonGDPRDataArray.concat(GDPRElement)
-              return condensedDataArray;
-            }
-            return nonGDPRDataArray;
+            // const nonGDPRDataArray = dataArray.filter(x => !gdpr_countries.includes(x[0]));
+            // const GDPRDataArray = dataArray.filter(x => gdpr_countries.includes(x[0]));
+            // if (GDPRDataArray.length) {
+            //   const GDPRDomains = GDPRDataArray[0][1].domains;
+            //   const GDPRCount = GDPRDataArray[0][1].count;
+            //   const GDPRSimilarity = GDPRDataArray[0][1].similarity;
+            //   const GDPRElement = [["GDPR", { "count": GDPRCount, "domains": GDPRDomains, "similarity": GDPRSimilarity }]];
+            //   const condensedDataArray = nonGDPRDataArray.concat(GDPRElement)
+            //   return condensedDataArray;
+            // }
+            return dataArray;
           }
 
           function sortResults(data, valueName) {
+            // console.log(data);
             data.sort(function(a, b) {
               const aCount = a[1][valueName];
               const bCount = b[1][valueName];
@@ -376,8 +379,9 @@
           }
 
           function getDomainData(country, inputData) {
+            // console.log(inputData);
             $.ajax( {
-              url: "notebooks/common_domains/" + country + "-common-domains.csv",
+              url: "notebooks/new_common_domains/" + country + "-common-domains.csv",
               type: "GET",
               async: true,
               dataType: "text",
@@ -385,6 +389,7 @@
                 document.getElementById("domain_table").innerHTML = '<table class="table table-bordered table-striped">No data available</table>';
               },
               success: function ( rawDomainData ) {
+                // console.log(rawDomainData);
                 var domainData = rawDomainData.split(/\r?\n|\r/);
                 var tableData = {};
                 var currCountry;
@@ -416,11 +421,23 @@
                           if (currCountry == 'Lichtenstein') {
                             correctCurrCountry = 'Liechtenstein';
                           }
-                          var inputDataKey = "('" + country + "', '" + ccMap['"' + correctCurrCountry + '"'] + "')";
-                          tableData[currCountry] = {"count": countryCount, "domains": [], "similarity": inputData[inputDataKey][0].similarity}
-                          for (var c = 0; c < currDomains.length; c++) {
-                            tableData[currCountry].domains.push(currDomains[c]);
+                          if (currCountry == "Russia") {
+                            correctCurrCountry = "Russian Federation";
                           }
+                          var inputDataKey = "('" + country + "', '" + ccMap['"' + correctCurrCountry + '"'] + "')";
+                          if (currCountry == "Moldova") {
+                            inputDataKey = "('" + country + "', 'MDA')";
+                          }
+
+                          // console.log(ccMap, currCountry, ccMap[currCountry]);
+                          
+                          // console.log(inputDataKey);
+                          if (inputData[inputDataKey]) {
+                            tableData[currCountry] = {"count": countryCount, "domains": [], "similarity": inputData[inputDataKey][0].similarity}
+                            for (var c = 0; c < currDomains.length; c++) {
+                              tableData[currCountry].domains.push(currDomains[c]);
+                            }
+                          }     
                         }
                         countryCount = 0;
                         currDomains = [];
@@ -620,7 +637,7 @@
                 }
 
                 $.ajax( {
-                url: "combined-similarities.json",
+                url: "new-combined-similarities.json",
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 async: true,
