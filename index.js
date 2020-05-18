@@ -650,6 +650,9 @@ function getAdversarialData(country, inputData) {
     currCountry = currSplitLine[1];
     currURLCountry = currSplitLine[2];
     currBlocked = parseInt(currSplitLine[3]);
+    if (currCountry != country && !gdpr_countries.includes(country)) {
+      continue;
+    }
     if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number") {
       continue;
     }
