@@ -2,33 +2,48 @@
 var ccMap = {}; // maps country code to country name
 const gray = "#d3d3d3"; // default country color (no data)
 
-const modes = ["World Map", "Force"];
+const modes = ["world-map", "force", "adversarial"];
 var currModeIdx = 0;
 var currMode = modes[currModeIdx];
 
 var combined_similarities; // holds loaded similarity ratios to prevent extra reloads
+var combined_adversarial;
+
+var blue_line = [0, 0, 255];
+var red_line = [255, 0, 0];
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.split(search).join(replacement);
 };
 
+function input_load() {
+  var input = document.getElementById('world-map');
+  input.checked = "checked";
+}
+
 // toggle between world map and force modes
-function toggleMode() {
-  currModeIdx = 1 - currModeIdx;
+function toggleMode(mode) {
+  currModeIdx = modes.indexOf(mode);
   currMode = modes[currModeIdx];
-  document.getElementById("curr_mode").innerHTML = currMode;
+  // document.getElementById("curr_mode").innerHTML = currMode;
   if (currModeIdx == 0) {
     enableWorldMap();
-  } else {
+  } else if (currModeIdx == 1) {
     enableForce();
+  } else {
+    enableAdversarial();
   }
 }
 
-function enableWorldMap() {
+function setupMap() {
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("legend").style.display = "";
   document.getElementById("basic_chloropleth").style.width = "80%";
+}
+
+function enableWorldMap() {
+  setupMap();
   var country = "United States of America";
   populateMap(750, country);
   document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
@@ -39,6 +54,13 @@ function enableForce() {
   document.getElementById("basic_chloropleth").style.width = "100%";
   document.getElementById("legend").style.display = "none";
   generateForceDirected();
+}
+
+function enableAdversarial() {
+  setupMap();
+  var country = "China";
+  populateAdversarialMap(750, country);
+  document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
 }
 
 function calculateForceData() {
@@ -319,8 +341,7 @@ function fullColorHex(r,g,b) {
   return "#" + red+green+blue;
 }
 
-function numToHex(num) {
-  var color_line = [0, 0, 255];
+function numToHex(num, color_line) {
   curr_hex = fullColorHex(Math.round(num * color_line[0]), Math.round(num * color_line[1]), Math.round(num * color_line[2]));
   return curr_hex;
 }
@@ -358,7 +379,7 @@ function deriveColorScale(data) {
         var curr_min = country_limits[start_country].min;
 
         scaled_frac = (curr_similarity - curr_min) / (curr_max - curr_min);
-        curr_hex = numToHex(scaled_frac);
+        curr_hex = numToHex(scaled_frac, blue_line);
         fills[country] = curr_hex;
     }
     fills["defaultFill"] = gray;
@@ -385,6 +406,7 @@ function generateFillKeys(country, data) {
     } else {
       fillKeys[ccMap["\"" + country + "\""]] = { "fillKey": "selected" };
     }
+    // console.log(fillKeys);
     return fillKeys;
 }
 
@@ -429,9 +451,9 @@ function drawLegend(country, fills, fillKeys) {
     }
   }
   min_similarity = combined_similarities[min_key][0].similarity;
-  min_color = numToHex(min_similarity / (newMax - newMin));
+  min_color = numToHex(min_similarity / (newMax - newMin), blue_line);
   max_similarity = combined_similarities[max_key][0].similarity;
-  max_color = numToHex(max_similarity / (max_similarity - min_similarity));
+  max_color = numToHex(max_similarity / (max_similarity - min_similarity), blue_line);
   if (min_color == "#NaNNaNNaN") {
     min_color = "black";
   }
@@ -520,3 +542,259 @@ function populateMap(map_height, country) {
     }});
   }});
 }
+
+function deriveAdversarialColorScale(inputData) {
+  var fills = {};
+  var countryAdvLimits = {};
+  var inputDataLines = inputData.split('\n');
+  inputDataLines = inputDataLines.slice(1, inputDataLines.length);
+  // console.log(inputDataLines);
+  var currSplitLine;
+  var currCountry;
+  var currURLCountry;
+  var currBlocked;
+  for (var idx in inputDataLines) {
+    currSplitLine = inputDataLines[idx].split(",");
+    currCountry = currSplitLine[1];
+    currURLCountry = currSplitLine[2];
+    currBlocked = parseInt(currSplitLine[3]);
+    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number") {
+      continue;
+    }
+    if (countryAdvLimits[currCountry]) {
+      var currBounds = countryAdvLimits[currCountry];
+      if (currBlocked > currBounds["max"]) {
+        currBounds["max"] = currBlocked;
+      }
+      if (currBlocked < currBounds["min"]) {
+        currBounds["min"] = currBlocked;
+      }
+    } else {
+      countryAdvLimits[currCountry] = { "min": currBlocked, "max": currBlocked }
+    }
+    // console.log(currSplitLine[1], currSplitLine[2], currSplitLine[3]);
+  }
+  // console.log(countryAdvLimits);
+  for (var idx in inputDataLines) {
+    currSplitLine = inputDataLines[idx].split(",");
+    currCountry = currSplitLine[1];
+    currURLCountry = currSplitLine[2];
+    currBlocked = parseInt(currSplitLine[3]);
+    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number") {
+      continue;
+    }
+    var lowerBound = countryAdvLimits[currCountry].min;
+    var upperBound = countryAdvLimits[currCountry].max;
+    var scaledFrac = (currBlocked - lowerBound) / (upperBound - lowerBound);
+    var currHex = numToHex(scaledFrac, red_line);
+    var key = "(" + currCountry + "," + currURLCountry + ")";
+    // console.log(key, scaledFrac);
+    fills[key] = currHex;
+  }
+  fills["defaultFill"] = gray;
+  fills["selected"] = "#218023";
+  // console.log(fills);
+  return fills;
+}
+
+function generateAdversarialFillKeys(country, inputData) {
+  var fillKeys = {};
+  var inputDataLines = inputData.split('\n');
+  inputDataLines = inputDataLines.slice(1, inputDataLines.length);
+  var currSplitLine;
+  var currCountry;
+  var currURLCountry;
+  var currBlocked;
+  for (var idx in inputDataLines) {
+    currSplitLine = inputDataLines[idx].split(",");
+    currCountry = currSplitLine[1];
+    currURLCountry = currSplitLine[2];
+    currBlocked = parseInt(currSplitLine[3]);
+    if (currCountry != country && !gdpr_countries.includes(country)) {
+      continue;
+    }
+    var currCC = ccMap["\"" + currURLCountry + "\""];
+    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number" || !currCC) {
+      continue;
+    }
+    var currFillKey = "(" + currCountry + "," + currURLCountry + ")";
+    if (gdpr_countries.includes(currURLCountry)) {
+      currFillKey = "(" + currCountry + ",GDPR)";
+    }
+    if (gdpr_countries.includes(currCountry)) {
+      currFillKey = "(" + currCountry + ",GDPR)";
+    }
+    fillKeys[currCC] = { fillKey: currFillKey };
+  }
+  // console.log(fillKeys);
+  return fillKeys;
+}
+
+function getAdversarialData(country, inputData) {
+  var inputDataLines = inputData.split('\n');
+  inputDataLines = inputDataLines.slice(1, inputDataLines.length);
+
+  document.getElementById("domain_table").style.height = "500px";
+  var tableData = '<table class="table table-bordered table-striped">';
+
+  tableData += '<th>Country</th>';
+  tableData += '<th>Number of Domains Blocked</th>';
+
+  var currSplitLine;
+  var currCountry;
+  var currURLCountry;
+  var currBlocked;
+  var countryToBlockedNum = {};
+  for (var idx in inputDataLines) {
+    currSplitLine = inputDataLines[idx].split(",");
+    currCountry = currSplitLine[1];
+    currURLCountry = currSplitLine[2];
+    currBlocked = parseInt(currSplitLine[3]);
+    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number") {
+      continue;
+    }
+    countryToBlockedNum[currURLCountry] = currBlocked;
+    // tableData += '<tr>';
+    // tableData += '<td>' + currURLCountry + '</td>'
+    // tableData += '<td>' + currBlocked + '</td>';
+    // tableData += '</tr>';
+  }
+
+  var sortedBlocked = Object.entries(countryToBlockedNum)
+  sortedBlocked.sort((a, b) => b[1] - a[1]);
+
+  for (var idx in sortedBlocked) {
+    var currData = sortedBlocked[idx];
+    tableData += '<tr>';
+    tableData += '<td>' + currData[0] + '</td>'
+    tableData += '<td>' + currData[1] + '</td>';
+    tableData += '</tr>';
+  }
+  // console.log(sortedBlocked);
+
+  document.getElementById("domain_table").innerHTML = tableData;
+}
+
+function populateAdversarialMap(map_height, country) {
+  // var similarity_limits;
+  // var min_similarity;
+  // var max_similarity;
+  // const num_intervals = 5;
+  $.ajax( {
+      url: "notebooks/cleaned_data/adversarial_data/combined_adversarial.csv",
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      async: true,
+      dataType: "text",
+      success: function ( inputData ) {
+          combined_adversarial = inputData;
+          var fills = deriveAdversarialColorScale(inputData);
+          var fillKeys = generateAdversarialFillKeys(country, inputData);
+          getAdversarialData(country, inputData);
+          var basic_choropleth = new Datamap({
+            element: document.getElementById("basic_chloropleth"),
+            projection: 'mercator',
+            fills: fills,
+            data: fillKeys,
+            done: function(datamap) {
+              datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+                  country = geography.properties.name;
+                  if (!includedAdvCountries.includes(country)) {
+                    return;
+                  }
+                  fillKeys = generateAdversarialFillKeys(country, inputData);
+                  datamap.updateChoropleth(fillKeys, {reset: true});
+                  getAdversarialData(country, inputData);
+                  document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+                  // similarity_limits = drawLegend(country, fills, fillKeys);
+                  // min_similarity = similarity_limits[0];
+                  // max_similarity = similarity_limits[1];
+                  // drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
+              });
+            },
+            geographyConfig: {
+              borderColor: function(data) {
+                return '#b1b1b1';
+              },
+              popupTemplate: function(geography, data) {
+                return;
+              },
+              highlightOnHover: false,
+            },
+          });
+          // similarity_limits = drawLegend(country, fills, fillKeys);
+          // min_similarity = similarity_limits[0];
+          // max_similarity = similarity_limits[1];
+          // drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
+    }});
+  // const countryCodesURL = "https://raw.githubusercontent.com/daylight-lab/III/master/shared/data/country-codes/countries_codes_and_coordinates.csv";
+  // if (!includedCountries.includes(country)) {
+  //   return;
+  // }
+  // $.ajax( {
+  //   url: countryCodesURL,
+  //   type: "GET",
+  //   async: true,
+  //   dataType: "text",
+  //   success: function ( rawCCData ) {
+  //     var ccData = rawCCData.split(/\r?\n|\r/);
+  //     var currRow;
+  //     var name;
+  //     var cc3;
+  //     for (var i = 1; i < ccData.length; i++) {
+  //       currRow = ccData[i].split(", ");
+  //       name = currRow[0];
+  //       cc3 = currRow[2].slice(1, currRow[2].length - 1);
+  //       ccMap[name] = cc3;
+  //     }
+
+    //   $.ajax( {
+    //   url: "similarity_data/combined-similarities.json",
+    //   type: "GET",
+    //   contentType: "application/json; charset=utf-8",
+    //   async: true,
+    //   dataType: "json",
+    //   success: function ( inputData ) {
+    //       combined_similarities = inputData;
+    //       var fills = deriveColorScale(inputData);
+    //       var fillKeys = generateFillKeys(country, inputData);
+    //       getDomainData(country, inputData);
+    //       var basic_choropleth = new Datamap({
+    //         element: document.getElementById("basic_chloropleth"),
+    //         projection: 'mercator',
+    //         fills: fills,
+    //         data: fillKeys,
+    //         done: function(datamap) {
+    //           datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+    //               country = geography.properties.name;
+    //               if (!includedCountries.includes(country)) {
+    //                 return;
+    //               }
+    //               fillKeys = generateFillKeys(country, inputData);
+    //               datamap.updateChoropleth(fillKeys, {reset: true});
+    //               getDomainData(country, inputData);
+    //               document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+    //               similarity_limits = drawLegend(country, fills, fillKeys);
+    //               min_similarity = similarity_limits[0];
+    //               max_similarity = similarity_limits[1];
+    //               drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
+    //           });
+    //         },
+    //         geographyConfig: {
+    //           borderColor: function(data) {
+    //             return '#b1b1b1';
+    //           },
+    //           popupTemplate: function(geography, data) {
+    //             return;
+    //           },
+    //           highlightOnHover: false,
+    //         },
+    //       });
+    //       similarity_limits = drawLegend(country, fills, fillKeys);
+    //       min_similarity = similarity_limits[0];
+    //       max_similarity = similarity_limits[1];
+    //       drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
+    // }});
+  // }});
+}
+

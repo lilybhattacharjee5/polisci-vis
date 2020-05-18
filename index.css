@@ -129,3 +129,12 @@ input:checked + .slider:before {
   height: 500px;
   overflow-y: auto;
 }
+
+.content .content_elem {
+  display: flex;
+  flex-direction: row;
+}
+
+.mode_input {
+  padding-right: 30px;
+}

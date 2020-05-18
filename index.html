@@ -16,8 +16,9 @@
         <script src="datamaps.js"></script>
         <script src="local_country_variables/gdpr_countries.js"></script>
         <script src="local_country_variables/included_countries.js"></script>
+        <script src="local_country_variables/included_adversarial_countries.js"></script>
     </head> 
-    <body>
+    <body onload="input_load()">
         <h1 style>Internationally Blocked Domains Demo</h1>
         <div class="container">
           Click on a country to see shared censored website data in other countries across the world.
@@ -38,12 +39,24 @@
         <br />
         <div class="content" id="vis_mode">
           <div class="content_elem">
-            <label class="switch">
-              <input type="checkbox" onchange="toggleMode()">
-              <span class="slider round"></span>
-            </label>
+            <!-- <label class="switch"> -->
+              <div class="mode_input">
+                <input type="radio" id="world-map" name="mode", value="world-map" onchange="toggleMode(this.value)">
+                <label for="world-map"></label>World Map<br>
+              </div>
+              <div class="mode_input">
+                <input type="radio" id="force" name="mode", value="force" onchange="toggleMode(this.value)">
+                <label for="force"></label>Force</br>
+              </div>
+              <div class="mode_input">
+                <input type="radio" id="adversarial" name="mode", value="adversarial" onchange="toggleMode(this.value)">
+                <label for="adversarial"></label>Adversarial<br>
+              </div>
+              <!-- <input type="checkbox" onchange="toggleMode()"> -->
+              <!-- <span class="slider round"></span> -->
+            <!-- </label> -->
           </div>
-          <div class="content_elem" id="curr_mode">World Map</div>
+          <!-- <div class="content_elem" id="curr_mode">World Map</div> -->
         </div>
         <b><p class="content" id="selected_country"></p></b>
         <div class="content" id="domain_table"></div>

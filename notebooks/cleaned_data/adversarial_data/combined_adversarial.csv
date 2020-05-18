@@ -1,0 +1,323 @@
+,Country,URL Country,Number of Domains Blocked
+0,China,Andorra,1
+1,China,United Arab Emirates,6
+2,China,Afghanistan,2
+3,China,Angola,1
+4,China,Argentina,1
+5,China,Austria,2
+6,China,Australia,32
+7,China,Aruba,1
+8,China,Belgium,11
+9,China,Bulgaria,1
+10,China,Bermuda,2
+11,China,Brazil,6
+12,China,Bahamas,25
+13,China,Belarus,1
+14,China,Canada,270
+15,China,Switzerland,11
+16,China,China,943
+17,China,Colombia,4
+18,China,Cyprus,1
+19,China,Czechia,11
+20,China,Germany,42
+21,China,Denmark,3
+22,China,Egypt,2
+23,China,Spain,10
+24,China,Finland,2
+25,China,France,60
+26,China,Gabon,1
+27,China,United Kingdom,93
+28,China,Gibraltar,1
+29,China,Greece,1
+30,China,Hong Kong,84
+31,China,Honduras,1
+32,China,Croatia,1
+33,China,Hungary,2
+34,China,Indonesia,9
+35,China,Ireland,3
+36,China,Israel,6
+37,China,India,46
+38,China,"Iran, Islamic Republic of",1
+39,China,Italy,6
+40,China,Jordan,3
+41,China,Japan,123
+42,China,Kenya,2
+43,China,Cambodia,2
+44,China,Saint Kitts and Nevis,14
+45,China,"Korea, Republic of",41
+46,China,Cayman Islands,83
+47,China,Luxembourg,6
+48,China,Latvia,1
+49,China,"Moldova, Republic of",40
+50,China,Macao,4
+51,China,Malta,7
+52,China,Mexico,3
+53,China,Malaysia,778
+54,China,Netherlands,15
+55,China,Norway,7
+56,China,New Zealand,8
+57,China,Panama,145
+58,China,Philippines,2
+59,China,Pakistan,4
+60,China,"Palestine, State of",2
+61,China,Paraguay,1
+62,China,Qatar,1
+63,China,Russian Federation,12
+64,China,Saudi Arabia,2
+65,China,Seychelles,2
+66,China,Sweden,7
+67,China,Singapore,5
+68,China,Slovenia,2
+69,China,Slovakia,1
+70,China,Thailand,11
+71,China,Turkey,3
+72,China,"Taiwan, Province of China",21
+73,China,Ukraine,3
+74,China,United States,3485
+75,China,Uruguay,1
+76,China,"Virgin Islands, British",3
+77,China,Viet Nam,222
+78,China,South Africa,4
+79,China,Zimbabwe,1
+0,GDPR,Canada,19
+1,GDPR,China,2
+2,GDPR,United Kingdom,1
+3,GDPR,Guam,1
+4,GDPR,India,1
+5,GDPR,Cayman Islands,1
+6,GDPR,Panama,5
+7,GDPR,Pakistan,1
+8,GDPR,Puerto Rico,1
+9,GDPR,United States,477
+10,GDPR,"Virgin Islands, U.S.",1
+0,India,Bahamas,3
+1,India,Canada,3
+2,India,France,1
+3,India,Panama,1
+0,Iraq,China,1
+1,Iraq,Spain,1
+2,Iraq,France,1
+3,Iraq,Greece,1
+4,Iraq,Jordan,2
+5,Iraq,Seychelles,1
+6,Iraq,United States,5
+0,Pakistan,Australia,2
+1,Pakistan,Bahamas,8
+2,Pakistan,Canada,15
+3,Pakistan,China,14
+4,Pakistan,Czechia,2
+5,Pakistan,Denmark,2
+6,Pakistan,Finland,1
+7,Pakistan,France,4
+8,Pakistan,United Kingdom,10
+9,Pakistan,Hong Kong,3
+10,Pakistan,Israel,2
+11,Pakistan,India,1
+12,Pakistan,Italy,1
+13,Pakistan,Japan,3
+14,Pakistan,Cayman Islands,4
+15,Pakistan,Latvia,2
+16,Pakistan,Malaysia,1
+17,Pakistan,Panama,18
+18,Pakistan,Poland,1
+19,Pakistan,Romania,3
+20,Pakistan,Russian Federation,1
+21,Pakistan,Seychelles,1
+22,Pakistan,Singapore,2
+23,Pakistan,Turkey,3
+24,Pakistan,United States,178
+25,Pakistan,Viet Nam,1
+0,Russia,Andorra,1
+1,Russia,Antigua and Barbuda,4
+2,Russia,Austria,4
+3,Russia,Australia,3
+4,Russia,Belgium,3
+5,Russia,Brazil,1
+6,Russia,Bahamas,68
+7,Russia,Belarus,3
+8,Russia,Belize,1
+9,Russia,Canada,62
+10,Russia,Switzerland,2
+11,Russia,China,192
+12,Russia,Curaçao,9
+13,Russia,Cyprus,29
+14,Russia,Czechia,4
+15,Russia,Germany,1
+16,Russia,Dominica,1
+17,Russia,Estonia,3
+18,Russia,Spain,4
+19,Russia,France,53
+20,Russia,United Kingdom,26
+21,Russia,Gibraltar,32
+22,Russia,Greece,1
+23,Russia,Hong Kong,6
+24,Russia,Indonesia,4
+25,Russia,Ireland,2
+26,Russia,Israel,4
+27,Russia,Isle of Man,3
+28,Russia,India,19
+29,Russia,Italy,1
+30,Russia,Jersey,3
+31,Russia,Japan,13
+32,Russia,"Korea, Republic of",5
+33,Russia,Kuwait,1
+34,Russia,Cayman Islands,15
+35,Russia,Kazakhstan,10
+36,Russia,Lithuania,5
+37,Russia,Luxembourg,3
+38,Russia,Latvia,3
+39,Russia,"Moldova, Republic of",2
+40,Russia,Malta,7
+41,Russia,Mauritius,1
+42,Russia,Malaysia,2
+43,Russia,Netherlands,36
+44,Russia,Norway,6
+45,Russia,Nauru,1
+46,Russia,Panama,53
+47,Russia,Portugal,43
+48,Russia,Romania,2
+49,Russia,Russian Federation,99
+50,Russia,Seychelles,18
+51,Russia,Sweden,16
+52,Russia,Thailand,5
+53,Russia,Ukraine,44
+54,Russia,United States,588
+55,Russia,Uzbekistan,18
+56,Russia,"Virgin Islands, British",23
+0,Saudi Arabia,Argentina,2
+1,Saudi Arabia,Australia,1
+2,Saudi Arabia,Bulgaria,1
+3,Saudi Arabia,Bahamas,2
+4,Saudi Arabia,Canada,78
+5,Saudi Arabia,Switzerland,1
+6,Saudi Arabia,China,4
+7,Saudi Arabia,Czechia,3
+8,Saudi Arabia,Germany,1
+9,Saudi Arabia,France,3
+10,Saudi Arabia,United Kingdom,40
+11,Saudi Arabia,India,4
+12,Saudi Arabia,Italy,1
+13,Saudi Arabia,Japan,12
+14,Saudi Arabia,Saint Kitts and Nevis,1
+15,Saudi Arabia,Cayman Islands,8
+16,Saudi Arabia,Mexico,1
+17,Saudi Arabia,Malaysia,2
+18,Saudi Arabia,Netherlands,2
+19,Saudi Arabia,Panama,6
+20,Saudi Arabia,Philippines,2
+21,Saudi Arabia,Saudi Arabia,1
+22,Saudi Arabia,Sweden,8
+23,Saudi Arabia,Singapore,23
+24,Saudi Arabia,Turks and Caicos Islands,1
+25,Saudi Arabia,Thailand,1
+26,Saudi Arabia,Ukraine,1
+27,Saudi Arabia,United States,494
+0,United Arab Emirates,Andorra,2
+1,United Arab Emirates,United Arab Emirates,22
+2,United Arab Emirates,Afghanistan,2
+3,United Arab Emirates,Albania,1
+4,United Arab Emirates,Argentina,6
+5,United Arab Emirates,Austria,4
+6,United Arab Emirates,Australia,46
+7,United Arab Emirates,Bosnia and Herzegovina,2
+8,United Arab Emirates,Barbados,4
+9,United Arab Emirates,Bangladesh,7
+10,United Arab Emirates,Belgium,4
+11,United Arab Emirates,Bulgaria,17
+12,United Arab Emirates,Bahrain,4
+13,United Arab Emirates,Brazil,11
+14,United Arab Emirates,Bahamas,57
+15,United Arab Emirates,Bhutan,1
+16,United Arab Emirates,Belarus,1
+17,United Arab Emirates,Belize,1
+18,United Arab Emirates,Canada,240
+19,United Arab Emirates,Switzerland,35
+20,United Arab Emirates,China,402
+21,United Arab Emirates,Colombia,4
+22,United Arab Emirates,Costa Rica,1
+23,United Arab Emirates,Cyprus,128
+24,United Arab Emirates,Czechia,30
+25,United Arab Emirates,Germany,60
+26,United Arab Emirates,Denmark,9
+27,United Arab Emirates,Dominica,1
+28,United Arab Emirates,Algeria,2
+29,United Arab Emirates,Ecuador,2
+30,United Arab Emirates,Estonia,6
+31,United Arab Emirates,Egypt,7
+32,United Arab Emirates,Spain,65
+33,United Arab Emirates,Finland,4
+34,United Arab Emirates,France,216
+35,United Arab Emirates,United Kingdom,107
+36,United Arab Emirates,Georgia,6
+37,United Arab Emirates,Guernsey,1
+38,United Arab Emirates,Ghana,1
+39,United Arab Emirates,Gibraltar,3
+40,United Arab Emirates,Greece,5
+41,United Arab Emirates,Guam,1
+42,United Arab Emirates,Hong Kong,55
+43,United Arab Emirates,Croatia,5
+44,United Arab Emirates,Hungary,6
+45,United Arab Emirates,Indonesia,19
+46,United Arab Emirates,Ireland,6
+47,United Arab Emirates,Israel,41
+48,United Arab Emirates,India,173
+49,United Arab Emirates,Iraq,2
+50,United Arab Emirates,"Iran, Islamic Republic of",1
+51,United Arab Emirates,Italy,16
+52,United Arab Emirates,Jordan,14
+53,United Arab Emirates,Japan,114
+54,United Arab Emirates,Cambodia,4
+55,United Arab Emirates,Saint Kitts and Nevis,17
+56,United Arab Emirates,"Korea, Republic of",20
+57,United Arab Emirates,Kuwait,21
+58,United Arab Emirates,Cayman Islands,40
+59,United Arab Emirates,Lebanon,5
+60,United Arab Emirates,Lithuania,10
+61,United Arab Emirates,Luxembourg,39
+62,United Arab Emirates,Latvia,3
+63,United Arab Emirates,Morocco,4
+64,United Arab Emirates,"Moldova, Republic of",1
+65,United Arab Emirates,Macao,2
+66,United Arab Emirates,Malta,4
+67,United Arab Emirates,Mexico,3
+68,United Arab Emirates,Malaysia,52
+69,United Arab Emirates,Netherlands,100
+70,United Arab Emirates,Norway,6
+71,United Arab Emirates,Nepal,2
+72,United Arab Emirates,New Zealand,4
+73,United Arab Emirates,Panama,346
+74,United Arab Emirates,Peru,2
+75,United Arab Emirates,Philippines,4
+76,United Arab Emirates,Pakistan,12
+77,United Arab Emirates,Poland,1
+78,United Arab Emirates,Puerto Rico,1
+79,United Arab Emirates,Portugal,1
+80,United Arab Emirates,Palau,2
+81,United Arab Emirates,Paraguay,1
+82,United Arab Emirates,Qatar,1
+83,United Arab Emirates,Romania,34
+84,United Arab Emirates,Russian Federation,102
+85,United Arab Emirates,Saudi Arabia,14
+86,United Arab Emirates,Seychelles,21
+87,United Arab Emirates,Sweden,9
+88,United Arab Emirates,Singapore,16
+89,United Arab Emirates,Slovenia,5
+90,United Arab Emirates,Slovakia,2
+91,United Arab Emirates,Sierra Leone,1
+92,United Arab Emirates,El Salvador,1
+93,United Arab Emirates,Sint Maarten (Dutch part),1
+94,United Arab Emirates,Turks and Caicos Islands,1
+95,United Arab Emirates,Thailand,10
+96,United Arab Emirates,Turkey,40
+97,United Arab Emirates,"Taiwan, Province of China",5
+98,United Arab Emirates,Ukraine,25
+99,United Arab Emirates,United States Minor Outlying Islands,1
+100,United Arab Emirates,United States,4425
+101,United Arab Emirates,Uruguay,2
+102,United Arab Emirates,Uzbekistan,1
+103,United Arab Emirates,Saint Vincent and the Grenadines,2
+104,United Arab Emirates,"Virgin Islands, British",1326
+105,United Arab Emirates,Viet Nam,23
+106,United Arab Emirates,Vanuatu,1
+107,United Arab Emirates,Yemen,2
+108,United Arab Emirates,South Africa,1
