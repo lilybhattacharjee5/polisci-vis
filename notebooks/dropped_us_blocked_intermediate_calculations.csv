@@ -1,25 +1,2257 @@
 ,Country 1,Country 2,Count
 0,China,Hong Kong,2
-1,"Korea, Republic of",Turkey,32
-2,China,India,10
-3,China,Malaysia,10
-4,China,Viet Nam,10
-5,China,South Africa,10
-6,India,Malaysia,10
-7,India,Viet Nam,10
-8,India,South Africa,10
-9,Malaysia,Viet Nam,10
-10,Malaysia,South Africa,10
-11,Viet Nam,South Africa,10
-12,Japan,"Korea, Republic of",2
-13,Bulgaria,India,4
-14,Bulgaria,Netherlands,4
-15,Bulgaria,New Zealand,4
-16,India,Netherlands,4
-17,India,New Zealand,4
-18,Netherlands,New Zealand,4
-19,Hungary,New Zealand,2
-20,China,Netherlands,2
-21,India,Russian Federation,3
-22,India,Turkey,3
-23,Russian Federation,Turkey,3
+1,Hong Kong,China,2
+2,"Korea, Republic of",Turkey,32
+3,Turkey,"Korea, Republic of",32
+4,China,India,10
+5,China,Malaysia,10
+6,China,Viet Nam,10
+7,China,South Africa,10
+8,India,China,10
+9,India,Malaysia,10
+10,India,Viet Nam,10
+11,India,South Africa,10
+12,Malaysia,China,10
+13,Malaysia,India,10
+14,Malaysia,Viet Nam,10
+15,Malaysia,South Africa,10
+16,Viet Nam,China,10
+17,Viet Nam,India,10
+18,Viet Nam,Malaysia,10
+19,Viet Nam,South Africa,10
+20,South Africa,China,10
+21,South Africa,India,10
+22,South Africa,Malaysia,10
+23,South Africa,Viet Nam,10
+24,Japan,"Korea, Republic of",2
+25,"Korea, Republic of",Japan,2
+26,Bulgaria,India,4
+27,Bulgaria,Netherlands,4
+28,Bulgaria,New Zealand,4
+29,India,Bulgaria,4
+30,India,Netherlands,4
+31,India,New Zealand,4
+32,Netherlands,Bulgaria,4
+33,Netherlands,India,4
+34,Netherlands,New Zealand,4
+35,New Zealand,Bulgaria,4
+36,New Zealand,India,4
+37,New Zealand,Netherlands,4
+38,Hungary,New Zealand,2
+39,New Zealand,Hungary,2
+40,China,Netherlands,2
+41,Netherlands,China,2
+42,India,Russian Federation,3
+43,India,Turkey,3
+44,Russian Federation,India,3
+45,Russian Federation,Turkey,3
+46,Turkey,India,3
+47,Turkey,Russian Federation,3
+48,United States,"Korea, Republic of",0
+49,United States,Spain,0
+50,United States,South Africa,0
+51,United States,Czechia,0
+52,United States,Poland,0
+53,United States,Malaysia,0
+54,United States,Russian Federation,0
+55,United States,China,0
+56,United States,"Taiwan, Province of China",0
+57,United States,Bulgaria,0
+58,United States,Hong Kong,0
+59,United States,Romania,0
+60,United States,Peru,0
+61,United States,Hungary,0
+62,United States,Norway,0
+63,United States,Mexico,0
+64,United States,Ukraine,0
+65,United States,Netherlands,0
+66,United States,Viet Nam,0
+67,United States,Japan,0
+68,United States,Lithuania,0
+69,United States,Serbia,0
+70,United States,Australia,0
+71,United States,Kenya,0
+72,United States,Slovakia,0
+73,United States,India,0
+74,United States,Chile,0
+75,United States,Canada,0
+76,United States,Liechtenstein,0
+77,United States,Singapore,0
+78,United States,Indonesia,0
+79,United States,New Zealand,0
+80,United States,Luxembourg,0
+81,United States,Belize,0
+82,United States,Colombia,0
+83,United States,Turkey,0
+84,United States,Brazil,0
+85,United States,Sweden,0
+86,United States,Iceland,0
+87,United States,Finland,0
+88,United States,Algeria,0
+89,United States,Portugal,0
+90,United States,Denmark,0
+91,United States,Israel,0
+92,United States,"Moldova, Republic of",0
+93,United States,Austria,0
+94,United States,Seychelles,0
+95,"Korea, Republic of",United States,0
+96,"Korea, Republic of",Spain,0
+97,"Korea, Republic of",South Africa,0
+98,"Korea, Republic of",Czechia,0
+99,"Korea, Republic of",Poland,0
+100,"Korea, Republic of",Malaysia,0
+101,"Korea, Republic of",Russian Federation,0
+102,"Korea, Republic of",China,0
+103,"Korea, Republic of","Taiwan, Province of China",0
+104,"Korea, Republic of",Bulgaria,0
+105,"Korea, Republic of",Hong Kong,0
+106,"Korea, Republic of",Romania,0
+107,"Korea, Republic of",Peru,0
+108,"Korea, Republic of",Hungary,0
+109,"Korea, Republic of",Norway,0
+110,"Korea, Republic of",Mexico,0
+111,"Korea, Republic of",Ukraine,0
+112,"Korea, Republic of",Netherlands,0
+113,"Korea, Republic of",Viet Nam,0
+114,"Korea, Republic of",Lithuania,0
+115,"Korea, Republic of",Serbia,0
+116,"Korea, Republic of",Australia,0
+117,"Korea, Republic of",Kenya,0
+118,"Korea, Republic of",Slovakia,0
+119,"Korea, Republic of",India,0
+120,"Korea, Republic of",Chile,0
+121,"Korea, Republic of",Canada,0
+122,"Korea, Republic of",Liechtenstein,0
+123,"Korea, Republic of",Singapore,0
+124,"Korea, Republic of",Indonesia,0
+125,"Korea, Republic of",New Zealand,0
+126,"Korea, Republic of",Luxembourg,0
+127,"Korea, Republic of",Belize,0
+128,"Korea, Republic of",Colombia,0
+129,"Korea, Republic of",Brazil,0
+130,"Korea, Republic of",Sweden,0
+131,"Korea, Republic of",Iceland,0
+132,"Korea, Republic of",Finland,0
+133,"Korea, Republic of",Algeria,0
+134,"Korea, Republic of",Portugal,0
+135,"Korea, Republic of",Denmark,0
+136,"Korea, Republic of",Israel,0
+137,"Korea, Republic of","Moldova, Republic of",0
+138,"Korea, Republic of",Austria,0
+139,"Korea, Republic of",Seychelles,0
+140,Spain,United States,0
+141,Spain,"Korea, Republic of",0
+142,Spain,South Africa,0
+143,Spain,Czechia,0
+144,Spain,Poland,0
+145,Spain,Malaysia,0
+146,Spain,Russian Federation,0
+147,Spain,China,0
+148,Spain,"Taiwan, Province of China",0
+149,Spain,Bulgaria,0
+150,Spain,Hong Kong,0
+151,Spain,Romania,0
+152,Spain,Peru,0
+153,Spain,Hungary,0
+154,Spain,Norway,0
+155,Spain,Mexico,0
+156,Spain,Ukraine,0
+157,Spain,Netherlands,0
+158,Spain,Viet Nam,0
+159,Spain,Japan,0
+160,Spain,Lithuania,0
+161,Spain,Serbia,0
+162,Spain,Australia,0
+163,Spain,Kenya,0
+164,Spain,Slovakia,0
+165,Spain,India,0
+166,Spain,Chile,0
+167,Spain,Canada,0
+168,Spain,Liechtenstein,0
+169,Spain,Singapore,0
+170,Spain,Indonesia,0
+171,Spain,New Zealand,0
+172,Spain,Luxembourg,0
+173,Spain,Belize,0
+174,Spain,Colombia,0
+175,Spain,Turkey,0
+176,Spain,Brazil,0
+177,Spain,Sweden,0
+178,Spain,Iceland,0
+179,Spain,Finland,0
+180,Spain,Algeria,0
+181,Spain,Portugal,0
+182,Spain,Denmark,0
+183,Spain,Israel,0
+184,Spain,"Moldova, Republic of",0
+185,Spain,Austria,0
+186,Spain,Seychelles,0
+187,South Africa,United States,0
+188,South Africa,"Korea, Republic of",0
+189,South Africa,Spain,0
+190,South Africa,Czechia,0
+191,South Africa,Poland,0
+192,South Africa,Russian Federation,0
+193,South Africa,"Taiwan, Province of China",0
+194,South Africa,Bulgaria,0
+195,South Africa,Hong Kong,0
+196,South Africa,Romania,0
+197,South Africa,Peru,0
+198,South Africa,Hungary,0
+199,South Africa,Norway,0
+200,South Africa,Mexico,0
+201,South Africa,Ukraine,0
+202,South Africa,Netherlands,0
+203,South Africa,Japan,0
+204,South Africa,Lithuania,0
+205,South Africa,Serbia,0
+206,South Africa,Australia,0
+207,South Africa,Kenya,0
+208,South Africa,Slovakia,0
+209,South Africa,Chile,0
+210,South Africa,Canada,0
+211,South Africa,Liechtenstein,0
+212,South Africa,Singapore,0
+213,South Africa,Indonesia,0
+214,South Africa,New Zealand,0
+215,South Africa,Luxembourg,0
+216,South Africa,Belize,0
+217,South Africa,Colombia,0
+218,South Africa,Turkey,0
+219,South Africa,Brazil,0
+220,South Africa,Sweden,0
+221,South Africa,Iceland,0
+222,South Africa,Finland,0
+223,South Africa,Algeria,0
+224,South Africa,Portugal,0
+225,South Africa,Denmark,0
+226,South Africa,Israel,0
+227,South Africa,"Moldova, Republic of",0
+228,South Africa,Austria,0
+229,South Africa,Seychelles,0
+230,Czechia,United States,0
+231,Czechia,"Korea, Republic of",0
+232,Czechia,Spain,0
+233,Czechia,South Africa,0
+234,Czechia,Poland,0
+235,Czechia,Malaysia,0
+236,Czechia,Russian Federation,0
+237,Czechia,China,0
+238,Czechia,"Taiwan, Province of China",0
+239,Czechia,Bulgaria,0
+240,Czechia,Hong Kong,0
+241,Czechia,Romania,0
+242,Czechia,Peru,0
+243,Czechia,Hungary,0
+244,Czechia,Norway,0
+245,Czechia,Mexico,0
+246,Czechia,Ukraine,0
+247,Czechia,Netherlands,0
+248,Czechia,Viet Nam,0
+249,Czechia,Japan,0
+250,Czechia,Lithuania,0
+251,Czechia,Serbia,0
+252,Czechia,Australia,0
+253,Czechia,Kenya,0
+254,Czechia,Slovakia,0
+255,Czechia,India,0
+256,Czechia,Chile,0
+257,Czechia,Canada,0
+258,Czechia,Liechtenstein,0
+259,Czechia,Singapore,0
+260,Czechia,Indonesia,0
+261,Czechia,New Zealand,0
+262,Czechia,Luxembourg,0
+263,Czechia,Belize,0
+264,Czechia,Colombia,0
+265,Czechia,Turkey,0
+266,Czechia,Brazil,0
+267,Czechia,Sweden,0
+268,Czechia,Iceland,0
+269,Czechia,Finland,0
+270,Czechia,Algeria,0
+271,Czechia,Portugal,0
+272,Czechia,Denmark,0
+273,Czechia,Israel,0
+274,Czechia,"Moldova, Republic of",0
+275,Czechia,Austria,0
+276,Czechia,Seychelles,0
+277,Poland,United States,0
+278,Poland,"Korea, Republic of",0
+279,Poland,Spain,0
+280,Poland,South Africa,0
+281,Poland,Czechia,0
+282,Poland,Malaysia,0
+283,Poland,Russian Federation,0
+284,Poland,China,0
+285,Poland,"Taiwan, Province of China",0
+286,Poland,Bulgaria,0
+287,Poland,Hong Kong,0
+288,Poland,Romania,0
+289,Poland,Peru,0
+290,Poland,Hungary,0
+291,Poland,Norway,0
+292,Poland,Mexico,0
+293,Poland,Ukraine,0
+294,Poland,Netherlands,0
+295,Poland,Viet Nam,0
+296,Poland,Japan,0
+297,Poland,Lithuania,0
+298,Poland,Serbia,0
+299,Poland,Australia,0
+300,Poland,Kenya,0
+301,Poland,Slovakia,0
+302,Poland,India,0
+303,Poland,Chile,0
+304,Poland,Canada,0
+305,Poland,Liechtenstein,0
+306,Poland,Singapore,0
+307,Poland,Indonesia,0
+308,Poland,New Zealand,0
+309,Poland,Luxembourg,0
+310,Poland,Belize,0
+311,Poland,Colombia,0
+312,Poland,Turkey,0
+313,Poland,Brazil,0
+314,Poland,Sweden,0
+315,Poland,Iceland,0
+316,Poland,Finland,0
+317,Poland,Algeria,0
+318,Poland,Portugal,0
+319,Poland,Denmark,0
+320,Poland,Israel,0
+321,Poland,"Moldova, Republic of",0
+322,Poland,Austria,0
+323,Poland,Seychelles,0
+324,Malaysia,United States,0
+325,Malaysia,"Korea, Republic of",0
+326,Malaysia,Spain,0
+327,Malaysia,Czechia,0
+328,Malaysia,Poland,0
+329,Malaysia,Russian Federation,0
+330,Malaysia,"Taiwan, Province of China",0
+331,Malaysia,Bulgaria,0
+332,Malaysia,Hong Kong,0
+333,Malaysia,Romania,0
+334,Malaysia,Peru,0
+335,Malaysia,Hungary,0
+336,Malaysia,Norway,0
+337,Malaysia,Mexico,0
+338,Malaysia,Ukraine,0
+339,Malaysia,Netherlands,0
+340,Malaysia,Japan,0
+341,Malaysia,Lithuania,0
+342,Malaysia,Serbia,0
+343,Malaysia,Australia,0
+344,Malaysia,Kenya,0
+345,Malaysia,Slovakia,0
+346,Malaysia,Chile,0
+347,Malaysia,Canada,0
+348,Malaysia,Liechtenstein,0
+349,Malaysia,Singapore,0
+350,Malaysia,Indonesia,0
+351,Malaysia,New Zealand,0
+352,Malaysia,Luxembourg,0
+353,Malaysia,Belize,0
+354,Malaysia,Colombia,0
+355,Malaysia,Turkey,0
+356,Malaysia,Brazil,0
+357,Malaysia,Sweden,0
+358,Malaysia,Iceland,0
+359,Malaysia,Finland,0
+360,Malaysia,Algeria,0
+361,Malaysia,Portugal,0
+362,Malaysia,Denmark,0
+363,Malaysia,Israel,0
+364,Malaysia,"Moldova, Republic of",0
+365,Malaysia,Austria,0
+366,Malaysia,Seychelles,0
+367,Russian Federation,United States,0
+368,Russian Federation,"Korea, Republic of",0
+369,Russian Federation,Spain,0
+370,Russian Federation,South Africa,0
+371,Russian Federation,Czechia,0
+372,Russian Federation,Poland,0
+373,Russian Federation,Malaysia,0
+374,Russian Federation,China,0
+375,Russian Federation,"Taiwan, Province of China",0
+376,Russian Federation,Bulgaria,0
+377,Russian Federation,Hong Kong,0
+378,Russian Federation,Romania,0
+379,Russian Federation,Peru,0
+380,Russian Federation,Hungary,0
+381,Russian Federation,Norway,0
+382,Russian Federation,Mexico,0
+383,Russian Federation,Ukraine,0
+384,Russian Federation,Netherlands,0
+385,Russian Federation,Viet Nam,0
+386,Russian Federation,Japan,0
+387,Russian Federation,Lithuania,0
+388,Russian Federation,Serbia,0
+389,Russian Federation,Australia,0
+390,Russian Federation,Kenya,0
+391,Russian Federation,Slovakia,0
+392,Russian Federation,Chile,0
+393,Russian Federation,Canada,0
+394,Russian Federation,Liechtenstein,0
+395,Russian Federation,Singapore,0
+396,Russian Federation,Indonesia,0
+397,Russian Federation,New Zealand,0
+398,Russian Federation,Luxembourg,0
+399,Russian Federation,Belize,0
+400,Russian Federation,Colombia,0
+401,Russian Federation,Brazil,0
+402,Russian Federation,Sweden,0
+403,Russian Federation,Iceland,0
+404,Russian Federation,Finland,0
+405,Russian Federation,Algeria,0
+406,Russian Federation,Portugal,0
+407,Russian Federation,Denmark,0
+408,Russian Federation,Israel,0
+409,Russian Federation,"Moldova, Republic of",0
+410,Russian Federation,Austria,0
+411,Russian Federation,Seychelles,0
+412,China,United States,0
+413,China,"Korea, Republic of",0
+414,China,Spain,0
+415,China,Czechia,0
+416,China,Poland,0
+417,China,Russian Federation,0
+418,China,"Taiwan, Province of China",0
+419,China,Bulgaria,0
+420,China,Romania,0
+421,China,Peru,0
+422,China,Hungary,0
+423,China,Norway,0
+424,China,Mexico,0
+425,China,Ukraine,0
+426,China,Japan,0
+427,China,Lithuania,0
+428,China,Serbia,0
+429,China,Australia,0
+430,China,Kenya,0
+431,China,Slovakia,0
+432,China,Chile,0
+433,China,Canada,0
+434,China,Liechtenstein,0
+435,China,Singapore,0
+436,China,Indonesia,0
+437,China,New Zealand,0
+438,China,Luxembourg,0
+439,China,Belize,0
+440,China,Colombia,0
+441,China,Turkey,0
+442,China,Brazil,0
+443,China,Sweden,0
+444,China,Iceland,0
+445,China,Finland,0
+446,China,Algeria,0
+447,China,Portugal,0
+448,China,Denmark,0
+449,China,Israel,0
+450,China,"Moldova, Republic of",0
+451,China,Austria,0
+452,China,Seychelles,0
+453,"Taiwan, Province of China",United States,0
+454,"Taiwan, Province of China","Korea, Republic of",0
+455,"Taiwan, Province of China",Spain,0
+456,"Taiwan, Province of China",South Africa,0
+457,"Taiwan, Province of China",Czechia,0
+458,"Taiwan, Province of China",Poland,0
+459,"Taiwan, Province of China",Malaysia,0
+460,"Taiwan, Province of China",Russian Federation,0
+461,"Taiwan, Province of China",China,0
+462,"Taiwan, Province of China",Bulgaria,0
+463,"Taiwan, Province of China",Hong Kong,0
+464,"Taiwan, Province of China",Romania,0
+465,"Taiwan, Province of China",Peru,0
+466,"Taiwan, Province of China",Hungary,0
+467,"Taiwan, Province of China",Norway,0
+468,"Taiwan, Province of China",Mexico,0
+469,"Taiwan, Province of China",Ukraine,0
+470,"Taiwan, Province of China",Netherlands,0
+471,"Taiwan, Province of China",Viet Nam,0
+472,"Taiwan, Province of China",Japan,0
+473,"Taiwan, Province of China",Lithuania,0
+474,"Taiwan, Province of China",Serbia,0
+475,"Taiwan, Province of China",Australia,0
+476,"Taiwan, Province of China",Kenya,0
+477,"Taiwan, Province of China",Slovakia,0
+478,"Taiwan, Province of China",India,0
+479,"Taiwan, Province of China",Chile,0
+480,"Taiwan, Province of China",Canada,0
+481,"Taiwan, Province of China",Liechtenstein,0
+482,"Taiwan, Province of China",Singapore,0
+483,"Taiwan, Province of China",Indonesia,0
+484,"Taiwan, Province of China",New Zealand,0
+485,"Taiwan, Province of China",Luxembourg,0
+486,"Taiwan, Province of China",Belize,0
+487,"Taiwan, Province of China",Colombia,0
+488,"Taiwan, Province of China",Turkey,0
+489,"Taiwan, Province of China",Brazil,0
+490,"Taiwan, Province of China",Sweden,0
+491,"Taiwan, Province of China",Iceland,0
+492,"Taiwan, Province of China",Finland,0
+493,"Taiwan, Province of China",Algeria,0
+494,"Taiwan, Province of China",Portugal,0
+495,"Taiwan, Province of China",Denmark,0
+496,"Taiwan, Province of China",Israel,0
+497,"Taiwan, Province of China","Moldova, Republic of",0
+498,"Taiwan, Province of China",Austria,0
+499,"Taiwan, Province of China",Seychelles,0
+500,Bulgaria,United States,0
+501,Bulgaria,"Korea, Republic of",0
+502,Bulgaria,Spain,0
+503,Bulgaria,South Africa,0
+504,Bulgaria,Czechia,0
+505,Bulgaria,Poland,0
+506,Bulgaria,Malaysia,0
+507,Bulgaria,Russian Federation,0
+508,Bulgaria,China,0
+509,Bulgaria,"Taiwan, Province of China",0
+510,Bulgaria,Hong Kong,0
+511,Bulgaria,Romania,0
+512,Bulgaria,Peru,0
+513,Bulgaria,Hungary,0
+514,Bulgaria,Norway,0
+515,Bulgaria,Mexico,0
+516,Bulgaria,Ukraine,0
+517,Bulgaria,Viet Nam,0
+518,Bulgaria,Japan,0
+519,Bulgaria,Lithuania,0
+520,Bulgaria,Serbia,0
+521,Bulgaria,Australia,0
+522,Bulgaria,Kenya,0
+523,Bulgaria,Slovakia,0
+524,Bulgaria,Chile,0
+525,Bulgaria,Canada,0
+526,Bulgaria,Liechtenstein,0
+527,Bulgaria,Singapore,0
+528,Bulgaria,Indonesia,0
+529,Bulgaria,Luxembourg,0
+530,Bulgaria,Belize,0
+531,Bulgaria,Colombia,0
+532,Bulgaria,Turkey,0
+533,Bulgaria,Brazil,0
+534,Bulgaria,Sweden,0
+535,Bulgaria,Iceland,0
+536,Bulgaria,Finland,0
+537,Bulgaria,Algeria,0
+538,Bulgaria,Portugal,0
+539,Bulgaria,Denmark,0
+540,Bulgaria,Israel,0
+541,Bulgaria,"Moldova, Republic of",0
+542,Bulgaria,Austria,0
+543,Bulgaria,Seychelles,0
+544,Hong Kong,United States,0
+545,Hong Kong,"Korea, Republic of",0
+546,Hong Kong,Spain,0
+547,Hong Kong,South Africa,0
+548,Hong Kong,Czechia,0
+549,Hong Kong,Poland,0
+550,Hong Kong,Malaysia,0
+551,Hong Kong,Russian Federation,0
+552,Hong Kong,"Taiwan, Province of China",0
+553,Hong Kong,Bulgaria,0
+554,Hong Kong,Romania,0
+555,Hong Kong,Peru,0
+556,Hong Kong,Hungary,0
+557,Hong Kong,Norway,0
+558,Hong Kong,Mexico,0
+559,Hong Kong,Ukraine,0
+560,Hong Kong,Netherlands,0
+561,Hong Kong,Viet Nam,0
+562,Hong Kong,Japan,0
+563,Hong Kong,Lithuania,0
+564,Hong Kong,Serbia,0
+565,Hong Kong,Australia,0
+566,Hong Kong,Kenya,0
+567,Hong Kong,Slovakia,0
+568,Hong Kong,India,0
+569,Hong Kong,Chile,0
+570,Hong Kong,Canada,0
+571,Hong Kong,Liechtenstein,0
+572,Hong Kong,Singapore,0
+573,Hong Kong,Indonesia,0
+574,Hong Kong,New Zealand,0
+575,Hong Kong,Luxembourg,0
+576,Hong Kong,Belize,0
+577,Hong Kong,Colombia,0
+578,Hong Kong,Turkey,0
+579,Hong Kong,Brazil,0
+580,Hong Kong,Sweden,0
+581,Hong Kong,Iceland,0
+582,Hong Kong,Finland,0
+583,Hong Kong,Algeria,0
+584,Hong Kong,Portugal,0
+585,Hong Kong,Denmark,0
+586,Hong Kong,Israel,0
+587,Hong Kong,"Moldova, Republic of",0
+588,Hong Kong,Austria,0
+589,Hong Kong,Seychelles,0
+590,Romania,United States,0
+591,Romania,"Korea, Republic of",0
+592,Romania,Spain,0
+593,Romania,South Africa,0
+594,Romania,Czechia,0
+595,Romania,Poland,0
+596,Romania,Malaysia,0
+597,Romania,Russian Federation,0
+598,Romania,China,0
+599,Romania,"Taiwan, Province of China",0
+600,Romania,Bulgaria,0
+601,Romania,Hong Kong,0
+602,Romania,Peru,0
+603,Romania,Hungary,0
+604,Romania,Norway,0
+605,Romania,Mexico,0
+606,Romania,Ukraine,0
+607,Romania,Netherlands,0
+608,Romania,Viet Nam,0
+609,Romania,Japan,0
+610,Romania,Lithuania,0
+611,Romania,Serbia,0
+612,Romania,Australia,0
+613,Romania,Kenya,0
+614,Romania,Slovakia,0
+615,Romania,India,0
+616,Romania,Chile,0
+617,Romania,Canada,0
+618,Romania,Liechtenstein,0
+619,Romania,Singapore,0
+620,Romania,Indonesia,0
+621,Romania,New Zealand,0
+622,Romania,Luxembourg,0
+623,Romania,Belize,0
+624,Romania,Colombia,0
+625,Romania,Turkey,0
+626,Romania,Brazil,0
+627,Romania,Sweden,0
+628,Romania,Iceland,0
+629,Romania,Finland,0
+630,Romania,Algeria,0
+631,Romania,Portugal,0
+632,Romania,Denmark,0
+633,Romania,Israel,0
+634,Romania,"Moldova, Republic of",0
+635,Romania,Austria,0
+636,Romania,Seychelles,0
+637,Peru,United States,0
+638,Peru,"Korea, Republic of",0
+639,Peru,Spain,0
+640,Peru,South Africa,0
+641,Peru,Czechia,0
+642,Peru,Poland,0
+643,Peru,Malaysia,0
+644,Peru,Russian Federation,0
+645,Peru,China,0
+646,Peru,"Taiwan, Province of China",0
+647,Peru,Bulgaria,0
+648,Peru,Hong Kong,0
+649,Peru,Romania,0
+650,Peru,Hungary,0
+651,Peru,Norway,0
+652,Peru,Mexico,0
+653,Peru,Ukraine,0
+654,Peru,Netherlands,0
+655,Peru,Viet Nam,0
+656,Peru,Japan,0
+657,Peru,Lithuania,0
+658,Peru,Serbia,0
+659,Peru,Australia,0
+660,Peru,Kenya,0
+661,Peru,Slovakia,0
+662,Peru,India,0
+663,Peru,Chile,0
+664,Peru,Canada,0
+665,Peru,Liechtenstein,0
+666,Peru,Singapore,0
+667,Peru,Indonesia,0
+668,Peru,New Zealand,0
+669,Peru,Luxembourg,0
+670,Peru,Belize,0
+671,Peru,Colombia,0
+672,Peru,Turkey,0
+673,Peru,Brazil,0
+674,Peru,Sweden,0
+675,Peru,Iceland,0
+676,Peru,Finland,0
+677,Peru,Algeria,0
+678,Peru,Portugal,0
+679,Peru,Denmark,0
+680,Peru,Israel,0
+681,Peru,"Moldova, Republic of",0
+682,Peru,Austria,0
+683,Peru,Seychelles,0
+684,Hungary,United States,0
+685,Hungary,"Korea, Republic of",0
+686,Hungary,Spain,0
+687,Hungary,South Africa,0
+688,Hungary,Czechia,0
+689,Hungary,Poland,0
+690,Hungary,Malaysia,0
+691,Hungary,Russian Federation,0
+692,Hungary,China,0
+693,Hungary,"Taiwan, Province of China",0
+694,Hungary,Bulgaria,0
+695,Hungary,Hong Kong,0
+696,Hungary,Romania,0
+697,Hungary,Peru,0
+698,Hungary,Norway,0
+699,Hungary,Mexico,0
+700,Hungary,Ukraine,0
+701,Hungary,Netherlands,0
+702,Hungary,Viet Nam,0
+703,Hungary,Japan,0
+704,Hungary,Lithuania,0
+705,Hungary,Serbia,0
+706,Hungary,Australia,0
+707,Hungary,Kenya,0
+708,Hungary,Slovakia,0
+709,Hungary,India,0
+710,Hungary,Chile,0
+711,Hungary,Canada,0
+712,Hungary,Liechtenstein,0
+713,Hungary,Singapore,0
+714,Hungary,Indonesia,0
+715,Hungary,Luxembourg,0
+716,Hungary,Belize,0
+717,Hungary,Colombia,0
+718,Hungary,Turkey,0
+719,Hungary,Brazil,0
+720,Hungary,Sweden,0
+721,Hungary,Iceland,0
+722,Hungary,Finland,0
+723,Hungary,Algeria,0
+724,Hungary,Portugal,0
+725,Hungary,Denmark,0
+726,Hungary,Israel,0
+727,Hungary,"Moldova, Republic of",0
+728,Hungary,Austria,0
+729,Hungary,Seychelles,0
+730,Norway,United States,0
+731,Norway,"Korea, Republic of",0
+732,Norway,Spain,0
+733,Norway,South Africa,0
+734,Norway,Czechia,0
+735,Norway,Poland,0
+736,Norway,Malaysia,0
+737,Norway,Russian Federation,0
+738,Norway,China,0
+739,Norway,"Taiwan, Province of China",0
+740,Norway,Bulgaria,0
+741,Norway,Hong Kong,0
+742,Norway,Romania,0
+743,Norway,Peru,0
+744,Norway,Hungary,0
+745,Norway,Mexico,0
+746,Norway,Ukraine,0
+747,Norway,Netherlands,0
+748,Norway,Viet Nam,0
+749,Norway,Japan,0
+750,Norway,Lithuania,0
+751,Norway,Serbia,0
+752,Norway,Australia,0
+753,Norway,Kenya,0
+754,Norway,Slovakia,0
+755,Norway,India,0
+756,Norway,Chile,0
+757,Norway,Canada,0
+758,Norway,Liechtenstein,0
+759,Norway,Singapore,0
+760,Norway,Indonesia,0
+761,Norway,New Zealand,0
+762,Norway,Luxembourg,0
+763,Norway,Belize,0
+764,Norway,Colombia,0
+765,Norway,Turkey,0
+766,Norway,Brazil,0
+767,Norway,Sweden,0
+768,Norway,Iceland,0
+769,Norway,Finland,0
+770,Norway,Algeria,0
+771,Norway,Portugal,0
+772,Norway,Denmark,0
+773,Norway,Israel,0
+774,Norway,"Moldova, Republic of",0
+775,Norway,Austria,0
+776,Norway,Seychelles,0
+777,Mexico,United States,0
+778,Mexico,"Korea, Republic of",0
+779,Mexico,Spain,0
+780,Mexico,South Africa,0
+781,Mexico,Czechia,0
+782,Mexico,Poland,0
+783,Mexico,Malaysia,0
+784,Mexico,Russian Federation,0
+785,Mexico,China,0
+786,Mexico,"Taiwan, Province of China",0
+787,Mexico,Bulgaria,0
+788,Mexico,Hong Kong,0
+789,Mexico,Romania,0
+790,Mexico,Peru,0
+791,Mexico,Hungary,0
+792,Mexico,Norway,0
+793,Mexico,Ukraine,0
+794,Mexico,Netherlands,0
+795,Mexico,Viet Nam,0
+796,Mexico,Japan,0
+797,Mexico,Lithuania,0
+798,Mexico,Serbia,0
+799,Mexico,Australia,0
+800,Mexico,Kenya,0
+801,Mexico,Slovakia,0
+802,Mexico,India,0
+803,Mexico,Chile,0
+804,Mexico,Canada,0
+805,Mexico,Liechtenstein,0
+806,Mexico,Singapore,0
+807,Mexico,Indonesia,0
+808,Mexico,New Zealand,0
+809,Mexico,Luxembourg,0
+810,Mexico,Belize,0
+811,Mexico,Colombia,0
+812,Mexico,Turkey,0
+813,Mexico,Brazil,0
+814,Mexico,Sweden,0
+815,Mexico,Iceland,0
+816,Mexico,Finland,0
+817,Mexico,Algeria,0
+818,Mexico,Portugal,0
+819,Mexico,Denmark,0
+820,Mexico,Israel,0
+821,Mexico,"Moldova, Republic of",0
+822,Mexico,Austria,0
+823,Mexico,Seychelles,0
+824,Ukraine,United States,0
+825,Ukraine,"Korea, Republic of",0
+826,Ukraine,Spain,0
+827,Ukraine,South Africa,0
+828,Ukraine,Czechia,0
+829,Ukraine,Poland,0
+830,Ukraine,Malaysia,0
+831,Ukraine,Russian Federation,0
+832,Ukraine,China,0
+833,Ukraine,"Taiwan, Province of China",0
+834,Ukraine,Bulgaria,0
+835,Ukraine,Hong Kong,0
+836,Ukraine,Romania,0
+837,Ukraine,Peru,0
+838,Ukraine,Hungary,0
+839,Ukraine,Norway,0
+840,Ukraine,Mexico,0
+841,Ukraine,Netherlands,0
+842,Ukraine,Viet Nam,0
+843,Ukraine,Japan,0
+844,Ukraine,Lithuania,0
+845,Ukraine,Serbia,0
+846,Ukraine,Australia,0
+847,Ukraine,Kenya,0
+848,Ukraine,Slovakia,0
+849,Ukraine,India,0
+850,Ukraine,Chile,0
+851,Ukraine,Canada,0
+852,Ukraine,Liechtenstein,0
+853,Ukraine,Singapore,0
+854,Ukraine,Indonesia,0
+855,Ukraine,New Zealand,0
+856,Ukraine,Luxembourg,0
+857,Ukraine,Belize,0
+858,Ukraine,Colombia,0
+859,Ukraine,Turkey,0
+860,Ukraine,Brazil,0
+861,Ukraine,Sweden,0
+862,Ukraine,Iceland,0
+863,Ukraine,Finland,0
+864,Ukraine,Algeria,0
+865,Ukraine,Portugal,0
+866,Ukraine,Denmark,0
+867,Ukraine,Israel,0
+868,Ukraine,"Moldova, Republic of",0
+869,Ukraine,Austria,0
+870,Ukraine,Seychelles,0
+871,Netherlands,United States,0
+872,Netherlands,"Korea, Republic of",0
+873,Netherlands,Spain,0
+874,Netherlands,South Africa,0
+875,Netherlands,Czechia,0
+876,Netherlands,Poland,0
+877,Netherlands,Malaysia,0
+878,Netherlands,Russian Federation,0
+879,Netherlands,"Taiwan, Province of China",0
+880,Netherlands,Hong Kong,0
+881,Netherlands,Romania,0
+882,Netherlands,Peru,0
+883,Netherlands,Hungary,0
+884,Netherlands,Norway,0
+885,Netherlands,Mexico,0
+886,Netherlands,Ukraine,0
+887,Netherlands,Viet Nam,0
+888,Netherlands,Japan,0
+889,Netherlands,Lithuania,0
+890,Netherlands,Serbia,0
+891,Netherlands,Australia,0
+892,Netherlands,Kenya,0
+893,Netherlands,Slovakia,0
+894,Netherlands,Chile,0
+895,Netherlands,Canada,0
+896,Netherlands,Liechtenstein,0
+897,Netherlands,Singapore,0
+898,Netherlands,Indonesia,0
+899,Netherlands,Luxembourg,0
+900,Netherlands,Belize,0
+901,Netherlands,Colombia,0
+902,Netherlands,Turkey,0
+903,Netherlands,Brazil,0
+904,Netherlands,Sweden,0
+905,Netherlands,Iceland,0
+906,Netherlands,Finland,0
+907,Netherlands,Algeria,0
+908,Netherlands,Portugal,0
+909,Netherlands,Denmark,0
+910,Netherlands,Israel,0
+911,Netherlands,"Moldova, Republic of",0
+912,Netherlands,Austria,0
+913,Netherlands,Seychelles,0
+914,Viet Nam,United States,0
+915,Viet Nam,"Korea, Republic of",0
+916,Viet Nam,Spain,0
+917,Viet Nam,Czechia,0
+918,Viet Nam,Poland,0
+919,Viet Nam,Russian Federation,0
+920,Viet Nam,"Taiwan, Province of China",0
+921,Viet Nam,Bulgaria,0
+922,Viet Nam,Hong Kong,0
+923,Viet Nam,Romania,0
+924,Viet Nam,Peru,0
+925,Viet Nam,Hungary,0
+926,Viet Nam,Norway,0
+927,Viet Nam,Mexico,0
+928,Viet Nam,Ukraine,0
+929,Viet Nam,Netherlands,0
+930,Viet Nam,Japan,0
+931,Viet Nam,Lithuania,0
+932,Viet Nam,Serbia,0
+933,Viet Nam,Australia,0
+934,Viet Nam,Kenya,0
+935,Viet Nam,Slovakia,0
+936,Viet Nam,Chile,0
+937,Viet Nam,Canada,0
+938,Viet Nam,Liechtenstein,0
+939,Viet Nam,Singapore,0
+940,Viet Nam,Indonesia,0
+941,Viet Nam,New Zealand,0
+942,Viet Nam,Luxembourg,0
+943,Viet Nam,Belize,0
+944,Viet Nam,Colombia,0
+945,Viet Nam,Turkey,0
+946,Viet Nam,Brazil,0
+947,Viet Nam,Sweden,0
+948,Viet Nam,Iceland,0
+949,Viet Nam,Finland,0
+950,Viet Nam,Algeria,0
+951,Viet Nam,Portugal,0
+952,Viet Nam,Denmark,0
+953,Viet Nam,Israel,0
+954,Viet Nam,"Moldova, Republic of",0
+955,Viet Nam,Austria,0
+956,Viet Nam,Seychelles,0
+957,Japan,United States,0
+958,Japan,Spain,0
+959,Japan,South Africa,0
+960,Japan,Czechia,0
+961,Japan,Poland,0
+962,Japan,Malaysia,0
+963,Japan,Russian Federation,0
+964,Japan,China,0
+965,Japan,"Taiwan, Province of China",0
+966,Japan,Bulgaria,0
+967,Japan,Hong Kong,0
+968,Japan,Romania,0
+969,Japan,Peru,0
+970,Japan,Hungary,0
+971,Japan,Norway,0
+972,Japan,Mexico,0
+973,Japan,Ukraine,0
+974,Japan,Netherlands,0
+975,Japan,Viet Nam,0
+976,Japan,Lithuania,0
+977,Japan,Serbia,0
+978,Japan,Australia,0
+979,Japan,Kenya,0
+980,Japan,Slovakia,0
+981,Japan,India,0
+982,Japan,Chile,0
+983,Japan,Canada,0
+984,Japan,Liechtenstein,0
+985,Japan,Singapore,0
+986,Japan,Indonesia,0
+987,Japan,New Zealand,0
+988,Japan,Luxembourg,0
+989,Japan,Belize,0
+990,Japan,Colombia,0
+991,Japan,Turkey,0
+992,Japan,Brazil,0
+993,Japan,Sweden,0
+994,Japan,Iceland,0
+995,Japan,Finland,0
+996,Japan,Algeria,0
+997,Japan,Portugal,0
+998,Japan,Denmark,0
+999,Japan,Israel,0
+1000,Japan,"Moldova, Republic of",0
+1001,Japan,Austria,0
+1002,Japan,Seychelles,0
+1003,Lithuania,United States,0
+1004,Lithuania,"Korea, Republic of",0
+1005,Lithuania,Spain,0
+1006,Lithuania,South Africa,0
+1007,Lithuania,Czechia,0
+1008,Lithuania,Poland,0
+1009,Lithuania,Malaysia,0
+1010,Lithuania,Russian Federation,0
+1011,Lithuania,China,0
+1012,Lithuania,"Taiwan, Province of China",0
+1013,Lithuania,Bulgaria,0
+1014,Lithuania,Hong Kong,0
+1015,Lithuania,Romania,0
+1016,Lithuania,Peru,0
+1017,Lithuania,Hungary,0
+1018,Lithuania,Norway,0
+1019,Lithuania,Mexico,0
+1020,Lithuania,Ukraine,0
+1021,Lithuania,Netherlands,0
+1022,Lithuania,Viet Nam,0
+1023,Lithuania,Japan,0
+1024,Lithuania,Serbia,0
+1025,Lithuania,Australia,0
+1026,Lithuania,Kenya,0
+1027,Lithuania,Slovakia,0
+1028,Lithuania,India,0
+1029,Lithuania,Chile,0
+1030,Lithuania,Canada,0
+1031,Lithuania,Liechtenstein,0
+1032,Lithuania,Singapore,0
+1033,Lithuania,Indonesia,0
+1034,Lithuania,New Zealand,0
+1035,Lithuania,Luxembourg,0
+1036,Lithuania,Belize,0
+1037,Lithuania,Colombia,0
+1038,Lithuania,Turkey,0
+1039,Lithuania,Brazil,0
+1040,Lithuania,Sweden,0
+1041,Lithuania,Iceland,0
+1042,Lithuania,Finland,0
+1043,Lithuania,Algeria,0
+1044,Lithuania,Portugal,0
+1045,Lithuania,Denmark,0
+1046,Lithuania,Israel,0
+1047,Lithuania,"Moldova, Republic of",0
+1048,Lithuania,Austria,0
+1049,Lithuania,Seychelles,0
+1050,Serbia,United States,0
+1051,Serbia,"Korea, Republic of",0
+1052,Serbia,Spain,0
+1053,Serbia,South Africa,0
+1054,Serbia,Czechia,0
+1055,Serbia,Poland,0
+1056,Serbia,Malaysia,0
+1057,Serbia,Russian Federation,0
+1058,Serbia,China,0
+1059,Serbia,"Taiwan, Province of China",0
+1060,Serbia,Bulgaria,0
+1061,Serbia,Hong Kong,0
+1062,Serbia,Romania,0
+1063,Serbia,Peru,0
+1064,Serbia,Hungary,0
+1065,Serbia,Norway,0
+1066,Serbia,Mexico,0
+1067,Serbia,Ukraine,0
+1068,Serbia,Netherlands,0
+1069,Serbia,Viet Nam,0
+1070,Serbia,Japan,0
+1071,Serbia,Lithuania,0
+1072,Serbia,Australia,0
+1073,Serbia,Kenya,0
+1074,Serbia,Slovakia,0
+1075,Serbia,India,0
+1076,Serbia,Chile,0
+1077,Serbia,Canada,0
+1078,Serbia,Liechtenstein,0
+1079,Serbia,Singapore,0
+1080,Serbia,Indonesia,0
+1081,Serbia,New Zealand,0
+1082,Serbia,Luxembourg,0
+1083,Serbia,Belize,0
+1084,Serbia,Colombia,0
+1085,Serbia,Turkey,0
+1086,Serbia,Brazil,0
+1087,Serbia,Sweden,0
+1088,Serbia,Iceland,0
+1089,Serbia,Finland,0
+1090,Serbia,Algeria,0
+1091,Serbia,Portugal,0
+1092,Serbia,Denmark,0
+1093,Serbia,Israel,0
+1094,Serbia,"Moldova, Republic of",0
+1095,Serbia,Austria,0
+1096,Serbia,Seychelles,0
+1097,Australia,United States,0
+1098,Australia,"Korea, Republic of",0
+1099,Australia,Spain,0
+1100,Australia,South Africa,0
+1101,Australia,Czechia,0
+1102,Australia,Poland,0
+1103,Australia,Malaysia,0
+1104,Australia,Russian Federation,0
+1105,Australia,China,0
+1106,Australia,"Taiwan, Province of China",0
+1107,Australia,Bulgaria,0
+1108,Australia,Hong Kong,0
+1109,Australia,Romania,0
+1110,Australia,Peru,0
+1111,Australia,Hungary,0
+1112,Australia,Norway,0
+1113,Australia,Mexico,0
+1114,Australia,Ukraine,0
+1115,Australia,Netherlands,0
+1116,Australia,Viet Nam,0
+1117,Australia,Japan,0
+1118,Australia,Lithuania,0
+1119,Australia,Serbia,0
+1120,Australia,Kenya,0
+1121,Australia,Slovakia,0
+1122,Australia,India,0
+1123,Australia,Chile,0
+1124,Australia,Canada,0
+1125,Australia,Liechtenstein,0
+1126,Australia,Singapore,0
+1127,Australia,Indonesia,0
+1128,Australia,New Zealand,0
+1129,Australia,Luxembourg,0
+1130,Australia,Belize,0
+1131,Australia,Colombia,0
+1132,Australia,Turkey,0
+1133,Australia,Brazil,0
+1134,Australia,Sweden,0
+1135,Australia,Iceland,0
+1136,Australia,Finland,0
+1137,Australia,Algeria,0
+1138,Australia,Portugal,0
+1139,Australia,Denmark,0
+1140,Australia,Israel,0
+1141,Australia,"Moldova, Republic of",0
+1142,Australia,Austria,0
+1143,Australia,Seychelles,0
+1144,Kenya,United States,0
+1145,Kenya,"Korea, Republic of",0
+1146,Kenya,Spain,0
+1147,Kenya,South Africa,0
+1148,Kenya,Czechia,0
+1149,Kenya,Poland,0
+1150,Kenya,Malaysia,0
+1151,Kenya,Russian Federation,0
+1152,Kenya,China,0
+1153,Kenya,"Taiwan, Province of China",0
+1154,Kenya,Bulgaria,0
+1155,Kenya,Hong Kong,0
+1156,Kenya,Romania,0
+1157,Kenya,Peru,0
+1158,Kenya,Hungary,0
+1159,Kenya,Norway,0
+1160,Kenya,Mexico,0
+1161,Kenya,Ukraine,0
+1162,Kenya,Netherlands,0
+1163,Kenya,Viet Nam,0
+1164,Kenya,Japan,0
+1165,Kenya,Lithuania,0
+1166,Kenya,Serbia,0
+1167,Kenya,Australia,0
+1168,Kenya,Slovakia,0
+1169,Kenya,India,0
+1170,Kenya,Chile,0
+1171,Kenya,Canada,0
+1172,Kenya,Liechtenstein,0
+1173,Kenya,Singapore,0
+1174,Kenya,Indonesia,0
+1175,Kenya,New Zealand,0
+1176,Kenya,Luxembourg,0
+1177,Kenya,Belize,0
+1178,Kenya,Colombia,0
+1179,Kenya,Turkey,0
+1180,Kenya,Brazil,0
+1181,Kenya,Sweden,0
+1182,Kenya,Iceland,0
+1183,Kenya,Finland,0
+1184,Kenya,Algeria,0
+1185,Kenya,Portugal,0
+1186,Kenya,Denmark,0
+1187,Kenya,Israel,0
+1188,Kenya,"Moldova, Republic of",0
+1189,Kenya,Austria,0
+1190,Kenya,Seychelles,0
+1191,Slovakia,United States,0
+1192,Slovakia,"Korea, Republic of",0
+1193,Slovakia,Spain,0
+1194,Slovakia,South Africa,0
+1195,Slovakia,Czechia,0
+1196,Slovakia,Poland,0
+1197,Slovakia,Malaysia,0
+1198,Slovakia,Russian Federation,0
+1199,Slovakia,China,0
+1200,Slovakia,"Taiwan, Province of China",0
+1201,Slovakia,Bulgaria,0
+1202,Slovakia,Hong Kong,0
+1203,Slovakia,Romania,0
+1204,Slovakia,Peru,0
+1205,Slovakia,Hungary,0
+1206,Slovakia,Norway,0
+1207,Slovakia,Mexico,0
+1208,Slovakia,Ukraine,0
+1209,Slovakia,Netherlands,0
+1210,Slovakia,Viet Nam,0
+1211,Slovakia,Japan,0
+1212,Slovakia,Lithuania,0
+1213,Slovakia,Serbia,0
+1214,Slovakia,Australia,0
+1215,Slovakia,Kenya,0
+1216,Slovakia,India,0
+1217,Slovakia,Chile,0
+1218,Slovakia,Canada,0
+1219,Slovakia,Liechtenstein,0
+1220,Slovakia,Singapore,0
+1221,Slovakia,Indonesia,0
+1222,Slovakia,New Zealand,0
+1223,Slovakia,Luxembourg,0
+1224,Slovakia,Belize,0
+1225,Slovakia,Colombia,0
+1226,Slovakia,Turkey,0
+1227,Slovakia,Brazil,0
+1228,Slovakia,Sweden,0
+1229,Slovakia,Iceland,0
+1230,Slovakia,Finland,0
+1231,Slovakia,Algeria,0
+1232,Slovakia,Portugal,0
+1233,Slovakia,Denmark,0
+1234,Slovakia,Israel,0
+1235,Slovakia,"Moldova, Republic of",0
+1236,Slovakia,Austria,0
+1237,Slovakia,Seychelles,0
+1238,India,United States,0
+1239,India,"Korea, Republic of",0
+1240,India,Spain,0
+1241,India,Czechia,0
+1242,India,Poland,0
+1243,India,"Taiwan, Province of China",0
+1244,India,Hong Kong,0
+1245,India,Romania,0
+1246,India,Peru,0
+1247,India,Hungary,0
+1248,India,Norway,0
+1249,India,Mexico,0
+1250,India,Ukraine,0
+1251,India,Japan,0
+1252,India,Lithuania,0
+1253,India,Serbia,0
+1254,India,Australia,0
+1255,India,Kenya,0
+1256,India,Slovakia,0
+1257,India,Chile,0
+1258,India,Canada,0
+1259,India,Liechtenstein,0
+1260,India,Singapore,0
+1261,India,Indonesia,0
+1262,India,Luxembourg,0
+1263,India,Belize,0
+1264,India,Colombia,0
+1265,India,Brazil,0
+1266,India,Sweden,0
+1267,India,Iceland,0
+1268,India,Finland,0
+1269,India,Algeria,0
+1270,India,Portugal,0
+1271,India,Denmark,0
+1272,India,Israel,0
+1273,India,"Moldova, Republic of",0
+1274,India,Austria,0
+1275,India,Seychelles,0
+1276,Chile,United States,0
+1277,Chile,"Korea, Republic of",0
+1278,Chile,Spain,0
+1279,Chile,South Africa,0
+1280,Chile,Czechia,0
+1281,Chile,Poland,0
+1282,Chile,Malaysia,0
+1283,Chile,Russian Federation,0
+1284,Chile,China,0
+1285,Chile,"Taiwan, Province of China",0
+1286,Chile,Bulgaria,0
+1287,Chile,Hong Kong,0
+1288,Chile,Romania,0
+1289,Chile,Peru,0
+1290,Chile,Hungary,0
+1291,Chile,Norway,0
+1292,Chile,Mexico,0
+1293,Chile,Ukraine,0
+1294,Chile,Netherlands,0
+1295,Chile,Viet Nam,0
+1296,Chile,Japan,0
+1297,Chile,Lithuania,0
+1298,Chile,Serbia,0
+1299,Chile,Australia,0
+1300,Chile,Kenya,0
+1301,Chile,Slovakia,0
+1302,Chile,India,0
+1303,Chile,Canada,0
+1304,Chile,Liechtenstein,0
+1305,Chile,Singapore,0
+1306,Chile,Indonesia,0
+1307,Chile,New Zealand,0
+1308,Chile,Luxembourg,0
+1309,Chile,Belize,0
+1310,Chile,Colombia,0
+1311,Chile,Turkey,0
+1312,Chile,Brazil,0
+1313,Chile,Sweden,0
+1314,Chile,Iceland,0
+1315,Chile,Finland,0
+1316,Chile,Algeria,0
+1317,Chile,Portugal,0
+1318,Chile,Denmark,0
+1319,Chile,Israel,0
+1320,Chile,"Moldova, Republic of",0
+1321,Chile,Austria,0
+1322,Chile,Seychelles,0
+1323,Canada,United States,0
+1324,Canada,"Korea, Republic of",0
+1325,Canada,Spain,0
+1326,Canada,South Africa,0
+1327,Canada,Czechia,0
+1328,Canada,Poland,0
+1329,Canada,Malaysia,0
+1330,Canada,Russian Federation,0
+1331,Canada,China,0
+1332,Canada,"Taiwan, Province of China",0
+1333,Canada,Bulgaria,0
+1334,Canada,Hong Kong,0
+1335,Canada,Romania,0
+1336,Canada,Peru,0
+1337,Canada,Hungary,0
+1338,Canada,Norway,0
+1339,Canada,Mexico,0
+1340,Canada,Ukraine,0
+1341,Canada,Netherlands,0
+1342,Canada,Viet Nam,0
+1343,Canada,Japan,0
+1344,Canada,Lithuania,0
+1345,Canada,Serbia,0
+1346,Canada,Australia,0
+1347,Canada,Kenya,0
+1348,Canada,Slovakia,0
+1349,Canada,India,0
+1350,Canada,Chile,0
+1351,Canada,Liechtenstein,0
+1352,Canada,Singapore,0
+1353,Canada,Indonesia,0
+1354,Canada,New Zealand,0
+1355,Canada,Luxembourg,0
+1356,Canada,Belize,0
+1357,Canada,Colombia,0
+1358,Canada,Turkey,0
+1359,Canada,Brazil,0
+1360,Canada,Sweden,0
+1361,Canada,Iceland,0
+1362,Canada,Finland,0
+1363,Canada,Algeria,0
+1364,Canada,Portugal,0
+1365,Canada,Denmark,0
+1366,Canada,Israel,0
+1367,Canada,"Moldova, Republic of",0
+1368,Canada,Austria,0
+1369,Canada,Seychelles,0
+1370,Liechtenstein,United States,0
+1371,Liechtenstein,"Korea, Republic of",0
+1372,Liechtenstein,Spain,0
+1373,Liechtenstein,South Africa,0
+1374,Liechtenstein,Czechia,0
+1375,Liechtenstein,Poland,0
+1376,Liechtenstein,Malaysia,0
+1377,Liechtenstein,Russian Federation,0
+1378,Liechtenstein,China,0
+1379,Liechtenstein,"Taiwan, Province of China",0
+1380,Liechtenstein,Bulgaria,0
+1381,Liechtenstein,Hong Kong,0
+1382,Liechtenstein,Romania,0
+1383,Liechtenstein,Peru,0
+1384,Liechtenstein,Hungary,0
+1385,Liechtenstein,Norway,0
+1386,Liechtenstein,Mexico,0
+1387,Liechtenstein,Ukraine,0
+1388,Liechtenstein,Netherlands,0
+1389,Liechtenstein,Viet Nam,0
+1390,Liechtenstein,Japan,0
+1391,Liechtenstein,Lithuania,0
+1392,Liechtenstein,Serbia,0
+1393,Liechtenstein,Australia,0
+1394,Liechtenstein,Kenya,0
+1395,Liechtenstein,Slovakia,0
+1396,Liechtenstein,India,0
+1397,Liechtenstein,Chile,0
+1398,Liechtenstein,Canada,0
+1399,Liechtenstein,Singapore,0
+1400,Liechtenstein,Indonesia,0
+1401,Liechtenstein,New Zealand,0
+1402,Liechtenstein,Luxembourg,0
+1403,Liechtenstein,Belize,0
+1404,Liechtenstein,Colombia,0
+1405,Liechtenstein,Turkey,0
+1406,Liechtenstein,Brazil,0
+1407,Liechtenstein,Sweden,0
+1408,Liechtenstein,Iceland,0
+1409,Liechtenstein,Finland,0
+1410,Liechtenstein,Algeria,0
+1411,Liechtenstein,Portugal,0
+1412,Liechtenstein,Denmark,0
+1413,Liechtenstein,Israel,0
+1414,Liechtenstein,"Moldova, Republic of",0
+1415,Liechtenstein,Austria,0
+1416,Liechtenstein,Seychelles,0
+1417,Singapore,United States,0
+1418,Singapore,"Korea, Republic of",0
+1419,Singapore,Spain,0
+1420,Singapore,South Africa,0
+1421,Singapore,Czechia,0
+1422,Singapore,Poland,0
+1423,Singapore,Malaysia,0
+1424,Singapore,Russian Federation,0
+1425,Singapore,China,0
+1426,Singapore,"Taiwan, Province of China",0
+1427,Singapore,Bulgaria,0
+1428,Singapore,Hong Kong,0
+1429,Singapore,Romania,0
+1430,Singapore,Peru,0
+1431,Singapore,Hungary,0
+1432,Singapore,Norway,0
+1433,Singapore,Mexico,0
+1434,Singapore,Ukraine,0
+1435,Singapore,Netherlands,0
+1436,Singapore,Viet Nam,0
+1437,Singapore,Japan,0
+1438,Singapore,Lithuania,0
+1439,Singapore,Serbia,0
+1440,Singapore,Australia,0
+1441,Singapore,Kenya,0
+1442,Singapore,Slovakia,0
+1443,Singapore,India,0
+1444,Singapore,Chile,0
+1445,Singapore,Canada,0
+1446,Singapore,Liechtenstein,0
+1447,Singapore,Indonesia,0
+1448,Singapore,New Zealand,0
+1449,Singapore,Luxembourg,0
+1450,Singapore,Belize,0
+1451,Singapore,Colombia,0
+1452,Singapore,Turkey,0
+1453,Singapore,Brazil,0
+1454,Singapore,Sweden,0
+1455,Singapore,Iceland,0
+1456,Singapore,Finland,0
+1457,Singapore,Algeria,0
+1458,Singapore,Portugal,0
+1459,Singapore,Denmark,0
+1460,Singapore,Israel,0
+1461,Singapore,"Moldova, Republic of",0
+1462,Singapore,Austria,0
+1463,Singapore,Seychelles,0
+1464,Indonesia,United States,0
+1465,Indonesia,"Korea, Republic of",0
+1466,Indonesia,Spain,0
+1467,Indonesia,South Africa,0
+1468,Indonesia,Czechia,0
+1469,Indonesia,Poland,0
+1470,Indonesia,Malaysia,0
+1471,Indonesia,Russian Federation,0
+1472,Indonesia,China,0
+1473,Indonesia,"Taiwan, Province of China",0
+1474,Indonesia,Bulgaria,0
+1475,Indonesia,Hong Kong,0
+1476,Indonesia,Romania,0
+1477,Indonesia,Peru,0
+1478,Indonesia,Hungary,0
+1479,Indonesia,Norway,0
+1480,Indonesia,Mexico,0
+1481,Indonesia,Ukraine,0
+1482,Indonesia,Netherlands,0
+1483,Indonesia,Viet Nam,0
+1484,Indonesia,Japan,0
+1485,Indonesia,Lithuania,0
+1486,Indonesia,Serbia,0
+1487,Indonesia,Australia,0
+1488,Indonesia,Kenya,0
+1489,Indonesia,Slovakia,0
+1490,Indonesia,India,0
+1491,Indonesia,Chile,0
+1492,Indonesia,Canada,0
+1493,Indonesia,Liechtenstein,0
+1494,Indonesia,Singapore,0
+1495,Indonesia,New Zealand,0
+1496,Indonesia,Luxembourg,0
+1497,Indonesia,Belize,0
+1498,Indonesia,Colombia,0
+1499,Indonesia,Turkey,0
+1500,Indonesia,Brazil,0
+1501,Indonesia,Sweden,0
+1502,Indonesia,Iceland,0
+1503,Indonesia,Finland,0
+1504,Indonesia,Algeria,0
+1505,Indonesia,Portugal,0
+1506,Indonesia,Denmark,0
+1507,Indonesia,Israel,0
+1508,Indonesia,"Moldova, Republic of",0
+1509,Indonesia,Austria,0
+1510,Indonesia,Seychelles,0
+1511,New Zealand,United States,0
+1512,New Zealand,"Korea, Republic of",0
+1513,New Zealand,Spain,0
+1514,New Zealand,South Africa,0
+1515,New Zealand,Czechia,0
+1516,New Zealand,Poland,0
+1517,New Zealand,Malaysia,0
+1518,New Zealand,Russian Federation,0
+1519,New Zealand,China,0
+1520,New Zealand,"Taiwan, Province of China",0
+1521,New Zealand,Hong Kong,0
+1522,New Zealand,Romania,0
+1523,New Zealand,Peru,0
+1524,New Zealand,Norway,0
+1525,New Zealand,Mexico,0
+1526,New Zealand,Ukraine,0
+1527,New Zealand,Viet Nam,0
+1528,New Zealand,Japan,0
+1529,New Zealand,Lithuania,0
+1530,New Zealand,Serbia,0
+1531,New Zealand,Australia,0
+1532,New Zealand,Kenya,0
+1533,New Zealand,Slovakia,0
+1534,New Zealand,Chile,0
+1535,New Zealand,Canada,0
+1536,New Zealand,Liechtenstein,0
+1537,New Zealand,Singapore,0
+1538,New Zealand,Indonesia,0
+1539,New Zealand,Luxembourg,0
+1540,New Zealand,Belize,0
+1541,New Zealand,Colombia,0
+1542,New Zealand,Turkey,0
+1543,New Zealand,Brazil,0
+1544,New Zealand,Sweden,0
+1545,New Zealand,Iceland,0
+1546,New Zealand,Finland,0
+1547,New Zealand,Algeria,0
+1548,New Zealand,Portugal,0
+1549,New Zealand,Denmark,0
+1550,New Zealand,Israel,0
+1551,New Zealand,"Moldova, Republic of",0
+1552,New Zealand,Austria,0
+1553,New Zealand,Seychelles,0
+1554,Luxembourg,United States,0
+1555,Luxembourg,"Korea, Republic of",0
+1556,Luxembourg,Spain,0
+1557,Luxembourg,South Africa,0
+1558,Luxembourg,Czechia,0
+1559,Luxembourg,Poland,0
+1560,Luxembourg,Malaysia,0
+1561,Luxembourg,Russian Federation,0
+1562,Luxembourg,China,0
+1563,Luxembourg,"Taiwan, Province of China",0
+1564,Luxembourg,Bulgaria,0
+1565,Luxembourg,Hong Kong,0
+1566,Luxembourg,Romania,0
+1567,Luxembourg,Peru,0
+1568,Luxembourg,Hungary,0
+1569,Luxembourg,Norway,0
+1570,Luxembourg,Mexico,0
+1571,Luxembourg,Ukraine,0
+1572,Luxembourg,Netherlands,0
+1573,Luxembourg,Viet Nam,0
+1574,Luxembourg,Japan,0
+1575,Luxembourg,Lithuania,0
+1576,Luxembourg,Serbia,0
+1577,Luxembourg,Australia,0
+1578,Luxembourg,Kenya,0
+1579,Luxembourg,Slovakia,0
+1580,Luxembourg,India,0
+1581,Luxembourg,Chile,0
+1582,Luxembourg,Canada,0
+1583,Luxembourg,Liechtenstein,0
+1584,Luxembourg,Singapore,0
+1585,Luxembourg,Indonesia,0
+1586,Luxembourg,New Zealand,0
+1587,Luxembourg,Belize,0
+1588,Luxembourg,Colombia,0
+1589,Luxembourg,Turkey,0
+1590,Luxembourg,Brazil,0
+1591,Luxembourg,Sweden,0
+1592,Luxembourg,Iceland,0
+1593,Luxembourg,Finland,0
+1594,Luxembourg,Algeria,0
+1595,Luxembourg,Portugal,0
+1596,Luxembourg,Denmark,0
+1597,Luxembourg,Israel,0
+1598,Luxembourg,"Moldova, Republic of",0
+1599,Luxembourg,Austria,0
+1600,Luxembourg,Seychelles,0
+1601,Belize,United States,0
+1602,Belize,"Korea, Republic of",0
+1603,Belize,Spain,0
+1604,Belize,South Africa,0
+1605,Belize,Czechia,0
+1606,Belize,Poland,0
+1607,Belize,Malaysia,0
+1608,Belize,Russian Federation,0
+1609,Belize,China,0
+1610,Belize,"Taiwan, Province of China",0
+1611,Belize,Bulgaria,0
+1612,Belize,Hong Kong,0
+1613,Belize,Romania,0
+1614,Belize,Peru,0
+1615,Belize,Hungary,0
+1616,Belize,Norway,0
+1617,Belize,Mexico,0
+1618,Belize,Ukraine,0
+1619,Belize,Netherlands,0
+1620,Belize,Viet Nam,0
+1621,Belize,Japan,0
+1622,Belize,Lithuania,0
+1623,Belize,Serbia,0
+1624,Belize,Australia,0
+1625,Belize,Kenya,0
+1626,Belize,Slovakia,0
+1627,Belize,India,0
+1628,Belize,Chile,0
+1629,Belize,Canada,0
+1630,Belize,Liechtenstein,0
+1631,Belize,Singapore,0
+1632,Belize,Indonesia,0
+1633,Belize,New Zealand,0
+1634,Belize,Luxembourg,0
+1635,Belize,Colombia,0
+1636,Belize,Turkey,0
+1637,Belize,Brazil,0
+1638,Belize,Sweden,0
+1639,Belize,Iceland,0
+1640,Belize,Finland,0
+1641,Belize,Algeria,0
+1642,Belize,Portugal,0
+1643,Belize,Denmark,0
+1644,Belize,Israel,0
+1645,Belize,"Moldova, Republic of",0
+1646,Belize,Austria,0
+1647,Belize,Seychelles,0
+1648,Colombia,United States,0
+1649,Colombia,"Korea, Republic of",0
+1650,Colombia,Spain,0
+1651,Colombia,South Africa,0
+1652,Colombia,Czechia,0
+1653,Colombia,Poland,0
+1654,Colombia,Malaysia,0
+1655,Colombia,Russian Federation,0
+1656,Colombia,China,0
+1657,Colombia,"Taiwan, Province of China",0
+1658,Colombia,Bulgaria,0
+1659,Colombia,Hong Kong,0
+1660,Colombia,Romania,0
+1661,Colombia,Peru,0
+1662,Colombia,Hungary,0
+1663,Colombia,Norway,0
+1664,Colombia,Mexico,0
+1665,Colombia,Ukraine,0
+1666,Colombia,Netherlands,0
+1667,Colombia,Viet Nam,0
+1668,Colombia,Japan,0
+1669,Colombia,Lithuania,0
+1670,Colombia,Serbia,0
+1671,Colombia,Australia,0
+1672,Colombia,Kenya,0
+1673,Colombia,Slovakia,0
+1674,Colombia,India,0
+1675,Colombia,Chile,0
+1676,Colombia,Canada,0
+1677,Colombia,Liechtenstein,0
+1678,Colombia,Singapore,0
+1679,Colombia,Indonesia,0
+1680,Colombia,New Zealand,0
+1681,Colombia,Luxembourg,0
+1682,Colombia,Belize,0
+1683,Colombia,Turkey,0
+1684,Colombia,Brazil,0
+1685,Colombia,Sweden,0
+1686,Colombia,Iceland,0
+1687,Colombia,Finland,0
+1688,Colombia,Algeria,0
+1689,Colombia,Portugal,0
+1690,Colombia,Denmark,0
+1691,Colombia,Israel,0
+1692,Colombia,"Moldova, Republic of",0
+1693,Colombia,Austria,0
+1694,Colombia,Seychelles,0
+1695,Turkey,United States,0
+1696,Turkey,Spain,0
+1697,Turkey,South Africa,0
+1698,Turkey,Czechia,0
+1699,Turkey,Poland,0
+1700,Turkey,Malaysia,0
+1701,Turkey,China,0
+1702,Turkey,"Taiwan, Province of China",0
+1703,Turkey,Bulgaria,0
+1704,Turkey,Hong Kong,0
+1705,Turkey,Romania,0
+1706,Turkey,Peru,0
+1707,Turkey,Hungary,0
+1708,Turkey,Norway,0
+1709,Turkey,Mexico,0
+1710,Turkey,Ukraine,0
+1711,Turkey,Netherlands,0
+1712,Turkey,Viet Nam,0
+1713,Turkey,Japan,0
+1714,Turkey,Lithuania,0
+1715,Turkey,Serbia,0
+1716,Turkey,Australia,0
+1717,Turkey,Kenya,0
+1718,Turkey,Slovakia,0
+1719,Turkey,Chile,0
+1720,Turkey,Canada,0
+1721,Turkey,Liechtenstein,0
+1722,Turkey,Singapore,0
+1723,Turkey,Indonesia,0
+1724,Turkey,New Zealand,0
+1725,Turkey,Luxembourg,0
+1726,Turkey,Belize,0
+1727,Turkey,Colombia,0
+1728,Turkey,Brazil,0
+1729,Turkey,Sweden,0
+1730,Turkey,Iceland,0
+1731,Turkey,Finland,0
+1732,Turkey,Algeria,0
+1733,Turkey,Portugal,0
+1734,Turkey,Denmark,0
+1735,Turkey,Israel,0
+1736,Turkey,"Moldova, Republic of",0
+1737,Turkey,Austria,0
+1738,Turkey,Seychelles,0
+1739,Brazil,United States,0
+1740,Brazil,"Korea, Republic of",0
+1741,Brazil,Spain,0
+1742,Brazil,South Africa,0
+1743,Brazil,Czechia,0
+1744,Brazil,Poland,0
+1745,Brazil,Malaysia,0
+1746,Brazil,Russian Federation,0
+1747,Brazil,China,0
+1748,Brazil,"Taiwan, Province of China",0
+1749,Brazil,Bulgaria,0
+1750,Brazil,Hong Kong,0
+1751,Brazil,Romania,0
+1752,Brazil,Peru,0
+1753,Brazil,Hungary,0
+1754,Brazil,Norway,0
+1755,Brazil,Mexico,0
+1756,Brazil,Ukraine,0
+1757,Brazil,Netherlands,0
+1758,Brazil,Viet Nam,0
+1759,Brazil,Japan,0
+1760,Brazil,Lithuania,0
+1761,Brazil,Serbia,0
+1762,Brazil,Australia,0
+1763,Brazil,Kenya,0
+1764,Brazil,Slovakia,0
+1765,Brazil,India,0
+1766,Brazil,Chile,0
+1767,Brazil,Canada,0
+1768,Brazil,Liechtenstein,0
+1769,Brazil,Singapore,0
+1770,Brazil,Indonesia,0
+1771,Brazil,New Zealand,0
+1772,Brazil,Luxembourg,0
+1773,Brazil,Belize,0
+1774,Brazil,Colombia,0
+1775,Brazil,Turkey,0
+1776,Brazil,Sweden,0
+1777,Brazil,Iceland,0
+1778,Brazil,Finland,0
+1779,Brazil,Algeria,0
+1780,Brazil,Portugal,0
+1781,Brazil,Denmark,0
+1782,Brazil,Israel,0
+1783,Brazil,"Moldova, Republic of",0
+1784,Brazil,Austria,0
+1785,Brazil,Seychelles,0
+1786,Sweden,United States,0
+1787,Sweden,"Korea, Republic of",0
+1788,Sweden,Spain,0
+1789,Sweden,South Africa,0
+1790,Sweden,Czechia,0
+1791,Sweden,Poland,0
+1792,Sweden,Malaysia,0
+1793,Sweden,Russian Federation,0
+1794,Sweden,China,0
+1795,Sweden,"Taiwan, Province of China",0
+1796,Sweden,Bulgaria,0
+1797,Sweden,Hong Kong,0
+1798,Sweden,Romania,0
+1799,Sweden,Peru,0
+1800,Sweden,Hungary,0
+1801,Sweden,Norway,0
+1802,Sweden,Mexico,0
+1803,Sweden,Ukraine,0
+1804,Sweden,Netherlands,0
+1805,Sweden,Viet Nam,0
+1806,Sweden,Japan,0
+1807,Sweden,Lithuania,0
+1808,Sweden,Serbia,0
+1809,Sweden,Australia,0
+1810,Sweden,Kenya,0
+1811,Sweden,Slovakia,0
+1812,Sweden,India,0
+1813,Sweden,Chile,0
+1814,Sweden,Canada,0
+1815,Sweden,Liechtenstein,0
+1816,Sweden,Singapore,0
+1817,Sweden,Indonesia,0
+1818,Sweden,New Zealand,0
+1819,Sweden,Luxembourg,0
+1820,Sweden,Belize,0
+1821,Sweden,Colombia,0
+1822,Sweden,Turkey,0
+1823,Sweden,Brazil,0
+1824,Sweden,Iceland,0
+1825,Sweden,Finland,0
+1826,Sweden,Algeria,0
+1827,Sweden,Portugal,0
+1828,Sweden,Denmark,0
+1829,Sweden,Israel,0
+1830,Sweden,"Moldova, Republic of",0
+1831,Sweden,Austria,0
+1832,Sweden,Seychelles,0
+1833,Iceland,United States,0
+1834,Iceland,"Korea, Republic of",0
+1835,Iceland,Spain,0
+1836,Iceland,South Africa,0
+1837,Iceland,Czechia,0
+1838,Iceland,Poland,0
+1839,Iceland,Malaysia,0
+1840,Iceland,Russian Federation,0
+1841,Iceland,China,0
+1842,Iceland,"Taiwan, Province of China",0
+1843,Iceland,Bulgaria,0
+1844,Iceland,Hong Kong,0
+1845,Iceland,Romania,0
+1846,Iceland,Peru,0
+1847,Iceland,Hungary,0
+1848,Iceland,Norway,0
+1849,Iceland,Mexico,0
+1850,Iceland,Ukraine,0
+1851,Iceland,Netherlands,0
+1852,Iceland,Viet Nam,0
+1853,Iceland,Japan,0
+1854,Iceland,Lithuania,0
+1855,Iceland,Serbia,0
+1856,Iceland,Australia,0
+1857,Iceland,Kenya,0
+1858,Iceland,Slovakia,0
+1859,Iceland,India,0
+1860,Iceland,Chile,0
+1861,Iceland,Canada,0
+1862,Iceland,Liechtenstein,0
+1863,Iceland,Singapore,0
+1864,Iceland,Indonesia,0
+1865,Iceland,New Zealand,0
+1866,Iceland,Luxembourg,0
+1867,Iceland,Belize,0
+1868,Iceland,Colombia,0
+1869,Iceland,Turkey,0
+1870,Iceland,Brazil,0
+1871,Iceland,Sweden,0
+1872,Iceland,Finland,0
+1873,Iceland,Algeria,0
+1874,Iceland,Portugal,0
+1875,Iceland,Denmark,0
+1876,Iceland,Israel,0
+1877,Iceland,"Moldova, Republic of",0
+1878,Iceland,Austria,0
+1879,Iceland,Seychelles,0
+1880,Finland,United States,0
+1881,Finland,"Korea, Republic of",0
+1882,Finland,Spain,0
+1883,Finland,South Africa,0
+1884,Finland,Czechia,0
+1885,Finland,Poland,0
+1886,Finland,Malaysia,0
+1887,Finland,Russian Federation,0
+1888,Finland,China,0
+1889,Finland,"Taiwan, Province of China",0
+1890,Finland,Bulgaria,0
+1891,Finland,Hong Kong,0
+1892,Finland,Romania,0
+1893,Finland,Peru,0
+1894,Finland,Hungary,0
+1895,Finland,Norway,0
+1896,Finland,Mexico,0
+1897,Finland,Ukraine,0
+1898,Finland,Netherlands,0
+1899,Finland,Viet Nam,0
+1900,Finland,Japan,0
+1901,Finland,Lithuania,0
+1902,Finland,Serbia,0
+1903,Finland,Australia,0
+1904,Finland,Kenya,0
+1905,Finland,Slovakia,0
+1906,Finland,India,0
+1907,Finland,Chile,0
+1908,Finland,Canada,0
+1909,Finland,Liechtenstein,0
+1910,Finland,Singapore,0
+1911,Finland,Indonesia,0
+1912,Finland,New Zealand,0
+1913,Finland,Luxembourg,0
+1914,Finland,Belize,0
+1915,Finland,Colombia,0
+1916,Finland,Turkey,0
+1917,Finland,Brazil,0
+1918,Finland,Sweden,0
+1919,Finland,Iceland,0
+1920,Finland,Algeria,0
+1921,Finland,Portugal,0
+1922,Finland,Denmark,0
+1923,Finland,Israel,0
+1924,Finland,"Moldova, Republic of",0
+1925,Finland,Austria,0
+1926,Finland,Seychelles,0
+1927,Algeria,United States,0
+1928,Algeria,"Korea, Republic of",0
+1929,Algeria,Spain,0
+1930,Algeria,South Africa,0
+1931,Algeria,Czechia,0
+1932,Algeria,Poland,0
+1933,Algeria,Malaysia,0
+1934,Algeria,Russian Federation,0
+1935,Algeria,China,0
+1936,Algeria,"Taiwan, Province of China",0
+1937,Algeria,Bulgaria,0
+1938,Algeria,Hong Kong,0
+1939,Algeria,Romania,0
+1940,Algeria,Peru,0
+1941,Algeria,Hungary,0
+1942,Algeria,Norway,0
+1943,Algeria,Mexico,0
+1944,Algeria,Ukraine,0
+1945,Algeria,Netherlands,0
+1946,Algeria,Viet Nam,0
+1947,Algeria,Japan,0
+1948,Algeria,Lithuania,0
+1949,Algeria,Serbia,0
+1950,Algeria,Australia,0
+1951,Algeria,Kenya,0
+1952,Algeria,Slovakia,0
+1953,Algeria,India,0
+1954,Algeria,Chile,0
+1955,Algeria,Canada,0
+1956,Algeria,Liechtenstein,0
+1957,Algeria,Singapore,0
+1958,Algeria,Indonesia,0
+1959,Algeria,New Zealand,0
+1960,Algeria,Luxembourg,0
+1961,Algeria,Belize,0
+1962,Algeria,Colombia,0
+1963,Algeria,Turkey,0
+1964,Algeria,Brazil,0
+1965,Algeria,Sweden,0
+1966,Algeria,Iceland,0
+1967,Algeria,Finland,0
+1968,Algeria,Portugal,0
+1969,Algeria,Denmark,0
+1970,Algeria,Israel,0
+1971,Algeria,"Moldova, Republic of",0
+1972,Algeria,Austria,0
+1973,Algeria,Seychelles,0
+1974,Portugal,United States,0
+1975,Portugal,"Korea, Republic of",0
+1976,Portugal,Spain,0
+1977,Portugal,South Africa,0
+1978,Portugal,Czechia,0
+1979,Portugal,Poland,0
+1980,Portugal,Malaysia,0
+1981,Portugal,Russian Federation,0
+1982,Portugal,China,0
+1983,Portugal,"Taiwan, Province of China",0
+1984,Portugal,Bulgaria,0
+1985,Portugal,Hong Kong,0
+1986,Portugal,Romania,0
+1987,Portugal,Peru,0
+1988,Portugal,Hungary,0
+1989,Portugal,Norway,0
+1990,Portugal,Mexico,0
+1991,Portugal,Ukraine,0
+1992,Portugal,Netherlands,0
+1993,Portugal,Viet Nam,0
+1994,Portugal,Japan,0
+1995,Portugal,Lithuania,0
+1996,Portugal,Serbia,0
+1997,Portugal,Australia,0
+1998,Portugal,Kenya,0
+1999,Portugal,Slovakia,0
+2000,Portugal,India,0
+2001,Portugal,Chile,0
+2002,Portugal,Canada,0
+2003,Portugal,Liechtenstein,0
+2004,Portugal,Singapore,0
+2005,Portugal,Indonesia,0
+2006,Portugal,New Zealand,0
+2007,Portugal,Luxembourg,0
+2008,Portugal,Belize,0
+2009,Portugal,Colombia,0
+2010,Portugal,Turkey,0
+2011,Portugal,Brazil,0
+2012,Portugal,Sweden,0
+2013,Portugal,Iceland,0
+2014,Portugal,Finland,0
+2015,Portugal,Algeria,0
+2016,Portugal,Denmark,0
+2017,Portugal,Israel,0
+2018,Portugal,"Moldova, Republic of",0
+2019,Portugal,Austria,0
+2020,Portugal,Seychelles,0
+2021,Denmark,United States,0
+2022,Denmark,"Korea, Republic of",0
+2023,Denmark,Spain,0
+2024,Denmark,South Africa,0
+2025,Denmark,Czechia,0
+2026,Denmark,Poland,0
+2027,Denmark,Malaysia,0
+2028,Denmark,Russian Federation,0
+2029,Denmark,China,0
+2030,Denmark,"Taiwan, Province of China",0
+2031,Denmark,Bulgaria,0
+2032,Denmark,Hong Kong,0
+2033,Denmark,Romania,0
+2034,Denmark,Peru,0
+2035,Denmark,Hungary,0
+2036,Denmark,Norway,0
+2037,Denmark,Mexico,0
+2038,Denmark,Ukraine,0
+2039,Denmark,Netherlands,0
+2040,Denmark,Viet Nam,0
+2041,Denmark,Japan,0
+2042,Denmark,Lithuania,0
+2043,Denmark,Serbia,0
+2044,Denmark,Australia,0
+2045,Denmark,Kenya,0
+2046,Denmark,Slovakia,0
+2047,Denmark,India,0
+2048,Denmark,Chile,0
+2049,Denmark,Canada,0
+2050,Denmark,Liechtenstein,0
+2051,Denmark,Singapore,0
+2052,Denmark,Indonesia,0
+2053,Denmark,New Zealand,0
+2054,Denmark,Luxembourg,0
+2055,Denmark,Belize,0
+2056,Denmark,Colombia,0
+2057,Denmark,Turkey,0
+2058,Denmark,Brazil,0
+2059,Denmark,Sweden,0
+2060,Denmark,Iceland,0
+2061,Denmark,Finland,0
+2062,Denmark,Algeria,0
+2063,Denmark,Portugal,0
+2064,Denmark,Israel,0
+2065,Denmark,"Moldova, Republic of",0
+2066,Denmark,Austria,0
+2067,Denmark,Seychelles,0
+2068,Israel,United States,0
+2069,Israel,"Korea, Republic of",0
+2070,Israel,Spain,0
+2071,Israel,South Africa,0
+2072,Israel,Czechia,0
+2073,Israel,Poland,0
+2074,Israel,Malaysia,0
+2075,Israel,Russian Federation,0
+2076,Israel,China,0
+2077,Israel,"Taiwan, Province of China",0
+2078,Israel,Bulgaria,0
+2079,Israel,Hong Kong,0
+2080,Israel,Romania,0
+2081,Israel,Peru,0
+2082,Israel,Hungary,0
+2083,Israel,Norway,0
+2084,Israel,Mexico,0
+2085,Israel,Ukraine,0
+2086,Israel,Netherlands,0
+2087,Israel,Viet Nam,0
+2088,Israel,Japan,0
+2089,Israel,Lithuania,0
+2090,Israel,Serbia,0
+2091,Israel,Australia,0
+2092,Israel,Kenya,0
+2093,Israel,Slovakia,0
+2094,Israel,India,0
+2095,Israel,Chile,0
+2096,Israel,Canada,0
+2097,Israel,Liechtenstein,0
+2098,Israel,Singapore,0
+2099,Israel,Indonesia,0
+2100,Israel,New Zealand,0
+2101,Israel,Luxembourg,0
+2102,Israel,Belize,0
+2103,Israel,Colombia,0
+2104,Israel,Turkey,0
+2105,Israel,Brazil,0
+2106,Israel,Sweden,0
+2107,Israel,Iceland,0
+2108,Israel,Finland,0
+2109,Israel,Algeria,0
+2110,Israel,Portugal,0
+2111,Israel,Denmark,0
+2112,Israel,"Moldova, Republic of",0
+2113,Israel,Austria,0
+2114,Israel,Seychelles,0
+2115,"Moldova, Republic of",United States,0
+2116,"Moldova, Republic of","Korea, Republic of",0
+2117,"Moldova, Republic of",Spain,0
+2118,"Moldova, Republic of",South Africa,0
+2119,"Moldova, Republic of",Czechia,0
+2120,"Moldova, Republic of",Poland,0
+2121,"Moldova, Republic of",Malaysia,0
+2122,"Moldova, Republic of",Russian Federation,0
+2123,"Moldova, Republic of",China,0
+2124,"Moldova, Republic of","Taiwan, Province of China",0
+2125,"Moldova, Republic of",Bulgaria,0
+2126,"Moldova, Republic of",Hong Kong,0
+2127,"Moldova, Republic of",Romania,0
+2128,"Moldova, Republic of",Peru,0
+2129,"Moldova, Republic of",Hungary,0
+2130,"Moldova, Republic of",Norway,0
+2131,"Moldova, Republic of",Mexico,0
+2132,"Moldova, Republic of",Ukraine,0
+2133,"Moldova, Republic of",Netherlands,0
+2134,"Moldova, Republic of",Viet Nam,0
+2135,"Moldova, Republic of",Japan,0
+2136,"Moldova, Republic of",Lithuania,0
+2137,"Moldova, Republic of",Serbia,0
+2138,"Moldova, Republic of",Australia,0
+2139,"Moldova, Republic of",Kenya,0
+2140,"Moldova, Republic of",Slovakia,0
+2141,"Moldova, Republic of",India,0
+2142,"Moldova, Republic of",Chile,0
+2143,"Moldova, Republic of",Canada,0
+2144,"Moldova, Republic of",Liechtenstein,0
+2145,"Moldova, Republic of",Singapore,0
+2146,"Moldova, Republic of",Indonesia,0
+2147,"Moldova, Republic of",New Zealand,0
+2148,"Moldova, Republic of",Luxembourg,0
+2149,"Moldova, Republic of",Belize,0
+2150,"Moldova, Republic of",Colombia,0
+2151,"Moldova, Republic of",Turkey,0
+2152,"Moldova, Republic of",Brazil,0
+2153,"Moldova, Republic of",Sweden,0
+2154,"Moldova, Republic of",Iceland,0
+2155,"Moldova, Republic of",Finland,0
+2156,"Moldova, Republic of",Algeria,0
+2157,"Moldova, Republic of",Portugal,0
+2158,"Moldova, Republic of",Denmark,0
+2159,"Moldova, Republic of",Israel,0
+2160,"Moldova, Republic of",Austria,0
+2161,"Moldova, Republic of",Seychelles,0
+2162,Austria,United States,0
+2163,Austria,"Korea, Republic of",0
+2164,Austria,Spain,0
+2165,Austria,South Africa,0
+2166,Austria,Czechia,0
+2167,Austria,Poland,0
+2168,Austria,Malaysia,0
+2169,Austria,Russian Federation,0
+2170,Austria,China,0
+2171,Austria,"Taiwan, Province of China",0
+2172,Austria,Bulgaria,0
+2173,Austria,Hong Kong,0
+2174,Austria,Romania,0
+2175,Austria,Peru,0
+2176,Austria,Hungary,0
+2177,Austria,Norway,0
+2178,Austria,Mexico,0
+2179,Austria,Ukraine,0
+2180,Austria,Netherlands,0
+2181,Austria,Viet Nam,0
+2182,Austria,Japan,0
+2183,Austria,Lithuania,0
+2184,Austria,Serbia,0
+2185,Austria,Australia,0
+2186,Austria,Kenya,0
+2187,Austria,Slovakia,0
+2188,Austria,India,0
+2189,Austria,Chile,0
+2190,Austria,Canada,0
+2191,Austria,Liechtenstein,0
+2192,Austria,Singapore,0
+2193,Austria,Indonesia,0
+2194,Austria,New Zealand,0
+2195,Austria,Luxembourg,0
+2196,Austria,Belize,0
+2197,Austria,Colombia,0
+2198,Austria,Turkey,0
+2199,Austria,Brazil,0
+2200,Austria,Sweden,0
+2201,Austria,Iceland,0
+2202,Austria,Finland,0
+2203,Austria,Algeria,0
+2204,Austria,Portugal,0
+2205,Austria,Denmark,0
+2206,Austria,Israel,0
+2207,Austria,"Moldova, Republic of",0
+2208,Austria,Seychelles,0
+2209,Seychelles,United States,0
+2210,Seychelles,"Korea, Republic of",0
+2211,Seychelles,Spain,0
+2212,Seychelles,South Africa,0
+2213,Seychelles,Czechia,0
+2214,Seychelles,Poland,0
+2215,Seychelles,Malaysia,0
+2216,Seychelles,Russian Federation,0
+2217,Seychelles,China,0
+2218,Seychelles,"Taiwan, Province of China",0
+2219,Seychelles,Bulgaria,0
+2220,Seychelles,Hong Kong,0
+2221,Seychelles,Romania,0
+2222,Seychelles,Peru,0
+2223,Seychelles,Hungary,0
+2224,Seychelles,Norway,0
+2225,Seychelles,Mexico,0
+2226,Seychelles,Ukraine,0
+2227,Seychelles,Netherlands,0
+2228,Seychelles,Viet Nam,0
+2229,Seychelles,Japan,0
+2230,Seychelles,Lithuania,0
+2231,Seychelles,Serbia,0
+2232,Seychelles,Australia,0
+2233,Seychelles,Kenya,0
+2234,Seychelles,Slovakia,0
+2235,Seychelles,India,0
+2236,Seychelles,Chile,0
+2237,Seychelles,Canada,0
+2238,Seychelles,Liechtenstein,0
+2239,Seychelles,Singapore,0
+2240,Seychelles,Indonesia,0
+2241,Seychelles,New Zealand,0
+2242,Seychelles,Luxembourg,0
+2243,Seychelles,Belize,0
+2244,Seychelles,Colombia,0
+2245,Seychelles,Turkey,0
+2246,Seychelles,Brazil,0
+2247,Seychelles,Sweden,0
+2248,Seychelles,Iceland,0
+2249,Seychelles,Finland,0
+2250,Seychelles,Algeria,0
+2251,Seychelles,Portugal,0
+2252,Seychelles,Denmark,0
+2253,Seychelles,Israel,0
+2254,Seychelles,"Moldova, Republic of",0
+2255,Seychelles,Austria,0

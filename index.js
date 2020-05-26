@@ -81,7 +81,7 @@ function enableForce() {
 function enableAdversarial() {
   setupMap();
   var country = "China";
-  populateAdversarialMap(750, country);
+  populateAdversarialMap(750, country, datasource_mode);
   document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
 }
 
@@ -548,13 +548,17 @@ function getAdversarialData(country, inputData) {
   document.getElementById("domain_table").innerHTML = tableData;
 }
 
-function populateAdversarialMap(map_height, country) {
+function populateAdversarialMap(map_height, country, mode) {
   // var similarity_limits;
   // var min_similarity;
   // var max_similarity;
   // const num_intervals = 5;
+  var adversarialUrl = "notebooks/cleaned_data/adversarial_data/combined_adversarial.csv";
+  if (mode != 0) {
+    adversarialUrl = "notebooks/dropped_us_blocked_intermediate_calculations.csv";
+  }
   $.ajax( {
-      url: "notebooks/cleaned_data/adversarial_data/combined_adversarial.csv",
+      url: adversarialUrl,
       type: "GET",
       contentType: "application/json; charset=utf-8",
       async: true,
