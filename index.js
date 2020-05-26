@@ -12,6 +12,12 @@ var combined_adversarial;
 var blue_line = [0, 0, 255];
 var red_line = [255, 0, 0];
 
+var datasource_mode = 0;
+
+var condenseGDPR;
+var getDomainData;
+var populateMap;
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.split(search).join(replacement);
@@ -20,6 +26,22 @@ String.prototype.replaceAll = function(search, replacement) {
 function input_load() {
   var input = document.getElementById('world-map');
   input.checked = "checked";
+}
+
+function toggleDataSourceMode() {
+  datasource_mode = 1 - datasource_mode;
+
+  if (datasource_mode == 0) {
+    condenseGDPR = condenseGDPRDiff;
+    getDomainData = getDomainDataDiff;
+    populateMap = populateMapDiff;
+  } else {
+    condenseGDPR = condenseGDPRICLab;
+    getDomainData = getDomainDataICLab;
+    populateMap = populateMapICLab;
+  }
+
+  toggleMode(currMode);
 }
 
 // toggle between world map and force modes

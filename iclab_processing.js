@@ -1,9 +1,9 @@
-function condenseGDPR(data) {
+function condenseGDPRICLab(data) {
   const dataArray = Object.entries(data);
   return dataArray;
 }
 
-function getDomainData(country, inputData) {
+function getDomainDataICLab(country, inputData) {
   $.ajax( {
     url: "notebooks/new_common_domains/" + country + "-common-domains.csv",
     type: "GET",
@@ -68,12 +68,12 @@ function getDomainData(country, inputData) {
           }
         }
       }
-      sortedTableData = sortResults(condenseGDPR(tableData), 'count');
+      sortedTableData = sortResults(condenseGDPRICLab(tableData), 'count');
       formatResults(sortedTableData);
   }});
 }
 
-function populateMap(map_height, country) {
+function populateMapICLab(map_height, country) {
   var similarity_limits;
   var min_similarity;
   var max_similarity;
@@ -109,7 +109,7 @@ function populateMap(map_height, country) {
           combined_similarities = inputData;
           var fills = deriveColorScale(inputData);
           var fillKeys = generateFillKeys(country, inputData);
-          getDomainData(country, inputData);
+          getDomainDataICLab(country, inputData);
           var basic_choropleth = new Datamap({
             element: document.getElementById("basic_chloropleth"),
             projection: 'mercator',
@@ -123,7 +123,7 @@ function populateMap(map_height, country) {
                   }
                   fillKeys = generateFillKeys(country, inputData);
                   datamap.updateChoropleth(fillKeys, {reset: true});
-                  getDomainData(country, inputData);
+                  getDomainDataICLab(country, inputData);
                   document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
                   similarity_limits = drawLegend(country, fills, fillKeys);
                   min_similarity = similarity_limits[0];

@@ -138,3 +138,7 @@ input:checked + .slider:before {
 .mode_input {
   padding-right: 30px;
 }
+
+#datasource_swap {
+  text-align: center;
+}

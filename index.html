@@ -23,6 +23,10 @@
         <div class="container">
           Click on a country to see shared censored website data in other countries across the world.
         </div>
+        <div id="datasource_swap">
+          <input type="checkbox" id="datasource_mode" name="datasource_mode" value="ICLab" onchange="toggleDataSourceMode()">
+          <label for="datasource_mode">Enable ICLab Datasource</label><br>
+        </div>
         <div id="main_display">
           <div class="row_elem" id="basic_chloropleth"></div>
           <div class="row_elem" id="legend">
@@ -56,9 +60,8 @@
         <b><p class="content" id="selected_country"></p></b>
         <div class="content" id="domain_table"></div>
         <script src="index.js"></script>
-        <!-- swap which of the below 2 scripts is commented out to switch datasources -->
         <script src="iclab_processing.js"></script>
-        <!-- <script src="diff_datasources_processing.js"></script> -->
+        <script src="diff_datasources_processing.js"></script>
         <script>
           var country = "United States of America";
           
