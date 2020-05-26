@@ -1,0 +1,25 @@
+,Country 1,Country 2,Count
+0,China,Hong Kong,2
+1,"Korea, Republic of",Turkey,32
+2,China,India,10
+3,China,Malaysia,10
+4,China,Viet Nam,10
+5,China,South Africa,10
+6,India,Malaysia,10
+7,India,Viet Nam,10
+8,India,South Africa,10
+9,Malaysia,Viet Nam,10
+10,Malaysia,South Africa,10
+11,Viet Nam,South Africa,10
+12,Japan,"Korea, Republic of",2
+13,Bulgaria,India,4
+14,Bulgaria,Netherlands,4
+15,Bulgaria,New Zealand,4
+16,India,Netherlands,4
+17,India,New Zealand,4
+18,Netherlands,New Zealand,4
+19,Hungary,New Zealand,2
+20,China,Netherlands,2
+21,India,Russian Federation,3
+22,India,Turkey,3
+23,Russian Federation,Turkey,3

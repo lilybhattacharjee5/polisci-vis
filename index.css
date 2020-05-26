@@ -1,0 +1,140 @@
+h1 {
+  text-align: center;
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+#main_display {
+  display: flex;
+}
+
+.row_elem {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+#legend_labels, .content_elem {
+  margin-left: 10px;
+}
+
+.content {
+  align-items: center;
+}
+
+#legend_title {
+  font-weight: bold;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.content {
+  margin: 50px;
+}
+
+#basic_chloropleth {
+  width: 80%;
+  height: 750px;
+}
+
+#legend {
+  height: 750px;
+}
+
+#legend_display {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+#legend_div {
+  height: 100%;
+  width: 50px;
+  min-height: 750px;
+}
+
+#legend_labels {
+  height: 100%;
+}
+
+#vis_mode {
+  display: flex;
+}
+
+#selected_country {
+  font-size: 24px;
+}
+
+#domain_table {
+  height: 500px;
+  overflow-y: auto;
+}
+
+.content .content_elem {
+  display: flex;
+  flex-direction: row;
+}
+
+.mode_input {
+  padding-right: 30px;
+}
