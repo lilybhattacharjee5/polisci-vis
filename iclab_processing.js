@@ -5,7 +5,7 @@ function condenseGDPRICLab(data) {
 
 function getDomainDataICLab(country, inputData) {
   $.ajax( {
-    url: "notebooks/new_common_domains/" + country + "-common-domains.csv",
+    url: "notebooks/dropped_us/" + country + "-common-domains.csv",
     type: "GET",
     async: true,
     dataType: "text",
