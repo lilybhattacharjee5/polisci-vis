@@ -39,7 +39,6 @@
         <br />
         <div class="content" id="vis_mode">
           <div class="content_elem">
-            <!-- <label class="switch"> -->
               <div class="mode_input">
                 <input type="radio" id="world-map" name="mode", value="world-map" onchange="toggleMode(this.value)">
                 <label for="world-map"></label>World Map<br>
@@ -52,19 +51,17 @@
                 <input type="radio" id="adversarial" name="mode", value="adversarial" onchange="toggleMode(this.value)">
                 <label for="adversarial"></label>Adversarial<br>
               </div>
-              <!-- <input type="checkbox" onchange="toggleMode()"> -->
-              <!-- <span class="slider round"></span> -->
-            <!-- </label> -->
           </div>
-          <!-- <div class="content_elem" id="curr_mode">World Map</div> -->
         </div>
         <b><p class="content" id="selected_country"></p></b>
         <div class="content" id="domain_table"></div>
         <script src="index.js"></script>
+        <!-- swap which of the below 2 scripts is commented out to switch datasources -->
         <script src="iclab_processing.js"></script>
-        <script src="diff_datasources_processing.js"></script>
+        <!-- <script src="diff_datasources_processing.js"></script> -->
         <script>
           var country = "United States of America";
+          
           populateMap(750, country);
           document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
        </script>
