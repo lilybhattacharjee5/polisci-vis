@@ -128,7 +128,7 @@ function populateMapICLab(map_height, country) {
                   similarity_limits = drawLegend(country, fills, fillKeys);
                   min_similarity = similarity_limits[0];
                   max_similarity = similarity_limits[1];
-                  drawLegendIntervals(min_similarity, max_similarity, num_intervals);
+                  drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
               });
             },
             geographyConfig: {
@@ -144,7 +144,7 @@ function populateMapICLab(map_height, country) {
           similarity_limits = drawLegend(country, fills, fillKeys);
           min_similarity = similarity_limits[0];
           max_similarity = similarity_limits[1];
-          drawLegendIntervals(min_similarity, max_similarity, num_intervals);
+          drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
     }});
   }});
 }
