@@ -79,7 +79,7 @@ function populateMapICLab(map_height, country) {
   var max_similarity;
   const num_intervals = 5;
   const countryCodesURL = "https://raw.githubusercontent.com/daylight-lab/III/master/shared/data/country-codes/countries_codes_and_coordinates.csv";
-  if (!includedCountries.includes(country)) {
+  if (!includedCountriesICLab.includes(country)) {
     return;
   }
   $.ajax( {
@@ -118,7 +118,7 @@ function populateMapICLab(map_height, country) {
             done: function(datamap) {
               datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
                   country = geography.properties.name;
-                  if (!includedCountries.includes(country)) {
+                  if (!includedCountriesICLab.includes(country)) {
                     return;
                   }
                   fillKeys = generateFillKeys(country, inputData);
