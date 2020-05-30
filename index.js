@@ -7,6 +7,7 @@ var currModeIdx = 0;
 var currMode = modes[currModeIdx];
 
 var combined_similarities; // holds loaded similarity ratios to prevent extra reloads
+const combined_similarities_urls = ["similarity_data/combined-similarities.json", "data/dropped_us_combined_similarities.json"];
 var combined_adversarial;
 
 var blue_line = [0, 0, 255];
@@ -41,6 +42,17 @@ function toggleDataSourceMode() {
     populateMap = populateMapICLab;
   }
 
+  // reload combined similarities
+  $.ajax( {
+      url: combined_similarities_urls[datasource_mode],
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      async: true,
+      dataType: "json",
+      success: function ( inputData ) {
+        combined_similarities = inputData;
+      }
+  } );
   toggleMode(currMode);
 }
 
@@ -352,7 +364,6 @@ function generateFillKeys(country, data) {
     } else {
       fillKeys[ccMap["\"" + country + "\""]] = { "fillKey": "selected" };
     }
-    // console.log(fillKeys);
     return fillKeys;
 }
 
@@ -418,7 +429,6 @@ function deriveAdversarialColorScale(inputData) {
   var countryAdvLimits = {};
   var inputDataLines = inputData.split('\n');
   inputDataLines = inputDataLines.slice(1, inputDataLines.length);
-  // console.log(inputDataLines);
   var currSplitLine;
   var currCountry;
   var currURLCountry;
@@ -442,9 +452,7 @@ function deriveAdversarialColorScale(inputData) {
     } else {
       countryAdvLimits[currCountry] = { "min": currBlocked, "max": currBlocked }
     }
-    // console.log(currSplitLine[1], currSplitLine[2], currSplitLine[3]);
   }
-  // console.log(countryAdvLimits);
   for (var idx in inputDataLines) {
     currSplitLine = inputDataLines[idx].split(",");
     currCountry = currSplitLine[1];
@@ -458,12 +466,10 @@ function deriveAdversarialColorScale(inputData) {
     var scaledFrac = (currBlocked - lowerBound) / (upperBound - lowerBound);
     var currHex = numToHex(scaledFrac, red_line);
     var key = "(" + currCountry + "," + currURLCountry + ")";
-    // console.log(key, scaledFrac);
     fills[key] = currHex;
   }
   fills["defaultFill"] = gray;
   fills["selected"] = "#218023";
-  // console.log(fills);
   return fills;
 }
 
@@ -496,7 +502,6 @@ function generateAdversarialFillKeys(country, inputData) {
     }
     fillKeys[currCC] = { fillKey: currFillKey };
   }
-  // console.log(fillKeys);
   return fillKeys;
 }
 
@@ -527,10 +532,6 @@ function getAdversarialData(country, inputData) {
       continue;
     }
     countryToBlockedNum[currURLCountry] = currBlocked;
-    // tableData += '<tr>';
-    // tableData += '<td>' + currURLCountry + '</td>'
-    // tableData += '<td>' + currBlocked + '</td>';
-    // tableData += '</tr>';
   }
 
   var sortedBlocked = Object.entries(countryToBlockedNum)
@@ -543,7 +544,6 @@ function getAdversarialData(country, inputData) {
     tableData += '<td>' + currData[1] + '</td>';
     tableData += '</tr>';
   }
-  // console.log(sortedBlocked);
 
   document.getElementById("domain_table").innerHTML = tableData;
 }
@@ -553,9 +553,9 @@ function populateAdversarialMap(map_height, country, mode) {
   // var min_similarity;
   // var max_similarity;
   // const num_intervals = 5;
-  var adversarialUrl = "notebooks/cleaned_data/adversarial_data/combined_adversarial.csv";
+  var adversarialUrl = "data/adversarial_data/combined_adversarial.csv";
   if (mode != 0) {
-    adversarialUrl = "notebooks/dropped_us_blocked_intermediate_calculations.csv";
+    adversarialUrl = "data/dropped_us_blocked_intermediate_calculations.csv";
   }
   $.ajax( {
       url: adversarialUrl,
