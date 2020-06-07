@@ -150,7 +150,3 @@ function populateMapDiff(map_height, country) {
   }});
 }
 
-condenseGDPR = condenseGDPRDiff;
-getDomainData = getDomainDataDiff;
-populateMap = populateMapDiff;
-

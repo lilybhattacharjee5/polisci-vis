@@ -2,7 +2,9 @@
 var ccMap = {}; // maps country code to country name
 const gray = "#d3d3d3"; // default country color (no data)
 
-const modes = ["world-map", "force", "adversarial"];
+// disable adversarial mode for now
+// const modes = ["world-map", "force", "adversarial"];
+const modes = ["world-map", "force"];
 var currModeIdx = 0;
 var currMode = modes[currModeIdx];
 
@@ -13,7 +15,7 @@ var combined_adversarial;
 var blue_line = [0, 0, 255];
 var red_line = [255, 0, 0];
 
-var datasource_mode = 0;
+var datasource_mode = 1;
 
 var condenseGDPR;
 var getDomainData;
@@ -30,7 +32,9 @@ function input_load() {
 }
 
 function toggleDataSourceMode() {
-  datasource_mode = 1 - datasource_mode;
+  // datasource_mode = 1 - datasource_mode;
+  datasource_mode = 1;
+  console.log(datasource_mode)
 
   if (datasource_mode == 0) {
     condenseGDPR = condenseGDPRDiff;
@@ -87,6 +91,8 @@ function enableForce() {
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("basic_chloropleth").style.width = "100%";
   document.getElementById("legend").style.display = "none";
+  document.getElementById("selected_country").innerHTML = "";
+  document.getElementById("domain_table").innerHTML = "";
   generateForceDirected();
 }
 

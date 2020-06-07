@@ -22,12 +22,14 @@
     <body onload="input_load()">
         <h1 style>Internationally Blocked Domains Demo</h1>
         <div class="container">
-          Click on a country to see shared censored website data in other countries across the world.
+          <p>This demo includes a map and force-undirected visualization to display commonly-blocked domains and blocking similarities by nation. Click on a country to see shared censored website data in other countries across the world.</p>
+
+          <p>To view the code for the demo, click <a href="https://github.com/lilybhattacharjee5/interoperability-demo" target="_blank">here</a>. To view the data that powers these visualizations, click <a href="https://github.com/daylight-lab/uclab-data-processing/" target="_blank">here</a>.</p>
         </div>
-        <div id="datasource_swap">
+        <!-- <div id="datasource_swap">
           <input type="checkbox" id="datasource_mode" name="datasource_mode" value="ICLab" onchange="toggleDataSourceMode()">
           <label for="datasource_mode">Enable ICLab Datasource</label><br>
-        </div>
+        </div> -->
         <div id="main_display">
           <div class="row_elem" id="basic_chloropleth"></div>
           <div class="row_elem" id="legend">
@@ -52,10 +54,10 @@
                 <input type="radio" id="force" name="mode", value="force" onchange="toggleMode(this.value)">
                 <label for="force"></label>Force</br>
               </div>
-              <div class="mode_input">
+              <!-- <div class="mode_input">
                 <input type="radio" id="adversarial" name="mode", value="adversarial" onchange="toggleMode(this.value)">
                 <label for="adversarial"></label>Adversarial<br>
-              </div>
+              </div> -->
           </div>
         </div>
         <b><p class="content" id="selected_country"></p></b>

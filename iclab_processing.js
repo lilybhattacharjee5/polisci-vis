@@ -5,7 +5,8 @@ function condenseGDPRICLab(data) {
 
 function getDomainDataICLab(country, inputData) {
   $.ajax( {
-    url: "data/dropped_us/" + country + "-common-domains.csv",
+    // url: "data/dropped_us/" + country + "-common-domains.csv",
+    url: "https://raw.githubusercontent.com/daylight-lab/uclab-data-processing/master/data/iclab_dropped_us_common_domains/" + country + "-common-domains.csv",
     type: "GET",
     async: true,
     dataType: "text",
@@ -100,12 +101,13 @@ function populateMapICLab(map_height, country) {
       }
 
       $.ajax( {
-      url: "data/dropped_us_combined_similarities.json",
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      async: true,
-      dataType: "json",
-      success: function ( inputData ) {
+      // url: "data/dropped_us_combined_similarities.json",
+        url: "https://raw.githubusercontent.com/daylight-lab/uclab-data-processing/master/data/iclab_dropped_us_combined_similarities.json",
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        dataType: "json",
+        success: function ( inputData ) {
           combined_similarities = inputData;
           var fills = deriveColorScale(inputData);
           var fillKeys = generateFillKeys(country, inputData);
@@ -148,3 +150,7 @@ function populateMapICLab(map_height, country) {
     }});
   }});
 }
+
+condenseGDPR = condenseGDPRICLab;
+getDomainData = getDomainDataICLab;
+populateMap = populateMapICLab;
