@@ -101,8 +101,8 @@ function populateMapICLab(map_height, country) {
       }
 
       $.ajax( {
-      // url: "data/dropped_us_combined_similarities.json",
-        url: "https://raw.githubusercontent.com/daylight-lab/uclab-data-processing/master/data/iclab_dropped_us_combined_similarities.json",
+        url: "data/dropped_us_combined_similarities.json",
+        // url: "https://raw.githubusercontent.com/daylight-lab/uclab-data-processing/master/data/iclab_dropped_us_combined_similarities.json",
         type: "GET",
         contentType: "application/json; charset=utf-8",
         async: true,
