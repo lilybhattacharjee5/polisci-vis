@@ -15,7 +15,7 @@ function condenseGDPRDiff(data) {
 
 function getDomainDataDiff(country, inputData) {
   $.ajax( {
-    url: "notebooks/common_domains/" + country + "-common-domains.csv",
+    url: "data/common_domains/" + country + "-common-domains.csv",
     type: "GET",
     async: true,
     dataType: "text",
@@ -101,7 +101,7 @@ function populateMapDiff(map_height, country) {
       }
 
       $.ajax( {
-      url: "similarity_data/combined-similarities.json",
+      url: "data/combined-similarities.json",
       type: "GET",
       contentType: "application/json; charset=utf-8",
       async: true,

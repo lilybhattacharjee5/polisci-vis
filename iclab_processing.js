@@ -5,7 +5,7 @@ function condenseGDPRICLab(data) {
 
 function getDomainDataICLab(country, inputData) {
   $.ajax( {
-    url: "notebooks/dropped_us/" + country + "-common-domains.csv",
+    url: "data/dropped_us/" + country + "-common-domains.csv",
     type: "GET",
     async: true,
     dataType: "text",
@@ -100,16 +100,14 @@ function populateMapICLab(map_height, country) {
       }
 
       $.ajax( {
-      url: "notebooks/dropped_us_combined_similarities.json",
+      url: "data/dropped_us_combined_similarities.json",
       type: "GET",
       contentType: "application/json; charset=utf-8",
       async: true,
       dataType: "json",
       success: function ( inputData ) {
-          console.log(inputData);
           combined_similarities = inputData;
           var fills = deriveColorScale(inputData);
-          console.log(fills);
           var fillKeys = generateFillKeys(country, inputData);
           getDomainDataICLab(country, inputData);
           var basic_choropleth = new Datamap({
@@ -124,7 +122,6 @@ function populateMapICLab(map_height, country) {
                     return;
                   }
                   fillKeys = generateFillKeys(country, inputData);
-                  console.log(fillKeys);
                   datamap.updateChoropleth(fillKeys, {reset: true});
                   getDomainDataICLab(country, inputData);
                   document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
