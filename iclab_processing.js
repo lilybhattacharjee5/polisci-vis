@@ -74,6 +74,22 @@ function getDomainDataICLab(country, inputData) {
   }});
 }
 
+function processInputData(inputData) {
+  var originalData = inputData.split("\n");
+  var jsonFormat = {};
+  var currRow;
+  var splitRow;
+  for (var i = 1; i < originalData.length - 1; i++) {
+    currRow = originalData[i];
+    splitRow = currRow.split(",");
+    console.log(splitRow);
+    var key = "('" + splitRow[1] + "', '" + splitRow[2] + "')";
+    jsonFormat[key] = [{ "similarity" : splitRow[3] }];
+  }
+  console.log(jsonFormat);
+  return jsonFormat;
+}
+
 function populateMapICLab(map_height, country) {
   var similarity_limits;
   var min_similarity;
@@ -102,12 +118,13 @@ function populateMapICLab(map_height, country) {
 
       $.ajax( {
         url: "data/dropped_us_combined_similarities.json",
-        // url: "https://raw.githubusercontent.com/daylight-lab/uclab-data-processing/master/data/iclab_dropped_us_combined_similarities.json",
+        // url: "https://raw.githubusercontent.com/daylight-lab/uclab-data-processing/master/data/iclab_dropped_us_combined_similarities.csv",
         type: "GET",
         contentType: "application/json; charset=utf-8",
         async: true,
         dataType: "json",
         success: function ( inputData ) {
+          // var cleanedInputData = processInputData(inputData);
           combined_similarities = inputData;
           var fills = deriveColorScale(inputData);
           var fillKeys = generateFillKeys(country, inputData);
