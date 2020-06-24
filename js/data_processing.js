@@ -63,7 +63,7 @@ function populateMap(mapHeight, country) {
 	var min_similarity;
 	var max_similarity;
 	const num_intervals = 5;
-	const countryCodesURL = "https://raw.githubusercontent.com/daylight-lab/III/master/shared/data/country-codes/countries_codes_and_coordinates.csv";
+	const countryCodesURL = "local_country_variables/countries_codes_and_coordinates.csv";
 	$.ajax( {
 		url: countryCodesURL,
 		type: "GET",
@@ -75,14 +75,14 @@ function populateMap(mapHeight, country) {
 			var name;
 			var cc3;
 			for (var i = 1; i < ccData.length; i++) {
-		        currRow = ccData[i].split(", ");
-		        name = currRow[0];
-		        cc3 = currRow[2].slice(1, currRow[2].length - 1);
-		        ccMap[name] = cc3;
-	    	}
-	    	// console.log(ccMap);
+		    currRow = ccData[i].split(", ");
+		    name = currRow[0];
+		    cc3 = currRow[2].slice(1, currRow[2].length - 1);
+		    ccMap[name] = cc3;
+	    }
+	    // console.log(ccMap);
 
-	    	$.ajax( {
+	    $.ajax( {
 				url: "data/data.json",
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
@@ -123,7 +123,7 @@ function populateMap(mapHeight, country) {
 						},
 					})
 				}
-			
+
 			} )
 
 		}
