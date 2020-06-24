@@ -83,7 +83,7 @@ function populateMap(mapHeight, country) {
 	    	// console.log(ccMap);
 
 	    	$.ajax( {
-				url: "data/FinalUpdatedViz.json",
+				url: "data/data.json",
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
 				async: true,
