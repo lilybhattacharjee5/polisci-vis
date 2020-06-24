@@ -19,7 +19,7 @@ var datasource_mode = 1;
 
 var condenseGDPR;
 var getDomainData;
-var populateMap;
+// var populateMap;
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -34,7 +34,7 @@ function input_load() {
 function toggleDataSourceMode() {
   // datasource_mode = 1 - datasource_mode;
   datasource_mode = 1;
-  console.log(datasource_mode)
+  // console.log(datasource_mode)
 
   if (datasource_mode == 0) {
     condenseGDPR = condenseGDPRDiff;
@@ -82,7 +82,7 @@ function setupMap() {
 
 function enableWorldMap() {
   setupMap();
-  var country = "United States of America";
+  var country = "USA";
   populateMap(750, country);
   document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
 }
@@ -92,7 +92,7 @@ function enableForce() {
   document.getElementById("basic_chloropleth").style.width = "100%";
   document.getElementById("legend").style.display = "none";
   document.getElementById("selected_country").innerHTML = "";
-  document.getElementById("domain_table").innerHTML = "";
+  // document.getElementById("domain_table").innerHTML = "";
   generateForceDirected();
 }
 
@@ -103,81 +103,82 @@ function enableAdversarial() {
   document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
 }
 
-function calculateForceData() {
-  var forceNodes = [];
-  var forceLinks = [];
-  var uniqueNodes = {};
-  var ccToCountry = {};
-  var possibleNode;
-  var splitKey;
-  var cc;
-  var count = 0;
-  var target;
-  var source;
-  for (const [key, value] of Object.entries(combined_similarities)) {
-    splitKey = key.split(", ");
-    possibleNode = splitKey[0].replace("(", "").replaceAll("'", "\"");
-    strippedPossibleNode = possibleNode.replaceAll("\"", "");
-    if (!possibleNode.includes("\"")) {
-      possibleNode = '"' + possibleNode + '"';
-    }
+// function calculateForceData() {
+//   var forceNodes = [];
+//   var forceLinks = [];
+//   var uniqueNodes = {};
+//   var ccToCountry = {};
+//   var possibleNode;
+//   var splitKey;
+//   var cc;
+//   var count = 0;
+//   var target;
+//   var source;
+//   // console.log(combined_similarities)
+//   for (const [key, value] of Object.entries(combined_similarities)) {
+//     splitKey = key.split(", ");
+//     possibleNode = splitKey[0].replace("(", "").replaceAll("'", "\"");
+//     strippedPossibleNode = possibleNode.replaceAll("\"", "");
+//     if (!possibleNode.includes("\"")) {
+//       possibleNode = '"' + possibleNode + '"';
+//     }
 
-    if (possibleNode == '"Lichtenstein"') {
-      possibleNode = '"Liechtenstein"';
-    }
+//     if (possibleNode == '"Lichtenstein"') {
+//       possibleNode = '"Liechtenstein"';
+//     }
 
-    if (possibleNode == '"United States of America"') {
-      possibleNode = '"United States"';
-    }
+//     if (possibleNode == '"United States of America"') {
+//       possibleNode = '"United States"';
+//     }
     
-    if (!(possibleNode in uniqueNodes)) {
-      if (gdpr_countries.includes(strippedPossibleNode)) {
-        if (!("GDPR" in uniqueNodes)) {
-          forceNodes.push({ "character": "GDPR", "id": count, "influence": 40 });
-          uniqueNodes["GDPR"] = count;
-          count++;
-        }
-      } else {
-        uniqueNodes[possibleNode] = count;
-        forceNodes.push({ "character": strippedPossibleNode, "id": count, "influence": 40 });
-        count++;
-      }
-      cc = ccMap[possibleNode];
-      ccToCountry[cc] = strippedPossibleNode;
-    }
-  }
-  for (const [key, value] of Object.entries(combined_similarities)) {
-    splitKey = key.split(", ");
-    o_source = splitKey[0].replaceAll("'", "").replace("(", "");
-    o_target = splitKey[1].replaceAll("'", "").replace(")", "");
-    if (o_source == "United States of America") {
-      o_source = 'United States';
-    }
-    if (o_target == "United States of America") {
-      o_target = 'United States';
-    }
-    if (gdpr_countries.includes(o_source)) {
-      source = uniqueNodes["GDPR"];
-    } else {
-      source = uniqueNodes["\"" + o_source + "\""];
-    }
-    var country_o_target = ccToCountry[o_target];
-    if (gdpr_countries.includes(country_o_target)) {
-      target = uniqueNodes["GDPR"];
-    } else {
-      target = uniqueNodes["\"" + country_o_target + "\""];
-    }
-    var weight = value[0].similarity * 500;
-    if (source != undefined && target != undefined && weight) {
-      var newLink = { "source": source, "target": target, "weight": weight };
-      forceLinks.push(newLink);
-    }
-  }
-  return {
-    "nodes": forceNodes,
-    "links": forceLinks.slice(1,forceLinks.length),
-  }
-}
+//     if (!(possibleNode in uniqueNodes)) {
+//       if (gdpr_countries.includes(strippedPossibleNode)) {
+//         if (!("GDPR" in uniqueNodes)) {
+//           forceNodes.push({ "character": "GDPR", "id": count, "influence": 40 });
+//           uniqueNodes["GDPR"] = count;
+//           count++;
+//         }
+//       } else {
+//         uniqueNodes[possibleNode] = count;
+//         forceNodes.push({ "character": strippedPossibleNode, "id": count, "influence": 40 });
+//         count++;
+//       }
+//       cc = ccMap[possibleNode];
+//       ccToCountry[cc] = strippedPossibleNode;
+//     }
+//   }
+//   for (const [key, value] of Object.entries(combined_similarities)) {
+//     splitKey = key.split(", ");
+//     o_source = splitKey[0].replaceAll("'", "").replace("(", "");
+//     o_target = splitKey[1].replaceAll("'", "").replace(")", "");
+//     if (o_source == "United States of America") {
+//       o_source = 'United States';
+//     }
+//     if (o_target == "United States of America") {
+//       o_target = 'United States';
+//     }
+//     if (gdpr_countries.includes(o_source)) {
+//       source = uniqueNodes["GDPR"];
+//     } else {
+//       source = uniqueNodes["\"" + o_source + "\""];
+//     }
+//     var country_o_target = ccToCountry[o_target];
+//     if (gdpr_countries.includes(country_o_target)) {
+//       target = uniqueNodes["GDPR"];
+//     } else {
+//       target = uniqueNodes["\"" + country_o_target + "\""];
+//     }
+//     var weight = value[0].similarity * 500;
+//     if (source != undefined && target != undefined && weight) {
+//       var newLink = { "source": source, "target": target, "weight": weight };
+//       forceLinks.push(newLink);
+//     }
+//   }
+//   return {
+//     "nodes": forceNodes,
+//     "links": forceLinks.slice(1,forceLinks.length),
+//   }
+// }
 
 function generateForceDirected() {
   var margin = {
@@ -201,6 +202,8 @@ function generateForceDirected() {
   var links = dataset.links;
   var radius = 6;
   var padding = 20;
+  console.log(nodes);
+  console.log(links);
   // Create Force Layout
   var force = d3.layout.force()
           .size([width, height])
@@ -208,14 +211,14 @@ function generateForceDirected() {
           .links(links)
           .gravity(0)
           .charge(0)
-          .linkDistance(function(d) { return d.weight * 500; });
+          .linkDistance(function(d) { return d.weight * 50; });
   // Add links to SVG
   var link = svgElement.selectAll(".link")
         .data(links)
         .enter()
         .append("line")
-        .attr("stroke", "blue")
-        .attr("stroke-width", function(d){ return d.weight; })
+        .attr("stroke", "#add8e6")
+        .attr("stroke-width", function(d){ return d.weight / 20; })
         .attr("class", "link");
   // Add nodes to SVG
   var node = svgElement.selectAll(".node")
