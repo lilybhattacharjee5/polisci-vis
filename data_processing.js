@@ -142,11 +142,15 @@ function calculateForceData(country) {
 		var targets = Object.entries(combined_similarities[source]);
 		for (var j = 0; j < targets.length; j++) {
 			var target = targets[j][0];
-			forceLinks.push({
-				"source" : i,
-				"target" : j,
-				"weight" : targets[j][1].sim,
-			})
+			var targetIndex = nodeNames.indexOf(target);
+			console.log(target, targetIndex);
+			if (targetIndex >= 0) {
+				forceLinks.push({
+					"source" : i,
+					"target" : nodeNames.indexOf(target),
+					"weight" : targets[j][1].sim,
+				})
+			}
 		}
 	}
 	// console.log(forceNodes);
