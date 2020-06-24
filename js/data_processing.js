@@ -1,4 +1,26 @@
-// function getData(country, )
+
+function rgbToHex(rgb) {
+  var hex = Number(rgb).toString(16);
+  if (hex.length < 2) {
+    hex = "0" + hex;
+  }
+  return hex;
+}
+
+
+function fullColorHex(r,g,b) {
+  var red = rgbToHex(r);
+  var green = rgbToHex(g);
+  var blue = rgbToHex(b);
+  return "#" + red+green+blue;
+}
+
+function numToHex(num, color_line) {
+  curr_hex = fullColorHex(Math.round(num * color_line[0]), Math.round(num * color_line[1]), Math.round(num * color_line[2]));
+  return curr_hex;
+}
+
+
 function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
 	var adjustedSimilarity = (similarity - minSimilarity) / (maxSimilarity - minSimilarity);
 	if (maxSimilarity - minSimilarity == 0) {
