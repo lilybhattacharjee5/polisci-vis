@@ -2,15 +2,12 @@
 var ccMap = {}; // maps country code to country name
 const gray = "#d3d3d3"; // default country color (no data)
 
-// disable adversarial mode for now
-// const modes = ["world-map", "force", "adversarial"];
 const modes = ["world-map", "force"];
 var currModeIdx = 0;
 var currMode = modes[currModeIdx];
 
 var combined_similarities; // holds loaded similarity ratios to prevent extra reloads
 const combined_similarities_urls = ["similarity_data/combined-similarities.json", "data/dropped_us_combined_similarities.json"];
-var combined_adversarial;
 
 var blue_line = [0, 0, 255];
 var red_line = [255, 0, 0];
@@ -69,8 +66,6 @@ function toggleMode(mode) {
     enableWorldMap();
   } else if (currModeIdx == 1) {
     enableForce();
-  } else {
-    enableAdversarial();
   }
 }
 
@@ -96,12 +91,6 @@ function enableForce() {
   generateForceDirected();
 }
 
-function enableAdversarial() {
-  setupMap();
-  var country = "China";
-  populateAdversarialMap(750, country, datasource_mode);
-  document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
-}
 
 function generateForceDirected() {
   var margin = {
@@ -354,187 +343,5 @@ function drawLegend(country, fills, fillKeys) {
   document.getElementById("max_val").innerHTML = Math.round(max_similarity * Math.pow(10,6))/Math.pow(10,6);
   legend_div.style.backgroundImage = legend_input;
   return [min_similarity, max_similarity];
-}
-
-function deriveAdversarialColorScale(inputData) {
-  var fills = {};
-  var countryAdvLimits = {};
-  var inputDataLines = inputData.split('\n');
-  inputDataLines = inputDataLines.slice(1, inputDataLines.length);
-  var currSplitLine;
-  var currCountry;
-  var currURLCountry;
-  var currBlocked;
-  for (var idx in inputDataLines) {
-    currSplitLine = inputDataLines[idx].split(",");
-    currCountry = currSplitLine[1];
-    currURLCountry = currSplitLine[2];
-    currBlocked = parseInt(currSplitLine[3]);
-    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number") {
-      continue;
-    }
-    if (countryAdvLimits[currCountry]) {
-      var currBounds = countryAdvLimits[currCountry];
-      if (currBlocked > currBounds["max"]) {
-        currBounds["max"] = currBlocked;
-      }
-      if (currBlocked < currBounds["min"]) {
-        currBounds["min"] = currBlocked;
-      }
-    } else {
-      countryAdvLimits[currCountry] = { "min": currBlocked, "max": currBlocked }
-    }
-  }
-  for (var idx in inputDataLines) {
-    currSplitLine = inputDataLines[idx].split(",");
-    currCountry = currSplitLine[1];
-    currURLCountry = currSplitLine[2];
-    currBlocked = parseInt(currSplitLine[3]);
-    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number") {
-      continue;
-    }
-    var lowerBound = countryAdvLimits[currCountry].min;
-    var upperBound = countryAdvLimits[currCountry].max;
-    var scaledFrac = (currBlocked - lowerBound) / (upperBound - lowerBound);
-    var currHex = numToHex(scaledFrac, red_line);
-    var key = "(" + currCountry + "," + currURLCountry + ")";
-    fills[key] = currHex;
-  }
-  fills["defaultFill"] = gray;
-  fills["selected"] = "#218023";
-  return fills;
-}
-
-function generateAdversarialFillKeys(country, inputData) {
-  var fillKeys = {};
-  var inputDataLines = inputData.split('\n');
-  inputDataLines = inputDataLines.slice(1, inputDataLines.length);
-  var currSplitLine;
-  var currCountry;
-  var currURLCountry;
-  var currBlocked;
-  for (var idx in inputDataLines) {
-    currSplitLine = inputDataLines[idx].split(",");
-    currCountry = currSplitLine[1];
-    currURLCountry = currSplitLine[2];
-    currBlocked = parseInt(currSplitLine[3]);
-    if (currCountry != country && !gdpr_countries.includes(country)) {
-      continue;
-    }
-    var currCC = ccMap["\"" + currURLCountry + "\""];
-    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number" || !currCC) {
-      continue;
-    }
-    var currFillKey = "(" + currCountry + "," + currURLCountry + ")";
-    if (gdpr_countries.includes(currURLCountry)) {
-      currFillKey = "(" + currCountry + ",GDPR)";
-    }
-    if (gdpr_countries.includes(currCountry)) {
-      currFillKey = "(" + currCountry + ",GDPR)";
-    }
-    fillKeys[currCC] = { fillKey: currFillKey };
-  }
-  return fillKeys;
-}
-
-function getAdversarialData(country, inputData) {
-  var inputDataLines = inputData.split('\n');
-  inputDataLines = inputDataLines.slice(1, inputDataLines.length);
-
-  document.getElementById("domain_table").style.height = "500px";
-  var tableData = '<table class="table table-bordered table-striped">';
-
-  tableData += '<th>Country</th>';
-  tableData += '<th>Number of Domains Blocked</th>';
-
-  var currSplitLine;
-  var currCountry;
-  var currURLCountry;
-  var currBlocked;
-  var countryToBlockedNum = {};
-  for (var idx in inputDataLines) {
-    currSplitLine = inputDataLines[idx].split(",");
-    currCountry = currSplitLine[1];
-    currURLCountry = currSplitLine[2];
-    currBlocked = parseInt(currSplitLine[3]);
-    if (currCountry != country && !gdpr_countries.includes(country)) {
-      continue;
-    }
-    if (!currCountry || !currURLCountry || !currBlocked || typeof currBlocked !== "number") {
-      continue;
-    }
-    countryToBlockedNum[currURLCountry] = currBlocked;
-  }
-
-  var sortedBlocked = Object.entries(countryToBlockedNum)
-  sortedBlocked.sort((a, b) => b[1] - a[1]);
-
-  for (var idx in sortedBlocked) {
-    var currData = sortedBlocked[idx];
-    tableData += '<tr>';
-    tableData += '<td>' + currData[0] + '</td>'
-    tableData += '<td>' + currData[1] + '</td>';
-    tableData += '</tr>';
-  }
-
-  document.getElementById("domain_table").innerHTML = tableData;
-}
-
-function populateAdversarialMap(map_height, country, mode) {
-  // var similarity_limits;
-  // var min_similarity;
-  // var max_similarity;
-  // const num_intervals = 5;
-  var adversarialUrl = "data/adversarial_data/combined_adversarial.csv";
-  if (mode != 0) {
-    adversarialUrl = "data/dropped_us_blocked_intermediate_calculations.csv";
-  }
-  $.ajax( {
-      url: adversarialUrl,
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      async: true,
-      dataType: "text",
-      success: function ( inputData ) {
-          combined_adversarial = inputData;
-          var fills = deriveAdversarialColorScale(inputData);
-          var fillKeys = generateAdversarialFillKeys(country, inputData);
-          getAdversarialData(country, inputData);
-          var basic_choropleth = new Datamap({
-            element: document.getElementById("basic_chloropleth"),
-            projection: 'mercator',
-            fills: fills,
-            data: fillKeys,
-            done: function(datamap) {
-              datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                  country = geography.properties.name;
-                  if (!includedAdvCountries.includes(country)) {
-                    return;
-                  }
-                  fillKeys = generateAdversarialFillKeys(country, inputData);
-                  datamap.updateChoropleth(fillKeys, {reset: true});
-                  getAdversarialData(country, inputData);
-                  document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
-                  // similarity_limits = drawLegend(country, fills, fillKeys);
-                  // min_similarity = similarity_limits[0];
-                  // max_similarity = similarity_limits[1];
-                  // drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
-              });
-            },
-            geographyConfig: {
-              borderColor: function(data) {
-                return '#b1b1b1';
-              },
-              popupTemplate: function(geography, data) {
-                return;
-              },
-              highlightOnHover: false,
-            },
-          });
-          // similarity_limits = drawLegend(country, fills, fillKeys);
-          // min_similarity = similarity_limits[0];
-          // max_similarity = similarity_limits[1];
-          // drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals);
-    }});
 }
 
