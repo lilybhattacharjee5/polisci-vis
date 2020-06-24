@@ -2,21 +2,10 @@
 var ccMap = {}; // maps country code to country name
 const gray = "#d3d3d3"; // default country color (no data)
 
-const modes = ["world-map", "force"];
-var currModeIdx = 0;
-var currMode = modes[currModeIdx];
-
-var combined_similarities; // holds loaded similarity ratios to prevent extra reloads
-const combined_similarities_urls = ["similarity_data/combined-similarities.json", "data/dropped_us_combined_similarities.json"];
+var currMode = "world-map";
 
 var blue_line = [0, 0, 255];
 var red_line = [255, 0, 0];
-
-var datasource_mode = 1;
-
-var condenseGDPR;
-var getDomainData;
-// var populateMap;
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -28,50 +17,19 @@ function input_load() {
   input.checked = "checked";
 }
 
-function toggleDataSourceMode() {
-  // datasource_mode = 1 - datasource_mode;
-  datasource_mode = 1;
-  // console.log(datasource_mode)
-
-  if (datasource_mode == 0) {
-    condenseGDPR = condenseGDPRDiff;
-    getDomainData = getDomainDataDiff;
-    populateMap = populateMapDiff;
-  } else {
-    condenseGDPR = condenseGDPRICLab;
-    getDomainData = getDomainDataICLab;
-    populateMap = populateMapICLab;
-  }
-
-  // reload combined similarities
-  $.ajax( {
-      url: combined_similarities_urls[datasource_mode],
-      type: "GET",
-      contentType: "application/json; charset=utf-8",
-      async: true,
-      dataType: "json",
-      success: function ( inputData ) {
-        combined_similarities = inputData;
-      }
-  } );
-  toggleMode(currMode);
-}
-
 // toggle between world map and force modes
 function toggleMode(mode) {
-  currModeIdx = modes.indexOf(mode);
-  currMode = modes[currModeIdx];
-  // document.getElementById("curr_mode").innerHTML = currMode;
-  if (currModeIdx == 0) {
+  if (currMode == "force") {
     enableWorldMap();
-  } else if (currModeIdx == 1) {
+    currMode="world-map";
+  } else if (currMode == "world-map") {
     enableForce();
+    currMode="force";
   }
 }
 
 function setupMap() {
   document.getElementById("basic_chloropleth").innerHTML = "";
-  document.getElementById("legend").style.display = "";
   document.getElementById("basic_chloropleth").style.width = "80%";
 }
 
@@ -85,9 +43,7 @@ function enableWorldMap() {
 function enableForce() {
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("basic_chloropleth").style.width = "100%";
-  document.getElementById("legend").style.display = "none";
   document.getElementById("selected_country").innerHTML = "";
-  // document.getElementById("domain_table").innerHTML = "";
   generateForceDirected();
 }
 
@@ -168,42 +124,6 @@ function generateForceDirected() {
   force.start();
 }
 
-function formatResults(sortedData) {
-  if (!sortedData.length) {
-    document.getElementById("domain_table").innerHTML = "<p>No known blocked websites, though website takedowns have been enacted. See <a href = 'https://www.ice.gov/factsheets/ipr-in-our-sites' target = '_blank'>Operation In Our Sites</a>.</p>";
-    document.getElementById("domain_table").style.height = "100px";
-    return;
-  }
-  document.getElementById("domain_table").style.height = "500px";
-  var tableData = '<table class="table table-bordered table-striped">';
-  tableData += '<th>Country</th>';
-  tableData += '<th>Count</th>';
-  tableData += '<th>Similarity</th>';
-  tableData += '<th>Domains</th>';
-  for (var i = 0; i < sortedData.length; i++) {
-    tableData += '<tr>';
-    tableData += '<td>'+sortedData[i][0]+'</td>';
-    tableData += '<td>'+sortedData[i][1].count+'</td>';
-    tableData += '<td>'+sortedData[i][1].similarity+'</td>';
-    tableData += '<td>';
-    var allDomains = sortedData[i][1].domains;
-    for (var domainCount = 0; domainCount < allDomains.length; domainCount++) {
-      tableData += allDomains[domainCount] + '<br>';
-    }
-    tableData += '</td>';
-    tableData += '</tr>';
-  }
-  document.getElementById("domain_table").innerHTML = tableData;
-}
-
-function sortResults(data, valueName) {
-  data.sort(function(a, b) {
-    const aCount = a[1][valueName];
-    const bCount = b[1][valueName];
-    return bCount - aCount;
-  });
-  return data;
-}
 
 function rgbToHex(rgb) { 
   var hex = Number(rgb).toString(16);
@@ -288,60 +208,5 @@ function generateFillKeys(country, data) {
     return fillKeys;
 }
 
-function drawLegendIntervals(map_height, min_similarity, max_similarity, num_intervals) {
-  const similarity_range = max_similarity - min_similarity;
-  const jump = similarity_range / num_intervals;
-  const legend_labels = document.getElementById("legend_labels");
-  const div_height = map_height/num_intervals;
-  legend_labels.innerHTML = ""
-  for (var i = num_intervals; i > 0; i--) {
-    if (i == num_intervals) {
-      legend_labels.innerHTML += "<div style = 'height:" + div_height + "'></div>"
-      continue;
-    }
-    legend_labels.innerHTML += "<div class = 'legend_elem' style = 'height:" + div_height + ";'>" + Math.round((min_similarity + jump * i) * Math.pow(10,6))/Math.pow(10,6) + "</div>"
-  }
-}
 
-function drawLegend(country, fills, fillKeys) {
-  var legend_div = document.getElementById("legend_div");
-  var min_similarity = 0;
-  var max_similarity = -Infinity;
-  var min_similarity_key;
-  var max_similarity_key;
-  var max_color;
-  var min_color;
-  var curr_similarity;
-  var currFill;
-  var newMax = -Infinity;
-  var newMin = Infinity;
-  for (const [key, value] of Object.entries(fills)) {
-    if (value != "#NaNNaNNaN") {
-      currFill = parseInt("0x" + value.slice(1, value.length).toUpperCase());
-      if (currFill > newMax && key != "selected" && key != "defaultFill") {
-        newMax = currFill;
-        max_key = key;
-      }
-      if (currFill < newMin && key != "selected" && key != "defaultFill") {
-        newMin = currFill;
-        min_key = key;
-      }
-    }
-  }
-  min_similarity = combined_similarities[min_key][0].similarity;
-  min_color = numToHex(min_similarity / (newMax - newMin), blue_line);
-  max_similarity = combined_similarities[max_key][0].similarity;
-  max_color = numToHex(max_similarity / (max_similarity - min_similarity), blue_line);
-  if (min_color == "#NaNNaNNaN") {
-    min_color = "black";
-  }
-  if (max_color == "#NaNNaNNaN") {
-    max_color = "black";
-  }
-  const legend_input = "linear-gradient(to top, " + min_color + ", " + max_color + ")";
-  document.getElementById("min_val").innerHTML = Math.round(min_similarity * Math.pow(10,6))/Math.pow(10,6);
-  document.getElementById("max_val").innerHTML = Math.round(max_similarity * Math.pow(10,6))/Math.pow(10,6);
-  legend_div.style.backgroundImage = legend_input;
-  return [min_similarity, max_similarity];
-}
 

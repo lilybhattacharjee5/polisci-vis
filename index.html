@@ -1,24 +1,27 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <!-- Bootstrap -->
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="index.css">
 
+
+        <!-- JQuery -->
         <!-- Latest compiled JavaScript -->
         <script
           src="https://code.jquery.com/jquery-3.4.1.min.js"
           integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
           crossorigin="anonymous"></script>
+        <!-- d3 -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+        <!-- topojson -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+        <!-- datamaps.js-->
         <script src="libraries/datamaps.js"></script>
-        <script src="local_country_variables/gdpr_countries.js"></script>
-        <script src="local_country_variables/included_countries_iclab.js"></script>
-        <script src="local_country_variables/included_countries_diff.js"></script>
-        <script src="local_country_variables/included_adversarial_countries.js"></script>
-    </head> 
+    </head>
+    <!-- Initialize js in onload() -->
     <body onload="input_load()">
         <h1 style>Internationally Blocked Domains Demo</h1>
         <div class="container">
@@ -40,12 +43,15 @@
               <div class="legend_elem" id="legend_labels"></div>
             </div>
             <div id="min_val"></div>
-          </div>    
+          </div>
           </div>
         </div>
         <br />
+
         <div class="content" id="vis_mode">
           <div class="content_elem">
+
+            <!-- Toggle map type -->
               <div class="mode_input">
                 <input type="radio" id="world-map" name="mode", value="world-map" onchange="toggleMode(this.value)">
                 <label for="world-map"></label>World Map<br>
@@ -54,20 +60,21 @@
                 <input type="radio" id="force" name="mode", value="force" onchange="toggleMode(this.value)">
                 <label for="force"></label>Force</br>
               </div>
-              <!-- <div class="mode_input">
-                <input type="radio" id="adversarial" name="mode", value="adversarial" onchange="toggleMode(this.value)">
-                <label for="adversarial"></label>Adversarial<br>
-              </div> -->
           </div>
+
         </div>
+
+        <!-- Show selected country -->
         <b><p class="content" id="selected_country"></p></b>
+
+        <!-- Load scripts -->
         <script src="js/index.js"></script>
         <script src="js/data_processing.js"></script>
         <script>
           var country = "USA";
-          
           populateMap(750, country);
           document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
        </script>
+
     </body>
 </html>
