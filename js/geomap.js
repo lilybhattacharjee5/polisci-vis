@@ -1,8 +1,12 @@
+const GRAY = "#d3d3d3"; // default country color (no data)
+const SELECTED = "#00ff00";
+
 var ccMap = {}; // maps country code to country name
-const gray = "#d3d3d3"; // default country color (no data)
 
 var blue_line = [0, 0, 255];
 var red_line = [255, 0, 0];
+
+var inputData; // HACK pass this into stuff instead. used by force directed graph right now
 
 
 /* Color utilities */
@@ -30,7 +34,13 @@ function numToHex(num, color_line) {
   return curr_hex;
 }
 
-function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
+/*
+  Convert a similarity score into a hex color.
+
+  TODO Simliarity scores range from 0 to 100. This may change; we may want to
+  programmatically generate min and max in the future.
+  */
+function similarityToHexColor(similarity) {
 	var adjustedSimilarity =
       (similarity - minSimilarity) / (maxSimilarity - minSimilarity);
 	if (maxSimilarity - minSimilarity == 0) {
@@ -81,50 +91,94 @@ function dataToFills(inputData) {
 	return fills;
 }
 
-function fillsToFillKeys(inputData, country) {
-	var fillKeys = {};
-	var countryData = inputData[country];
+/*
+  Given a country, finds simliarities to it.
 
+  Returns an object of the from
+
+    {UKR: 0.1, ...}
+
+  This method handles logic around the fact that our data.json may not be
+  symmetrical; in other words, the data file may contain USA->CAN but not
+  CAN->USA.
+  */
+function similaritiesWith (country, inputData) {
+	var sims = {};
 	// console.log(country, inputData, countryData);
-	for (const [currCountryB, similarityData] of Object.entries(countryData)) {
-		var currFillKey = "(" + country + "," + currCountryB + ")";
-		fillKeys[currCountryB] = { fillKey: currFillKey, similarity: similarityData.sim };
-	}
+  for (var [countryPair, similarityScore] of Object.entries(inputData)) {
+    var [countryA, countryB] = countryPair.split('->');
+    // if this pair contains our country as country A,
+    if (countryA == country) {
+      // update the fill key for countryB
+      sims[countryB] = similarityScore;
+    }
+    // if this pair contains our country as country B
+    else if (countryB == country) {
+      sims[countryA] = similarityScore;
+    }
+  }
+	return sims;
+}
 
-	return fillKeys;
+/*
+  Given a country and the similarities object produced by `similaritiesWith`,
+  returns the fill keys for the chloropleth map.
+
+  Returns an object of the form
+
+    { UKR: "#f0f00", ...}
+
+  Country passed in will be given the SELECTED color.
+*/
+function getFillKeys (selectedCountry, similarities) {
+  var fillKeys = {}
+  for (var [countryName, similarityScore] of Object.entries(similarities)) {
+    // color each country by similariy score
+    fillKeys[countryName] =
+      similarityToHexColor(similarityScore);
+  }
+  // color selected country
+  fillKeys[selectedCountry] = SELECTED
+  return fillKeys
 }
 
 function createMap (inputData) {
-	// console.log(inputData);
-	var similarityBounds = getSimilarityBounds(country, inputData);
-	var minSimilarity = similarityBounds[0];
-	var maxSimilarity = similarityBounds[1];
+  inputData = JSON.parse(inputData); // HACK - not sure why we have to do this when we specify request is json in our ajax call
+  // these should be 0 and 1, but let's not be cocky.
 
-	// console.log(minSimilarity, maxSimilarity);
-
-	var fills = dataToFills(inputData);
+	// var fills = dataToFills(inputData);
 	// console.log(fills);
 
-	var fillKeys = fillsToFillKeys(inputData, country);
-	// console.log(fillKeys);
+	// var fillKeys = fillsToFillKeys(inputData, country);
+	// // console.log(fillKeys);
 
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
 		projection: "mercator",
-		fills: fills,
-		data: fillKeys,
+    fills: {
+      defaultFill: GRAY,
+    },
+		// fills: fills,
+		// data: fillKeys,
 		done: function(datamap) {
 			datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+        // HACK setting this globally; should be passing it down.
 				country = geography.properties.name;
-				fillKeys = fillsToFillKeys(inputData, ccMap['"' + country + '"']);
+        var alpha3 = ccMap[`"${country}"`]
+        console.log(country, alpha3)
+        var similarities = similaritiesWith(alpha3, inputData)
+        console.log(similarities)
+				fillKeys = getFillKeys(alpha3, inputData);
+        console.log(fillKeys)
 				datamap.updateChoropleth(fillKeys, { reset: true });
-				document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+				// document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
 			});
 		},
 		geographyConfig: {
 			popupTemplate: function(geography, data) {
 				return '<div class="hoverinfo">' + geography.properties.name + '<br>' + data.similarity / 100 + '</div>';
-			}
+			},
+      highlightFillColor: '#FC8D59',
 		},
 	});
 }

@@ -1,12 +1,12 @@
 function calculateForceData(country) {
-	var nodeNames = Object.keys(combined_similarities);
+	var nodeNames = Object.keys(inputData);
 	var forceNodes = [];
 	var forceLinks = [];
 	// console.log(combined_similarities);
 	for (var i = 0; i < nodeNames.length; i++) {
 		forceNodes.push({ "character" : nodeNames[i] });
 		var source = nodeNames[i];
-		var targets = Object.entries(combined_similarities[source]);
+		var targets = Object.entries(inputData[source]);
 		for (var j = 0; j < targets.length; j++) {
 			var target = targets[j][0];
 			var targetIndex = nodeNames.indexOf(target);
