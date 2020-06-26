@@ -12,6 +12,23 @@ var blue_line = [0, 0, 255];
 var inputData; // HACK pass this into stuff instead. used by force directed graph right now
 
 
+/* From an object where values are floats, returns a list
+
+   [[key, value], ...]
+
+   Sorted by value. */
+function sortedObject (obj) {
+  var sortable = [];
+  for (var item in obj) {
+    sortable.push([item, obj[item]]);
+  }
+  sortable.sort(function(a, b) {
+    return b[1] - a[1];
+  });
+  return sortable;
+}
+
+
 /* Color utilities */
 
 function rgbToHex(rgb) {
@@ -101,10 +118,20 @@ function getFillKeys (selectedCountry, similarities) {
   return fillKeys
 }
 
-function createTableHTML (country, similarities) {
-  var html = '';
-  for (var [countryName, similarityScore] of Object.entries(similarities)) {
+function createTableHTML (selectedCountry, similarities) {
+  var html = `<table>
+<tr>
+<th>Country</th>
+<th>Similarity to ${selectedCountry}</th>
+</tr>`
+  for (var [countryName, similarityScore] of sortedObject(similarities)) {
+    html+=`<tr>
+<td>${countryName}</td>
+<td>${similarityScore.toFixed(2)}</td>
+</tr>`
   }
+  html+='</table>'
+  return html
 }
 
 function createMap (inputData) {
@@ -127,7 +154,10 @@ function createMap (inputData) {
 				fillKeys = getFillKeys(alpha3, similarities);
         // console.log(fillKeys)
 				datamap.updateChoropleth(fillKeys, { reset: true });
-				// document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+				document.getElementById("selectedCountry").innerHTML =
+          `Selected Country: ${country} </div>`;
+				document.getElementById("similarityTable").innerHTML =
+          createTableHTML(country, similarities);
 			});
 		},
 		// geographyConfig: {
