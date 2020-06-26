@@ -1,3 +1,5 @@
+var INPUT_DATA; // HACK we want to be passing this in.
+
 const GRAY = "#d3d3d3"; // default country color (no data)
 const SELECTED = "#00ff00";
 
@@ -137,6 +139,8 @@ function createTableHTML (selectedCountry, similarities) {
 function createMap (inputData) {
   inputData = JSON.parse(inputData); // HACK - not sure why we have to do this when we specify request is json in our ajax call
 
+  INPUT_DATA = inputData; // HACK we want to be passing this in.
+
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
 		projection: "mercator",
@@ -150,7 +154,7 @@ function createMap (inputData) {
         var alpha3 = ccMap[`"${country}"`]
         // console.log(country, alpha3)
         var similarities = similaritiesWith(alpha3, inputData)
-        console.log(similarities)
+        // console.log(similarities)
 				fillKeys = getFillKeys(alpha3, similarities);
         // console.log(fillKeys)
 				datamap.updateChoropleth(fillKeys, { reset: true });
