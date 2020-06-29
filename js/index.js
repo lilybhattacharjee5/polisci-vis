@@ -1,6 +1,5 @@
 // global variables
-var currMode = "world-map";
-
+var currMode = "world-map"; // world-map or force
 
 // This method is called in `body onload` in index.html
 function input_load() {
@@ -26,10 +25,7 @@ function enableWorldMap() {
   // set up map
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("basic_chloropleth").style.width = "80%";
-  // select USA by default
-  var country = "USA";
-  populateMap(750, country);
-  document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+  populateMap(750);
 }
 
 // Initialize force directed graph
@@ -37,7 +33,7 @@ function enableWorldMap() {
 function enableForce() {
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("basic_chloropleth").style.width = "100%";
-  document.getElementById("selected_country").innerHTML = "";
+  document.getElementById("selectedCountry").innerHTML = "";
   generateForceDirected();
 }
 

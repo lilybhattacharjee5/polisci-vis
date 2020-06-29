@@ -39,6 +39,7 @@
         </div>
         <br />
 
+
         <div class="content" id="vis_mode">
           <div class="content_elem">
 
@@ -56,16 +57,15 @@
         </div>
 
         <!-- Show selected country -->
-        <b><p class="content" id="selected_country"></p></b>
+        <b><p class="content" id="selectedCountry"></p></b>
+        <b><p class="content" id="similarityTable"></p></b>
 
         <!-- Load scripts -->
         <script src="js/index.js"></script>
         <script src="js/geomap.js"></script>
         <script src="js/force-directed-graph.js"></script>
         <script>
-          var country = "USA";
-          populateMap(750, country);
-          document.getElementById("selected_country").innerHTML = "Selected Country: <div style = 'display: inline; color: blue;'>" + country + "</div>";
+          populateMap(750);
        </script>
 
     </body>
