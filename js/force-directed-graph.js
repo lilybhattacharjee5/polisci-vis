@@ -57,11 +57,25 @@ function getNodesAndLinks (inputData) {
   var links = []
   for (var [countryPair, similarityScore] of Object.entries(inputData)) {
     var [countryA, countryB] = countryPair.split('->');
-    links.push({
-      source: alphaToIndex[countryA],
-      target: alphaToIndex[countryB],
-      weight: similarityScore,
-    });
+    // links.push({
+    //   source: alphaToIndex[countryA],
+    //   target: alphaToIndex[countryB],
+    //   weight: similarityScore,
+    // });
+    if (100 - similarityScore > 0) {
+      links.push({
+        source: alphaToIndex[countryA],
+        target: alphaToIndex[countryB],
+        weight: 100 - similarityScore,
+      });
+    }
+    // } else {
+    //   links.push({
+    //     source: alphaToIndex[countryA],
+    //     target: alphaToIndex[countryB],
+    //     weight: 100,
+    //   });
+    // }
   }
 
   return [nodes, links];
@@ -87,8 +101,6 @@ function generateForceDirected() {
   var svgElement = generateSvg(width, height, 50, 20);
   // Extract data from dataset
   var [nodes, links] = getNodesAndLinks(INPUT_DATA)
-  console.log(nodes)
-  console.log(links)
   // var links = getLinks(INPUT_DATA)
   // Create Force Layout
   var force = d3.layout.force()
@@ -96,8 +108,8 @@ function generateForceDirected() {
       .nodes(nodes)
       .links(links)
       .gravity(0)
-      .charge(0)
-      .linkDistance(d => d.weight*50);
+      .charge(-1000)
+      .linkDistance(d => d.weight * 5);
   // Add links to SVG
   var link = svgElement.selectAll(".link")
       .data(links)
@@ -107,12 +119,26 @@ function generateForceDirected() {
       .attr("stroke-width", 1 )
       .attr("class", "link");
   // Add nodes to SVG
+  function mouseover() {
+    d3.select(this).select("circle").transition()
+        .duration(750)
+        .attr("r", radius * 1.5);
+  }
+
+  function mouseout() {
+    d3.select(this).select("circle").transition()
+      .duration(750)
+      .attr("r", radius);
+  }
+
   var node = svgElement.selectAll(".node")
       .data(nodes)
       .enter()
       .append("g")
       .attr("class", "node")
-      .call(force.drag);
+      .call(force.drag)
+      // .on("mouseover", mouseover)
+      .on("mouseout", mouseout);
   // Add labels to each node
   var label = node.append("text")
       .attr("dx", 12)
@@ -141,6 +167,23 @@ function generateForceDirected() {
     node.attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
     });
+  });
+
+  node.on("click", function(d) {
+    force.stop();
+    var thisNode = d.id
+
+    d3.selectAll(".circleNode").attr("r", radius);
+    // d3.select(this).attr("r", 12);
+
+    link.attr("opacity", function(d) {
+        return (d.source.id == thisNode || d.target.id == thisNode) ? 1 : 0.1
+    });
+
+  });
+
+  d3.select(".container").on("click",function(){
+    link.attr("opacity", 1);
   });
   // Start the force layout calculation
   force.start();
