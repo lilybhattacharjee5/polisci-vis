@@ -136,7 +136,7 @@ function generateForceDirected() {
       .enter()
       .append("g")
       .attr("class", "node")
-      .call(force.drag)
+      // .call(force.drag)
       // .on("mouseover", mouseover)
       .on("mouseout", mouseout);
   // Add labels to each node
