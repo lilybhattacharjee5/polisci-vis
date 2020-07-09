@@ -177,6 +177,9 @@ function generateForceDirected() {
     // d3.select(this).attr("r", 12);
 
     link.attr("opacity", function(d) {
+      // TODO I'm assuming we're setting opacity here. can we make the links opaque ONLY if the similarity is above the mean similarity in the whole dataset?
+      // we should be able to compute the mean similarity dynamically and keep it in memory.
+      // then, for each edge, we see if the edge is higher than that mean. if it is, line is opaque. if not, line is mostly transparent.
         return (d.source.id == thisNode || d.target.id == thisNode) ? 1 : 0.1
     });
 
