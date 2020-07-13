@@ -62,7 +62,7 @@ function getNodesAndLinks (inputData) {
     //   target: alphaToIndex[countryB],
     //   weight: similarityScore,
     // });
-    if (100 - similarityScore >= 0) {
+    if (100 - similarityScore >= 0 && similarityScore > 0) {
       links.push({
         source: alphaToIndex[countryA],
         target: alphaToIndex[countryB],
