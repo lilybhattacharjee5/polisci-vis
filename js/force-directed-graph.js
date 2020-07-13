@@ -62,7 +62,7 @@ function getNodesAndLinks (inputData) {
     //   target: alphaToIndex[countryB],
     //   weight: similarityScore,
     // });
-    if (100 - similarityScore > 0) {
+    if (100 - similarityScore >= 0) {
       links.push({
         source: alphaToIndex[countryA],
         target: alphaToIndex[countryB],
@@ -106,7 +106,7 @@ function generateSvg (width, height, marginLeft, marginTop) {
 function generateForceDirected() {
   // node circles
   var radius = 6;
-  var padding = 70;
+  var padding = 150;
   var width = $('#basic_chloropleth').width();
   var height = $('#basic_chloropleth').height();
   // Create an SVG element and append it to the DOM
@@ -129,8 +129,8 @@ function generateForceDirected() {
       .data(links)
       .enter()
       .append("line")
-      .attr("stroke", "#add8e6")
-      .attr("stroke-width", 1 )
+      .attr("stroke", "#625EED")
+      .attr("stroke-width", 1)
       .attr("class", "link");
   // Add nodes to SVG
   function mouseover() {
@@ -169,9 +169,9 @@ function generateForceDirected() {
     node
       .attr("r", d => d.influence)
       .attr("cx", d =>
-            d.x = Math.max(radius, Math.min(width - radius - padding, d.x)))
+            d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x)))
       .attr("cy", d =>
-            d.y = Math.max(radius, Math.min(height - radius - padding, d.y)));
+            d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y)));
     // Set X, Y of link
     link.attr("x1", d => d.source.x);
     link.attr("y1", d => d.source.y);
@@ -194,8 +194,12 @@ function generateForceDirected() {
       // TODO I'm assuming we're setting opacity here. can we make the links opaque ONLY if the similarity is above the mean similarity in the whole dataset?
       // we should be able to compute the mean similarity dynamically and keep it in memory.
       // then, for each edge, we see if the edge is higher than that mean. if it is, line is opaque. if not, line is mostly transparent.
-        return ((d.source.id == thisNode || d.target.id == thisNode) && (d.similarity > meanSimilarity)) ? 1 : 0.1
+      return ((d.source.id == thisNode || d.target.id == thisNode) && (d.similarity > meanSimilarity)) ? 1 : 0.1
     });
+
+    link.attr("stroke-width", function(d) {
+      return ((d.source.id == thisNode || d.target.id == thisNode) && (d.similarity > meanSimilarity)) ? 2 : 1
+    })
 
   });
 
