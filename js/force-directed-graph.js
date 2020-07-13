@@ -66,6 +66,7 @@ function getNodesAndLinks (inputData) {
       links.push({
         source: alphaToIndex[countryA],
         target: alphaToIndex[countryB],
+        similarity: similarityScore,
         weight: 100 - similarityScore,
       });
     }
@@ -81,6 +82,17 @@ function getNodesAndLinks (inputData) {
   return [nodes, links];
 }
 
+function calculateMeanSimilarity (links) {
+  var count = 0;
+  var similaritySum = 0;
+  console.log(links);
+  for (var link of links) {
+    similaritySum += link.similarity;
+    count++;
+  }
+  return similaritySum / count;
+}
+
 
 function generateSvg (width, height, marginLeft, marginTop) {
   return d3.select("#basic_chloropleth")
@@ -94,21 +106,23 @@ function generateSvg (width, height, marginLeft, marginTop) {
 function generateForceDirected() {
   // node circles
   var radius = 6;
-  var padding = 20;
+  var padding = 70;
   var width = $('#basic_chloropleth').width();
   var height = $('#basic_chloropleth').height();
   // Create an SVG element and append it to the DOM
   var svgElement = generateSvg(width, height, 50, 20);
   // Extract data from dataset
-  var [nodes, links] = getNodesAndLinks(INPUT_DATA)
+  var [nodes, links] = getNodesAndLinks(INPUT_DATA);
   // var links = getLinks(INPUT_DATA)
+  var meanSimilarity = calculateMeanSimilarity(links);
+  console.log("mean similarity", meanSimilarity);
   // Create Force Layout
   var force = d3.layout.force()
       .size([width, height])
       .nodes(nodes)
       .links(links)
       .gravity(0)
-      .charge(-1000)
+      .charge(-3000)
       .linkDistance(d => d.weight * 5);
   // Add links to SVG
   var link = svgElement.selectAll(".link")
@@ -180,7 +194,7 @@ function generateForceDirected() {
       // TODO I'm assuming we're setting opacity here. can we make the links opaque ONLY if the similarity is above the mean similarity in the whole dataset?
       // we should be able to compute the mean similarity dynamically and keep it in memory.
       // then, for each edge, we see if the edge is higher than that mean. if it is, line is opaque. if not, line is mostly transparent.
-        return (d.source.id == thisNode || d.target.id == thisNode) ? 1 : 0.1
+        return ((d.source.id == thisNode || d.target.id == thisNode) && (d.similarity > meanSimilarity)) ? 1 : 0.1
     });
 
   });
