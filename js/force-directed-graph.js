@@ -1,4 +1,3 @@
-
 // function calculateForceData(country) {
 // 	var nodeNames = Object.keys(inputData);
 // 	var forceNodes = [];
@@ -106,7 +105,7 @@ function generateSvg (width, height, marginLeft, marginTop) {
 function generateForceDirected() {
   // node circles
   var radius = 6;
-  var padding = 150;
+  var padding = 100;
   var width = $('#basic_chloropleth').width();
   var height = $('#basic_chloropleth').height();
   // Create an SVG element and append it to the DOM
@@ -123,7 +122,7 @@ function generateForceDirected() {
       .links(links)
       .gravity(0)
       .charge(-3000)
-      .linkDistance(d => d.weight * 5);
+      .linkDistance(d => d.weight * 7);
   // Add links to SVG
   var link = svgElement.selectAll(".link")
       .data(links)
@@ -150,9 +149,9 @@ function generateForceDirected() {
       .enter()
       .append("g")
       .attr("class", "node")
-      // .call(force.drag)
+      .call(force.drag)
       // .on("mouseover", mouseover)
-      .on("mouseout", mouseout);
+      // .on("mouseout", mouseout);
   // Add labels to each node
   var label = node.append("text")
       .attr("dx", 12)
@@ -163,49 +162,76 @@ function generateForceDirected() {
   var circle = node.append("circle")
       .attr("r", d => radius);
 
+  var flag = false;
+
   // This function will be executed for every tick of force layout
   force.on("tick", function(){
     // Set X and Y of node
     node
-      .attr("r", d => d.influence)
+      // .attr("r", d => d.influence)
       .attr("cx", d =>
             d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x)))
       .attr("cy", d =>
             d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y)));
     // Set X, Y of link
-    link.attr("x1", d => d.source.x);
-    link.attr("y1", d => d.source.y);
-    link.attr("x2", d => d.target.x);
-    link.attr("y2", d => d.target.y);
+    if (flag) {
+      link.attr("x1", d => nodes[d.source].x)
+        .attr("y1", d => nodes[d.source].y)
+        .attr("x2", d => nodes[d.target].x)
+        .attr("y2", d => nodes[d.target].y)
+        .attr("opacity", function(d) { 
+          if (d.similarity > meanSimilarity) {
+            return 1;
+          }
+          return 0.1;
+        });
+        force.linkDistance(d => d.weight * 7)
+        force.gravity(0)
+        // force.charge(-100)
+    } else {
+      link.attr("x1", d => d.source.x);
+      link.attr("y1", d => d.source.y);
+      link.attr("x2", d => d.target.x);
+      link.attr("y2", d => d.target.y);
+    }
+    
+
     // Shift node a little
     node.attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
     });
   });
 
+  var removedLinks;
+  var oldLink = jQuery.extend(true, [], link);
+  var oldLinks = jQuery.extend(true, [], links);
+  var count = 0;
+
   node.on("click", function(d) {
     force.stop();
-    var thisNode = d.id
+    var thisNode = d.id;
+    links = oldLinks.filter(function(l) {
+      var sourceName = nodes[l["source"]]["id"];
+      var targetName = nodes[l["target"]]["id"];
 
-    d3.selectAll(".circleNode").attr("r", radius);
-    // d3.select(this).attr("r", 12);
-
-    link.attr("opacity", function(d) {
-      // TODO I'm assuming we're setting opacity here. can we make the links opaque ONLY if the similarity is above the mean similarity in the whole dataset?
-      // we should be able to compute the mean similarity dynamically and keep it in memory.
-      // then, for each edge, we see if the edge is higher than that mean. if it is, line is opaque. if not, line is mostly transparent.
-      return ((d.source.id == thisNode || d.target.id == thisNode) && (d.similarity > meanSimilarity)) ? 1 : 0.1
-    });
-
-    link.attr("stroke-width", function(d) {
-      return ((d.source.id == thisNode || d.target.id == thisNode) && (d.similarity > meanSimilarity)) ? 2 : 1
+      return (sourceName === thisNode) || (targetName === thisNode);
     })
-
+    link.remove();
+    link = svgElement.selectAll('.link')
+    .data(links)
+    .enter().append('line')
+        .attr("class", "link")
+        .attr("stroke","#625EED")
+        .attr("stroke-width", 1)
+    // force("charge").strength(0)
+    flag = true;
+    force.start()
   });
 
   d3.select(".container").on("click",function(){
     link.attr("opacity", 1);
   });
+
   // Start the force layout calculation
   force.start();
 }
