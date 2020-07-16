@@ -84,7 +84,6 @@ function getNodesAndLinks (inputData) {
 function calculateMeanSimilarity (links) {
   var count = 0;
   var similaritySum = 0;
-  console.log(links);
   for (var link of links) {
     similaritySum += link.similarity;
     count++;
@@ -114,7 +113,7 @@ function generateForceDirected() {
   var [nodes, links] = getNodesAndLinks(INPUT_DATA);
   // var links = getLinks(INPUT_DATA)
   var meanSimilarity = calculateMeanSimilarity(links);
-  console.log("mean similarity", meanSimilarity);
+  // console.log("mean similarity", meanSimilarity);
   // Create Force Layout
   var force = d3.layout.force()
       .size([width, height])
@@ -123,6 +122,8 @@ function generateForceDirected() {
       .gravity(0)
       .charge(-3000)
       .linkDistance(d => d.weight * 7);
+
+  // console.log("old links", links)
   // Add links to SVG
   var link = svgElement.selectAll(".link")
       .data(links)
@@ -132,16 +133,21 @@ function generateForceDirected() {
       .attr("stroke-width", 1)
       .attr("class", "link");
   // Add nodes to SVG
-  function mouseover() {
+
+  function mouseover(d) {
     d3.select(this).select("circle").transition()
         .duration(750)
-        .attr("r", radius * 1.5);
+        .attr("r", radius * 2)
+        .attr("background-color", "#FFFBCC")
+        .attr("opacity", 0.5);
   }
 
-  function mouseout() {
+  function mouseout(d) {
     d3.select(this).select("circle").transition()
       .duration(750)
-      .attr("r", radius);
+      .attr("r", radius)
+      .attr("color", "black")
+      .attr("opacity", 1);
   }
 
   var node = svgElement.selectAll(".node")
@@ -149,9 +155,9 @@ function generateForceDirected() {
       .enter()
       .append("g")
       .attr("class", "node")
-      .call(force.drag)
-      // .on("mouseover", mouseover)
-      // .on("mouseout", mouseout);
+      .on("mouseover", mouseover)
+      .on("mouseout", mouseout)
+      .call(force.drag);
   // Add labels to each node
   var label = node.append("text")
       .attr("dx", 12)
@@ -163,6 +169,7 @@ function generateForceDirected() {
       .attr("r", d => radius);
 
   var flag = false;
+  var clickedNode;
 
   // This function will be executed for every tick of force layout
   force.on("tick", function(){
@@ -175,17 +182,20 @@ function generateForceDirected() {
             d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y)));
     // Set X, Y of link
     if (flag) {
-      link.attr("x1", d => nodes[d.source].x)
-        .attr("y1", d => nodes[d.source].y)
-        .attr("x2", d => nodes[d.target].x)
-        .attr("y2", d => nodes[d.target].y)
+      link.attr("x1", d => nodes[d.source.index].x)
+        .attr("y1", d => nodes[d.source.index].y)
+        .attr("x2", d => nodes[d.target.index].x)
+        .attr("y2", d => nodes[d.target.index].y)
         .attr("opacity", function(d) { 
           if (d.similarity > meanSimilarity) {
             return 1;
           }
           return 0.1;
         });
-        force.linkDistance(d => d.weight * 7)
+        // force.linkDistance(d => { 
+        //   console.log(d, clickedNode); 
+        //   return d.weight * 7; 
+        // })
         force.gravity(0)
         // force.charge(-100)
     } else {
@@ -207,12 +217,22 @@ function generateForceDirected() {
   var oldLinks = jQuery.extend(true, [], links);
   var count = 0;
 
-  node.on("click", function(d) {
+  circle.on("click", function(d) {
     force.stop();
     var thisNode = d.id;
     links = oldLinks.filter(function(l) {
-      var sourceName = nodes[l["source"]]["id"];
-      var targetName = nodes[l["target"]]["id"];
+      // console.log(l)
+      var source = l.source;
+      var target = l.target;
+      if (typeof source != "number") {
+        source = l.source.index;
+      }
+      if (typeof target != "number") {
+        target = l.target.index;
+      }
+      var sourceName = nodes[source].id;
+      var targetName = nodes[target].id;
+      // console.log(sourceName, targetName)
 
       return (sourceName === thisNode) || (targetName === thisNode);
     })
@@ -225,6 +245,13 @@ function generateForceDirected() {
         .attr("stroke-width", 1)
     // force("charge").strength(0)
     flag = true;
+    clickedNode = thisNode;
+    // console.log(links);
+    force.nodes(nodes);
+    force.links(links);
+    force.gravity(0)
+    force.charge(-100)
+    force.linkDistance(d => d.weight * 5)
     force.start()
   });
 
