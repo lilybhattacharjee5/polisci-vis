@@ -1,37 +1,3 @@
-// function calculateForceData(country) {
-// 	var nodeNames = Object.keys(inputData);
-// 	var forceNodes = [];
-// 	var forceLinks = [];
-// 	// console.log(combined_similarities);
-// 	for (var i = 0; i < nodeNames.length; i++) {
-// 		forceNodes.push({ "character" : nodeNames[i] });
-// 		var source = nodeNames[i];
-// 		var targets = Object.entries(inputData[source]);
-// 		for (var j = 0; j < targets.length; j++) {
-// 			var target = targets[j][0];
-// 			var targetIndex = nodeNames.indexOf(target);
-// 			console.log(target, targetIndex);
-// 			if (targetIndex >= 0) {
-// 				forceLinks.push({
-// 					"source" : i,
-// 					"target" : nodeNames.indexOf(target),
-// 					"weight" : targets[j][1].sim,
-// 				})
-// 			}
-// 		}
-// 	}
-// 	// console.log(forceNodes);
-// 	// console.log(forceLinks);
-// 	return {
-// 		"nodes" : forceNodes,
-// 		"links" : forceLinks,
-// 	}
-// }
-
-// function calculateForceData () {
-
-// }
-
 function getNodesAndLinks (inputData) {
   var countryCodes = {}
   // construct a dict with the country code of every country as its key
@@ -56,11 +22,6 @@ function getNodesAndLinks (inputData) {
   var links = []
   for (var [countryPair, similarityScore] of Object.entries(inputData)) {
     var [countryA, countryB] = countryPair.split('->');
-    // links.push({
-    //   source: alphaToIndex[countryA],
-    //   target: alphaToIndex[countryB],
-    //   weight: similarityScore,
-    // });
     if (100 - similarityScore >= 0 && similarityScore > 0) {
       links.push({
         source: alphaToIndex[countryA],
@@ -69,13 +30,6 @@ function getNodesAndLinks (inputData) {
         weight: 100 - similarityScore,
       });
     }
-    // } else {
-    //   links.push({
-    //     source: alphaToIndex[countryA],
-    //     target: alphaToIndex[countryB],
-    //     weight: 100,
-    //   });
-    // }
   }
 
   return [nodes, links];
@@ -111,9 +65,7 @@ function generateForceDirected() {
   var svgElement = generateSvg(width, height, 50, 20);
   // Extract data from dataset
   var [nodes, links] = getNodesAndLinks(INPUT_DATA);
-  // var links = getLinks(INPUT_DATA)
   var meanSimilarity = calculateMeanSimilarity(links);
-  // console.log("mean similarity", meanSimilarity);
   // Create Force Layout
   var force = d3.layout.force()
       .size([width, height])
@@ -123,7 +75,6 @@ function generateForceDirected() {
       .charge(-3000)
       .linkDistance(d => d.weight * 7);
 
-  // console.log("old links", links)
   // Add links to SVG
   var link = svgElement.selectAll(".link")
       .data(links)
@@ -132,8 +83,8 @@ function generateForceDirected() {
       .attr("stroke", "#625EED")
       .attr("stroke-width", 1)
       .attr("class", "link");
+  
   // Add nodes to SVG
-
   function mouseover(d) {
     d3.select(this).transition()
         .duration(100)
@@ -201,19 +152,12 @@ function generateForceDirected() {
           }
           return 0.1;
         });
-        // force.linkDistance(d => { 
-        //   console.log(d, clickedNode); 
-        //   return d.weight * 7; 
-        // })
-        force.gravity(0)
-        // force.charge(-100)
     } else {
       link.attr("x1", d => d.source.x);
       link.attr("y1", d => d.source.y);
       link.attr("x2", d => d.target.x);
       link.attr("y2", d => d.target.y);
     }
-    
 
     // Shift node a little
     node.attr("transform", function(d) {
@@ -230,7 +174,6 @@ function generateForceDirected() {
     force.stop();
     var thisNode = d.id;
     links = oldLinks.filter(function(l) {
-      // console.log(l)
       var source = l.source;
       var target = l.target;
       if (typeof source != "number") {
@@ -241,7 +184,6 @@ function generateForceDirected() {
       }
       var sourceName = nodes[source].id;
       var targetName = nodes[target].id;
-      // console.log(sourceName, targetName)
 
       return (sourceName === thisNode) || (targetName === thisNode);
     })
@@ -252,7 +194,6 @@ function generateForceDirected() {
         .attr("class", "link")
         .attr("stroke","#625EED")
         .attr("stroke-width", 1)
-    // force("charge").strength(0)
     flag = true;
     clickedNode = d;
     force.nodes(nodes);

@@ -82,7 +82,6 @@ function similarityToHexColor(similarity) {
   */
 function similaritiesWith (country, inputData) {
 	var sims = {};
-	// console.log(country, inputData, countryData);
   for (var [countryPair, similarityScore] of Object.entries(inputData)) {
     var [countryA, countryB] = countryPair.split('->');
     // if this pair contains our country as country A,
@@ -96,6 +95,16 @@ function similaritiesWith (country, inputData) {
     }
   }
 	return sims;
+}
+
+function generateDataObj(inputData) {
+  var dataObj = {};
+  for (var countryPair of Object.keys(inputData)) {
+    var [countryA, countryB] = countryPair.split('->');
+    dataObj[countryA] = {'hasData': true};
+    dataObj[countryB] = {'hasData': true};
+  }
+  return dataObj;
 }
 
 /*
@@ -140,10 +149,12 @@ function createMap (inputData) {
   inputData = JSON.parse(inputData); // HACK - not sure why we have to do this when we specify request is json in our ajax call
 
   INPUT_DATA = inputData; // HACK we want to be passing this in.
+  var dataObj = generateDataObj(inputData);
 
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
 		projection: "mercator",
+    data: dataObj,
     fills: {
       defaultFill: GRAY,
     },
@@ -151,24 +162,34 @@ function createMap (inputData) {
 			datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
         // HACK setting this globally; should be passing it down.
 				country = geography.properties.name;
+        // check that the country has corresponding data
         var alpha3 = ccMap[`"${country}"`]
-        // console.log(country, alpha3)
         var similarities = similaritiesWith(alpha3, inputData)
-        // console.log(similarities)
+        if (Object.keys(similarities).length == 0) {
+          return
+        }
 				fillKeys = getFillKeys(alpha3, similarities);
-        // console.log(fillKeys)
 				datamap.updateChoropleth(fillKeys, { reset: true });
 				document.getElementById("selectedCountry").innerHTML =
           `Selected Country: ${country} </div>`;
 				document.getElementById("similarityTable").innerHTML =
           createTableHTML(country, similarities);
-			});
+			})
 		},
-		// geographyConfig: {
-		// 	popupTemplate: function(geography, data) {
-		// 		return '<div class="hoverinfo">' + geography.properties.name + '<br>' + data.similarity / 100 + '</div>';
-		// 	},
-		// },
+		geographyConfig: {
+      highlightOnHover: true,
+      highlightFillColor: function(country) {
+        if (country.hasData) {
+          return 'orange';
+        }
+        return '#dbdbdb';
+      },
+      highlightBorderColor: function(country) {
+        if (!country.hasData) {
+          return;
+        }
+      }
+		},
 	});
 }
 
