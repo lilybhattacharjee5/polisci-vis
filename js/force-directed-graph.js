@@ -135,16 +135,16 @@ function generateForceDirected() {
   // Add nodes to SVG
 
   function mouseover(d) {
-    d3.select(this).select("circle").transition()
-        .duration(750)
+    d3.select(this).transition()
+        .duration(100)
         .attr("r", radius * 2)
         .attr("background-color", "#FFFBCC")
         .attr("opacity", 0.5);
   }
 
   function mouseout(d) {
-    d3.select(this).select("circle").transition()
-      .duration(750)
+    d3.select(this).transition()
+      .duration(100)
       .attr("r", radius)
       .attr("color", "black")
       .attr("opacity", 1);
@@ -155,8 +155,6 @@ function generateForceDirected() {
       .enter()
       .append("g")
       .attr("class", "node")
-      .on("mouseover", mouseover)
-      .on("mouseout", mouseout)
       .call(force.drag);
   // Add labels to each node
   var label = node.append("text")
@@ -166,7 +164,9 @@ function generateForceDirected() {
       .text(d => d.id);
   // Add circles to each node
   var circle = node.append("circle")
-      .attr("r", d => radius);
+      .attr("r", d => radius)
+      .on("mouseover", mouseover)
+      .on("mouseout", mouseout);
 
   var flag = false;
   var clickedNode;
@@ -175,11 +175,20 @@ function generateForceDirected() {
   force.on("tick", function(){
     // Set X and Y of node
     node
-      // .attr("r", d => d.influence)
-      .attr("cx", d =>
-            d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x)))
-      .attr("cy", d =>
-            d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y)));
+      .attr("cx", d => {
+        if (clickedNode && d.id === clickedNode.id) {
+          d.x = d.x + Math.round(width / 2 - d.x);
+        } else {
+          d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x));
+        }
+      })
+      .attr("cy", d => {
+        if (clickedNode && d.id === clickedNode.id) {
+          d.y = d.y + Math.round(height / 2 - d.y);
+        } else {
+          d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y));
+        }
+      });
     // Set X, Y of link
     if (flag) {
       link.attr("x1", d => nodes[d.source.index].x)
@@ -245,8 +254,7 @@ function generateForceDirected() {
         .attr("stroke-width", 1)
     // force("charge").strength(0)
     flag = true;
-    clickedNode = thisNode;
-    // console.log(links);
+    clickedNode = d;
     force.nodes(nodes);
     force.links(links);
     force.gravity(0)
