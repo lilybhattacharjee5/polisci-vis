@@ -114,6 +114,19 @@ input:checked + .slider:before {
   margin: 0 auto;
 }
 
+#worldMapLegend {
+  margin: 0 auto;
+}
+
+#legendBody {
+  /*display: flex;*/
+}
+
+#legendLabels {
+  display: flex;
+  flex-direction: vertical;
+}
+
 #legend {
   height: 750px;
 }

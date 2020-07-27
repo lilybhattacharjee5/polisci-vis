@@ -1,4 +1,5 @@
 var INPUT_DATA; // HACK we want to be passing this in.
+const MAP_HEIGHT = 750; // height of world map in pixels
 
 const GRAY = "#d3d3d3"; // default country color (no data)
 const SELECTED = "#00ff00";
@@ -123,14 +124,22 @@ function generateDataObj(inputData) {
 */
 function getFillKeys (selectedCountry, similarities) {
   var fillKeys = {}
+  var maxSimilarity = -Infinity
+  var minSimilarity = Infinity
   for (var [countryName, similarityScore] of Object.entries(similarities)) {
     // color each country by similariy score
     fillKeys[countryName] =
       similarityToHexColor(similarityScore);
+    if (similarityScore < minSimilarity) {
+      minSimilarity = similarityScore;
+    }
+    if (similarityScore > maxSimilarity) {
+      maxSimilarity = similarityScore;
+    }
   }
   // color selected country
   fillKeys[selectedCountry] = SELECTED
-  return fillKeys
+  return [fillKeys, minSimilarity, maxSimilarity]
 }
 
 function createTableHTML (selectedCountry, similarities) {
@@ -149,11 +158,20 @@ function createTableHTML (selectedCountry, similarities) {
     return html
 }
 
+function createLegendHTML (currMinSimilarity, currMaxSimilarity) {
+  console.log(currMinSimilarity, currMaxSimilarity);
+  document.getElementById("legendGradient").style.height = MAP_HEIGHT;
+  var minColor = similarityToHexColor(currMinSimilarity);
+  var maxColor = similarityToHexColor(currMaxSimilarity);
+  document.getElementById("legendGradient").style["background-image"] = "linear-gradient(to top, " + minColor + ", " + maxColor + ")"
+}
+
 function createMap (inputData) {
   inputData = JSON.parse(inputData); // HACK - not sure why we have to do this when we specify request is json in our ajax call
 
   INPUT_DATA = inputData; // HACK we want to be passing this in.
   var dataObj = generateDataObj(inputData);
+  var fillKeyData;
 
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
@@ -172,12 +190,23 @@ function createMap (inputData) {
         if (Object.keys(similarities).length == 0) {
           return
         }
-				fillKeys = getFillKeys(alpha3, similarities);
+        fillKeyData = getFillKeys(alpha3, similarities);
+				fillKeys = fillKeyData[0];
+        currMinSimilarity = fillKeyData[1];
+        currMaxSimilarity = fillKeyData[2];
 				datamap.updateChoropleth(fillKeys, { reset: true });
 				document.getElementById("selectedCountry").innerHTML =
           `Selected Country: <div id="countryName">${country}</div>`;
 				document.getElementById("similarityTable").innerHTML =
           createTableHTML(country, similarities);
+        document.getElementById("worldMapLegend").innerHTML = `<div>Legend</div>
+        <div id="legendBody">
+        <div id="legendGradient">
+        </div>
+        <div id ="legendLabels">
+        </div>
+        </div>`;
+        createLegendHTML(currMinSimilarity, currMaxSimilarity)
 			})
 		},
 		geographyConfig: {
@@ -203,7 +232,7 @@ function createMap (inputData) {
 	});
 }
 
-function populateMap(mapHeight) {
+function populateMap() {
   // load country codes
 	const countryCodesURL = "local_country_variables/countries_codes_and_coordinates.csv";
 	$.ajax( {
