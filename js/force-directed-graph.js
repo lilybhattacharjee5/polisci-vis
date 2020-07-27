@@ -20,7 +20,9 @@ function getNodesAndLinks (inputData) {
 
   // now we produce links
   var links = []
-  for (var [countryPair, similarityScore] of Object.entries(inputData)) {
+  for (var [countryPair, metrics] of Object.entries(inputData)) {
+    // TODO why do we need to *100? hidden constants?
+    var similarityScore = metrics.Overall_Similarity*100;
     var [countryA, countryB] = countryPair.split('->');
     if (100 - similarityScore >= 0 && similarityScore > 0) {
       links.push({
