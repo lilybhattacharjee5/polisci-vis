@@ -37,6 +37,7 @@ function enableForce() {
   document.getElementById("selectedCountry").innerHTML = "";
   document.getElementById("similarityTable").innerHTML = "";
   document.getElementById("resetButton").style.display = "flex";
+  document.getElementById("worldMapLegend").style.display = "none";
   generateForceDirected();
 }
 

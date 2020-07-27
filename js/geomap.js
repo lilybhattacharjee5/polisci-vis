@@ -164,6 +164,7 @@ function createLegendHTML (currMinSimilarity, currMaxSimilarity) {
   var minColor = similarityToHexColor(currMinSimilarity);
   var maxColor = similarityToHexColor(currMaxSimilarity);
   document.getElementById("legendGradient").style["background-image"] = "linear-gradient(to top, " + minColor + ", " + maxColor + ")"
+  document.getElementById("worldMapLegend").style.display = "inline";
 }
 
 function createMap (inputData) {
