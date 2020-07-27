@@ -34,6 +34,7 @@ function enableForce() {
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("basic_chloropleth").style.width = "100%";
   document.getElementById("selectedCountry").innerHTML = "";
+  document.getElementById("similarityTable").innerHTML = "";
   generateForceDirected();
 }
 

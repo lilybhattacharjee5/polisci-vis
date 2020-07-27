@@ -2,6 +2,7 @@ var INPUT_DATA; // HACK we want to be passing this in.
 
 const GRAY = "#d3d3d3"; // default country color (no data)
 const SELECTED = "#00ff00";
+const HIGHLIGHTED = "orange";
 
 // maximum and minimum expected similarity scores
 const MAX_SIMILARITY = 100
@@ -133,7 +134,7 @@ function getFillKeys (selectedCountry, similarities) {
 }
 
 function createTableHTML (selectedCountry, similarities) {
-  var html = `<table>
+  var html = `<div id="selectedCountrySimilarities"><table class="dataTable">
     <tr>
       <th>Country</th>
       <th>Similarity to ${selectedCountry}</th>
@@ -144,7 +145,7 @@ function createTableHTML (selectedCountry, similarities) {
                 <td>${similarityScore.toFixed(2)}</td>
               </tr>`
     }
-    html+='</table>'
+    html+='</table></div>'
     return html
 }
 
@@ -174,7 +175,7 @@ function createMap (inputData) {
 				fillKeys = getFillKeys(alpha3, similarities);
 				datamap.updateChoropleth(fillKeys, { reset: true });
 				document.getElementById("selectedCountry").innerHTML =
-          `Selected Country: ${country} </div>`;
+          `Selected Country: <div id="countryName">${country}</div>`;
 				document.getElementById("similarityTable").innerHTML =
           createTableHTML(country, similarities);
 			})
@@ -183,7 +184,7 @@ function createMap (inputData) {
       highlightOnHover: true,
       highlightFillColor: function(country) {
         if (country.hasData) {
-          return 'orange';
+          return HIGHLIGHTED;
         }
         return GRAY;
       },
