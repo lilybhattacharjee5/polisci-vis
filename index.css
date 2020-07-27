@@ -12,12 +12,19 @@ h1 {
   overflow-y: scroll;
 }
 
+#resetButton {
+  display: none;
+  float: right;
+  margin-right: 100px;
+}
+
 .container {
   padding: 20px;
 }
 
 #main_display {
   display: flex;
+  justify-content: center;
 }
 
 .row_elem {

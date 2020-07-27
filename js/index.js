@@ -25,6 +25,7 @@ function enableWorldMap() {
   // set up map
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("basic_chloropleth").style.width = "80%";
+  document.getElementById("resetButton").style.display = "none";
   populateMap(750);
 }
 
@@ -35,6 +36,7 @@ function enableForce() {
   document.getElementById("basic_chloropleth").style.width = "100%";
   document.getElementById("selectedCountry").innerHTML = "";
   document.getElementById("similarityTable").innerHTML = "";
+  document.getElementById("resetButton").style.display = "flex";
   generateForceDirected();
 }
 
