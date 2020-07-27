@@ -7,6 +7,9 @@ const SELECTED = "#00ff00";
 const MAX_SIMILARITY = 100
 const MIN_SIMILARITY = 0
 
+// highlight border width for countries with data
+const HIGHLIGHT_BORDER_WIDTH = 2
+
 var ccMap = {}; // maps country code to country name
 
 var blue_line = [0, 0, 255];
@@ -131,18 +134,18 @@ function getFillKeys (selectedCountry, similarities) {
 
 function createTableHTML (selectedCountry, similarities) {
   var html = `<table>
-<tr>
-<th>Country</th>
-<th>Similarity to ${selectedCountry}</th>
-</tr>`
-  for (var [countryName, similarityScore] of sortedObject(similarities)) {
-    html+=`<tr>
-<td>${countryName}</td>
-<td>${similarityScore.toFixed(2)}</td>
-</tr>`
-  }
-  html+='</table>'
-  return html
+    <tr>
+      <th>Country</th>
+      <th>Similarity to ${selectedCountry}</th>
+    </tr>`
+    for (var [countryName, similarityScore] of sortedObject(similarities)) {
+      html+=`<tr>
+                <td>${countryName}</td>
+                <td>${similarityScore.toFixed(2)}</td>
+              </tr>`
+    }
+    html+='</table>'
+    return html
 }
 
 function createMap (inputData) {
@@ -182,12 +185,18 @@ function createMap (inputData) {
         if (country.hasData) {
           return 'orange';
         }
-        return '#dbdbdb';
+        return GRAY;
       },
       highlightBorderColor: function(country) {
         if (!country.hasData) {
           return;
         }
+      },
+      highlightBorderWidth: function(country) {
+        if (!country.hasData) {
+          return;
+        }
+        return HIGHLIGHT_BORDER_WIDTH;
       }
 		},
 	});
