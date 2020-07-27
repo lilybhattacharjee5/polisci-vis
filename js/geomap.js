@@ -1,11 +1,16 @@
 var INPUT_DATA; // HACK we want to be passing this in.
+const MAP_HEIGHT = 750; // height of world map in pixels
 
 const GRAY = "#d3d3d3"; // default country color (no data)
 const SELECTED = "#00ff00";
+const HIGHLIGHTED = "orange";
 
 // maximum and minimum expected similarity scores
 const MAX_SIMILARITY = 1
 const MIN_SIMILARITY = 0
+
+// highlight border width for countries with data
+const HIGHLIGHT_BORDER_WIDTH = 2
 
 var ccMap = {}; // maps country code to country name
 
@@ -119,30 +124,47 @@ function generateDataObj(inputData) {
 */
 function getFillKeys (selectedCountry, similarities) {
   var fillKeys = {}
+  var maxSimilarity = -Infinity
+  var minSimilarity = Infinity
   for (var [countryName, similarityScore] of Object.entries(similarities)) {
     // color each country by similariy score
     fillKeys[countryName] =
       similarityToHexColor(similarityScore);
+    if (similarityScore < minSimilarity) {
+      minSimilarity = similarityScore;
+    }
+    if (similarityScore > maxSimilarity) {
+      maxSimilarity = similarityScore;
+    }
   }
   // color selected country
   fillKeys[selectedCountry] = SELECTED
-  return fillKeys
+  return [fillKeys, minSimilarity, maxSimilarity]
 }
 
 function createTableHTML (selectedCountry, similarities) {
-  var html = `<table>
-<tr>
-<th>Country</th>
-<th>Similarity to ${selectedCountry}</th>
-</tr>`
-  for (var [countryName, similarityScore] of sortedObject(similarities)) {
-    html+=`<tr>
-<td>${countryName}</td>
-<td>${similarityScore.toFixed(2)}</td>
-</tr>`
-  }
-  html+='</table>'
-  return html
+  var html = `<div id="selectedCountrySimilarities"><table class="dataTable">
+    <tr>
+      <th>Country</th>
+      <th>Similarity to ${selectedCountry}</th>
+    </tr>`
+    for (var [countryName, similarityScore] of sortedObject(similarities)) {
+      html+=`<tr>
+                <td>${countryName}</td>
+                <td>${similarityScore.toFixed(2)}</td>
+              </tr>`
+    }
+    html+='</table></div>'
+    return html
+}
+
+function createLegendHTML (currMinSimilarity, currMaxSimilarity) {
+  console.log(currMinSimilarity, currMaxSimilarity);
+  document.getElementById("legendGradient").style.height = MAP_HEIGHT;
+  var minColor = similarityToHexColor(currMinSimilarity);
+  var maxColor = similarityToHexColor(currMaxSimilarity);
+  document.getElementById("legendGradient").style["background-image"] = "linear-gradient(to top, " + minColor + ", " + maxColor + ")"
+  document.getElementById("worldMapLegend").style.display = "inline";
 }
 
 function createMap (inputData) {
@@ -150,6 +172,7 @@ function createMap (inputData) {
 
   INPUT_DATA = inputData; // HACK we want to be passing this in.
   var dataObj = generateDataObj(inputData);
+  var fillKeyData;
 
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
@@ -168,32 +191,49 @@ function createMap (inputData) {
         if (Object.keys(similarities).length == 0) {
           return
         }
-				fillKeys = getFillKeys(alpha3, similarities);
+        fillKeyData = getFillKeys(alpha3, similarities);
+				fillKeys = fillKeyData[0];
+        currMinSimilarity = fillKeyData[1];
+        currMaxSimilarity = fillKeyData[2];
 				datamap.updateChoropleth(fillKeys, { reset: true });
 				document.getElementById("selectedCountry").innerHTML =
-          `Selected Country: ${country} </div>`;
+          `Selected Country: <div id="countryName">${country}</div>`;
 				document.getElementById("similarityTable").innerHTML =
           createTableHTML(country, similarities);
+        document.getElementById("worldMapLegend").innerHTML = `<div>Legend</div>
+        <div id="legendBody">
+        <div id="legendGradient">
+        </div>
+        <div id ="legendLabels">
+        </div>
+        </div>`;
+        createLegendHTML(currMinSimilarity, currMaxSimilarity)
 			})
 		},
 		geographyConfig: {
       highlightOnHover: true,
       highlightFillColor: function(country) {
         if (country.hasData) {
-          return 'orange';
+          return HIGHLIGHTED;
         }
-        return '#dbdbdb';
+        return GRAY;
       },
       highlightBorderColor: function(country) {
         if (!country.hasData) {
           return;
         }
+      },
+      highlightBorderWidth: function(country) {
+        if (!country.hasData) {
+          return;
+        }
+        return HIGHLIGHT_BORDER_WIDTH;
       }
 		},
 	});
 }
 
-function populateMap(mapHeight) {
+function populateMap() {
   // load country codes
 	const countryCodesURL = "local_country_variables/countries_codes_and_coordinates.csv";
 	$.ajax( {

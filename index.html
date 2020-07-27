@@ -33,9 +33,10 @@
           <input type="checkbox" id="datasource_mode" name="datasource_mode" value="ICLab" onchange="toggleDataSourceMode()">
           <label for="datasource_mode">Enable ICLab Datasource</label><br>
         </div> -->
+        <div id="resetButton"><button>Reset</button></div>
         <div id="main_display">
           <div class="row_elem" id="basic_chloropleth"></div>
-          </div>
+          <div class="row_elem" id="worldMapLegend"></div>
         </div>
         <br />
 
@@ -57,7 +58,7 @@
         </div>
 
         <!-- Show selected country -->
-        <b><p class="content" id="selectedCountry"></p></b>
+        <b><h3 class="content" id="selectedCountry"></h3></b>
         <b><p class="content" id="similarityTable"></p></b>
 
         <!-- Load scripts -->
@@ -65,7 +66,7 @@
         <script src="js/geomap.js"></script>
         <script src="js/force-directed-graph.js"></script>
         <script>
-          populateMap(750);
+          populateMap();
        </script>
 
     </body>

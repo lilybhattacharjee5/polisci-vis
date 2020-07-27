@@ -2,12 +2,29 @@ h1 {
   text-align: center;
 }
 
+#countryName {
+  display: inline;
+  color: blue;
+}
+
+#selectedCountrySimilarities {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+#resetButton {
+  display: none;
+  float: right;
+  margin-right: 100px;
+}
+
 .container {
   padding: 20px;
 }
 
 #main_display {
   display: flex;
+  justify-content: center;
 }
 
 .row_elem {
@@ -94,6 +111,20 @@ input:checked + .slider:before {
 #basic_chloropleth {
   width: 80%;
   height: 750px;
+  margin: 0 auto;
+}
+
+#worldMapLegend {
+  margin: 0 auto;
+}
+
+#legendBody {
+  /*display: flex;*/
+}
+
+#legendLabels {
+  display: flex;
+  flex-direction: vertical;
 }
 
 #legend {

@@ -121,6 +121,39 @@ function generateForceDirected() {
       .on("mouseover", mouseover)
       .on("mouseout", mouseout);
 
+  function selectCircle(d) {
+    force.stop();
+    var thisNode = d.id;
+    links = oldLinks.filter(function(l) {
+      var source = l.source;
+      var target = l.target;
+      if (typeof source != "number") {
+        source = l.source.index;
+      }
+      if (typeof target != "number") {
+        target = l.target.index;
+      }
+      var sourceName = nodes[source].id;
+      var targetName = nodes[target].id;
+
+      return (sourceName === thisNode) || (targetName === thisNode);
+    })
+    link.remove();
+    link = svgElement.selectAll('.link')
+    .data(links)
+    .enter().append('line')
+        .attr("class", "link")
+        .attr("stroke","#625EED")
+        .attr("stroke-width", 1)
+    flag = true;
+    clickedNode = d;
+    force.links(links);
+    force.nodes(nodes);
+    force.charge(-100)
+    force.linkDistance(d => d.weight * 5)
+    force.start()
+  }
+
   var flag = false;
   var clickedNode;
 
@@ -168,44 +201,46 @@ function generateForceDirected() {
   });
 
   var removedLinks;
-  var oldLink = jQuery.extend(true, [], link);
+  // var oldLink = jQuery.extend(true, [], link);
   var oldLinks = jQuery.extend(true, [], links);
   var count = 0;
 
-  circle.on("click", function(d) {
-    force.stop();
-    var thisNode = d.id;
-    links = oldLinks.filter(function(l) {
-      var source = l.source;
-      var target = l.target;
-      if (typeof source != "number") {
-        source = l.source.index;
-      }
-      if (typeof target != "number") {
-        target = l.target.index;
-      }
-      var sourceName = nodes[source].id;
-      var targetName = nodes[target].id;
-
-      return (sourceName === thisNode) || (targetName === thisNode);
-    })
+  d3.select("#resetButton").on("click", function() {
+    links = oldLinks
     link.remove();
+    node.remove()
     link = svgElement.selectAll('.link')
     .data(links)
     .enter().append('line')
         .attr("class", "link")
         .attr("stroke","#625EED")
         .attr("stroke-width", 1)
-    flag = true;
-    clickedNode = d;
-    force.nodes(nodes);
+    node = svgElement.selectAll(".node")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .call(force.drag);
+    label = node.append("text")
+      .attr("dx", 12)
+      .attr("dy", "0.35em")
+      .attr("font-size", 14)
+      .text(d => d.id);
+    circle = node.append("circle")
+      .attr("r", d => radius)
+      .on("mouseover", mouseover)
+      .on("mouseout", mouseout);
+    // node.remove();
+    circle.on("click", selectCircle)
+    flag = false
     force.links(links);
-    force.gravity(0)
-    force.charge(-100)
-    force.linkDistance(d => d.weight * 5)
+    force.nodes(nodes);
+    force.charge(-3000)
+    force.linkDistance(d => d.weight * 7)
     force.start()
-  });
+  })
 
+  circle.on("click", selectCircle)
   d3.select(".container").on("click",function(){
     link.attr("opacity", 1);
   });
