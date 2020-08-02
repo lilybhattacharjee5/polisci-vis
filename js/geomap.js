@@ -6,7 +6,7 @@ const SELECTED = "#00ff00";
 const HIGHLIGHTED = "orange";
 
 // maximum and minimum expected similarity scores
-const MAX_SIMILARITY = 100
+const MAX_SIMILARITY = 1
 const MIN_SIMILARITY = 0
 
 // highlight border width for countries with data
@@ -87,16 +87,16 @@ function similarityToHexColor(similarity) {
   */
 function similaritiesWith (country, inputData) {
 	var sims = {};
-  for (var [countryPair, similarityScore] of Object.entries(inputData)) {
+  for (var [countryPair, metrics] of Object.entries(inputData)) {
     var [countryA, countryB] = countryPair.split('->');
     // if this pair contains our country as country A,
     if (countryA == country) {
       // update the fill key for countryB
-      sims[countryB] = similarityScore;
+      sims[countryB] = metrics.Overall_Similarity;
     }
     // if this pair contains our country as country B
     else if (countryB == country) {
-      sims[countryA] = similarityScore;
+      sims[countryA] = metrics.Overall_Similarity;
     }
   }
 	return sims;
