@@ -53,7 +53,19 @@ function generateSvg (width, height, marginLeft, marginTop) {
       .append("svg")
       .attr({"width": width, "height": height})
       .append("g")
-      .attr("transform","translate("+marginLeft+","+marginTop+")");
+      // .attr("transform","translate("+marginLeft+","+marginTop+")");
+}
+
+function calculateHeight (links) {
+  var maxLength = -Infinity;
+  var currLength;
+  for (var link of links) {
+    currLength = link.weight * 7;
+    if (currLength > maxLength) {
+      maxLength = currLength;
+    }
+  }
+  return maxLength * 2;
 }
 
 
@@ -63,10 +75,17 @@ function generateForceDirected() {
   var padding = 100;
   var width = $('#basic_chloropleth').width();
   var height = $('#basic_chloropleth').height();
-  // Create an SVG element and append it to the DOM
-  var svgElement = generateSvg(width, height, 50, 20);
+  var multiplier = 7;
+  
   // Extract data from dataset
   var [nodes, links] = getNodesAndLinks(INPUT_DATA);
+  // height = calculateHeight(links);
+  height = calculateHeight(links, multiplier);
+  document.getElementById("basic_chloropleth").style.height = height;
+
+  // Create an SVG element and append it to the DOM
+  var svgElement = generateSvg(width, height, 50, 20);
+
   var meanSimilarity = calculateMeanSimilarity(links);
   // Create Force Layout
   var force = d3.layout.force()
@@ -75,7 +94,7 @@ function generateForceDirected() {
       .links(links)
       .gravity(0)
       .charge(-3000)
-      .linkDistance(d => d.weight * 7);
+      .linkDistance(d => d.weight * multiplier);
 
   // Add links to SVG
   var link = svgElement.selectAll(".link")
@@ -137,7 +156,7 @@ function generateForceDirected() {
       var targetName = nodes[target].id;
 
       return (sourceName === thisNode) || (targetName === thisNode);
-    })
+    });
     link.remove();
     link = svgElement.selectAll('.link')
     .data(links)
@@ -145,12 +164,15 @@ function generateForceDirected() {
         .attr("class", "link")
         .attr("stroke","#625EED")
         .attr("stroke-width", 1)
+    multiplier = 5
+    height = calculateHeight(links, multiplier);
+    document.getElementById("basic_chloropleth").style.height = height;
     flag = true;
     clickedNode = d;
     force.links(links);
     force.nodes(nodes);
     force.charge(-100)
-    force.linkDistance(d => d.weight * 5)
+    force.linkDistance(d => d.weight * multiplier)
     force.start()
   }
 
@@ -231,7 +253,9 @@ function generateForceDirected() {
       .on("mouseover", mouseover)
       .on("mouseout", mouseout);
     // node.remove();
-    circle.on("click", selectCircle)
+    circle.on("click", selectCircle);
+    height = calculateHeight(links) * 1.5;
+    document.getElementById("basic_chloropleth").style.height = height;
     flag = false
     force.links(links);
     force.nodes(nodes);
