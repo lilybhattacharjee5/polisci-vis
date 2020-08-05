@@ -53,7 +53,6 @@ function generateSvg (width, height, marginLeft, marginTop) {
       .append("svg")
       .attr({"width": width, "height": height})
       .append("g")
-      // .attr("transform","translate("+marginLeft+","+marginTop+")");
 }
 
 function calculateHeight (links) {

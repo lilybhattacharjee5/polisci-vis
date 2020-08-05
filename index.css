@@ -116,35 +116,30 @@ input:checked + .slider:before {
 
 #worldMapLegend {
   margin: 0 auto;
+  display: none;
 }
 
 #legendBody {
-  /*display: flex;*/
+  display: flex;
+  flex-direction: row;
+}
+
+#legendTitle {
+  padding-right: 30px;
+}
+
+#legendGradient {
+  flex: 3;
 }
 
 #legendLabels {
+  flex: 2;
   display: flex;
-  flex-direction: vertical;
+  flex-direction: column;
 }
 
 #legend {
   height: 750px;
-}
-
-#legend_display {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-}
-
-#legend_div {
-  height: 100%;
-  width: 50px;
-  min-height: 750px;
-}
-
-#legend_labels {
-  height: 100%;
 }
 
 #vis_mode {

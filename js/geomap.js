@@ -12,6 +12,9 @@ const MIN_SIMILARITY = 0
 // highlight border width for countries with data
 const HIGHLIGHT_BORDER_WIDTH = 2
 
+const NUM_INCREMENTS = 5;
+const DIGITS_ROUNDED = 5;
+
 var ccMap = {}; // maps country code to country name
 
 var blue_line = [0, 0, 255];
@@ -158,12 +161,30 @@ function createTableHTML (selectedCountry, similarities) {
     return html
 }
 
-function createLegendHTML (currMinSimilarity, currMaxSimilarity) {
+function createLegendHTML (currMinSimilarity, currMaxSimilarity, numIncrements) {
   console.log(currMinSimilarity, currMaxSimilarity);
   document.getElementById("legendGradient").style.height = MAP_HEIGHT;
   var minColor = similarityToHexColor(currMinSimilarity);
   var maxColor = similarityToHexColor(currMaxSimilarity);
   document.getElementById("legendGradient").style["background-image"] = "linear-gradient(to top, " + minColor + ", " + maxColor + ")"
+  document.getElementById("legendGradient").style.width = "40px";
+  var legendElemTag;
+  var legendElemText;
+  var incrementSize = (currMaxSimilarity - currMinSimilarity) / numIncrements;
+  for (var i = 0; i < numIncrements; i++) {
+    legendElemTag = document.createElement("div");
+    legendElemText = document.createTextNode(Math.round((currMaxSimilarity - incrementSize * i) * Math.pow(10, DIGITS_ROUNDED), DIGITS_ROUNDED) / Math.pow(10, DIGITS_ROUNDED).toString());
+    legendElemTag.appendChild(legendElemText);
+    legendElemTag.style.flex = 1;
+    legendElemTag.style["padding-left"] = "20px";
+    document.getElementById("legendLabels").appendChild(legendElemTag);
+  }
+  legendElemTag = document.createElement("div");
+  legendElemText = document.createTextNode(Math.round((currMinSimilarity) * Math.pow(10, DIGITS_ROUNDED), DIGITS_ROUNDED) / Math.pow(10, DIGITS_ROUNDED).toString());
+  legendElemTag.appendChild(legendElemText);
+  legendElemTag.style.flex = 0;
+  legendElemTag.style["padding-left"] = "20px";
+  document.getElementById("legendLabels").appendChild(legendElemTag);
   document.getElementById("worldMapLegend").style.display = "inline";
 }
 
@@ -200,14 +221,14 @@ function createMap (inputData) {
           `Selected Country: <div id="countryName">${country}</div>`;
 				document.getElementById("similarityTable").innerHTML =
           createTableHTML(country, similarities);
-        document.getElementById("worldMapLegend").innerHTML = `<div>Legend</div>
+        document.getElementById("worldMapLegend").innerHTML = `<div id="legendTitle">Legend</div>
         <div id="legendBody">
         <div id="legendGradient">
         </div>
         <div id ="legendLabels">
         </div>
         </div>`;
-        createLegendHTML(currMinSimilarity, currMaxSimilarity)
+        createLegendHTML(currMinSimilarity, currMaxSimilarity, NUM_INCREMENTS)
 			})
 		},
 		geographyConfig: {

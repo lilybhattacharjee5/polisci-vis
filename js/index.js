@@ -25,7 +25,9 @@ function enableWorldMap() {
   // set up map
   document.getElementById("basic_chloropleth").innerHTML = "";
   document.getElementById("basic_chloropleth").style.width = "80%";
+  document.getElementById("basic_chloropleth").style.height = "750px";
   document.getElementById("resetButton").style.display = "none";
+  document.getElementById("worldMapLegend").style.display = "none";
   populateMap(750);
 }
 
