@@ -6,8 +6,14 @@ File format:
 
 ```
 {
- "USA->CAN": [float],
- "USA->UKR": [float],
+ "USA->CAN": {
+ 	Overall_Similarity: [float],
+ 	... // can include other pair-specific attributes
+ },
+ "USA->UKR": {
+ 	Overall_Similarity: [float],
+ 	... // can include other pair-specific attributes
+ },
  ...
 }
 ```

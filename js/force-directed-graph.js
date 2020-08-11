@@ -1,3 +1,6 @@
+var LINK_COLOR = "#625EED";
+
+/* Separate node and link data from global INPUT_DATA variable */
 function getNodesAndLinks (inputData) {
   var countryCodes = {}
   // construct a dict with the country code of every country as its key
@@ -37,6 +40,8 @@ function getNodesAndLinks (inputData) {
   return [nodes, links];
 }
 
+/* Calculate the average similarity value in the dataset to determine which edges will
+have high (low similarity, almost transparent) vs. low opacity (high similarity) */
 function calculateMeanSimilarity (links) {
   var count = 0;
   var similaritySum = 0;
@@ -47,7 +52,7 @@ function calculateMeanSimilarity (links) {
   return similaritySum / count;
 }
 
-
+/* Generate the SVG image holding the visualization */
 function generateSvg (width, height, marginLeft, marginTop) {
   return d3.select("#basic_chloropleth")
       .append("svg")
@@ -55,6 +60,8 @@ function generateSvg (width, height, marginLeft, marginTop) {
       .append("g")
 }
 
+/* Calculate the height of the force visualization as the max edge length * 2 
+(in case there are 2 such edge lengths that end up spanning the height after rebalancing) */
 function calculateHeight (links) {
   var maxLength = -Infinity;
   var currLength;
@@ -67,52 +74,58 @@ function calculateHeight (links) {
   return maxLength * 2;
 }
 
-
+/* Uses the global INPUT_DATA variable to generate a force graph with undirected edges
+  between countries with corresponding edge lengths based on pairwise similarity */
 function generateForceDirected() {
-  // node circles
-  var radius = 6;
-  var padding = 100;
+  /* Initial force graph settings */
+  var radius = 6; // node size
+  var padding = 100; // pads graph from edges of visualization
   var width = $('#basic_chloropleth').width();
   var height = $('#basic_chloropleth').height();
+  // the constant by which the similarity score is multiplied
+  // toggled based on whether or not a country node is selected
   var multiplier = 7;
   
-  // Extract data from dataset
+  // extract data from dataset
   var [nodes, links] = getNodesAndLinks(INPUT_DATA);
-  // height = calculateHeight(links);
+  // vary visualization height based on maximum edge length
   height = calculateHeight(links, multiplier);
   document.getElementById("basic_chloropleth").style.height = height;
 
-  // Create an SVG element and append it to the DOM
+  // create an SVG element and append it to the DOM
   var svgElement = generateSvg(width, height, 50, 20);
 
+  // calculate average similarity of all visible nodes to find edge weight threshhold
   var meanSimilarity = calculateMeanSimilarity(links);
-  // Create Force Layout
-  var force = d3.layout.force()
-      .size([width, height])
-      .nodes(nodes)
-      .links(links)
-      .gravity(0)
-      .charge(-3000)
-      .linkDistance(d => d.weight * multiplier);
-
-  // Add links to SVG
-  var link = svgElement.selectAll(".link")
-      .data(links)
-      .enter()
-      .append("line")
-      .attr("stroke", "#625EED")
-      .attr("stroke-width", 1)
-      .attr("class", "link");
   
-  // Add nodes to SVG
+  // create force layout
+  var force = d3.layout.force()
+    .size([width, height])
+    .nodes(nodes)
+    .links(links)
+    .gravity(0) // no attraction between nodes
+    .charge(-3000) // repulse nodes so text is more visible & to prevent overlapping
+    .linkDistance(d => d.weight * multiplier); // set edge length based on multiplier
+
+  // add links to SVG
+  var link = svgElement.selectAll(".link")
+    .data(links)
+    .enter()
+    .append("line")
+    .attr("stroke", LINK_COLOR)
+    .attr("stroke-width", 1)
+    .attr("class", "link");
+  
+  // Increase node size & decrease opacity on node mouseover
   function mouseover(d) {
     d3.select(this).transition()
-        .duration(100)
-        .attr("r", radius * 2)
-        .attr("background-color", "#FFFBCC")
-        .attr("opacity", 0.5);
+      .duration(100)
+      .attr("r", radius * 2)
+      .attr("background-color", "#FFFBCC")
+      .attr("opacity", 0.5);
   }
 
+  // Reverse the effects of mouseover on the node
   function mouseout(d) {
     d3.select(this).transition()
       .duration(100)
@@ -121,27 +134,36 @@ function generateForceDirected() {
       .attr("opacity", 1);
   }
 
+  // add nodes to SVG
   var node = svgElement.selectAll(".node")
-      .data(nodes)
-      .enter()
-      .append("g")
-      .attr("class", "node")
-      .call(force.drag);
-  // Add labels to each node
+    .data(nodes)
+    .enter()
+    .append("g")
+    .attr("class", "node")
+    .call(force.drag);
+  
+  // add labels to each node
   var label = node.append("text")
-      .attr("dx", 12)
-      .attr("dy", "0.35em")
-      .attr("font-size", 14)
-      .text(d => d.id);
-  // Add circles to each node
+    .attr("dx", 12)
+    .attr("dy", "0.35em")
+    .attr("font-size", 14)
+    .text(d => d.id);
+  
+  // add circles to each node & attach mouseover, mouseout functions
   var circle = node.append("circle")
-      .attr("r", d => radius)
-      .on("mouseover", mouseover)
-      .on("mouseout", mouseout);
+    .attr("r", d => radius)
+    .on("mouseover", mouseover)
+    .on("mouseout", mouseout);
 
+  var flag = false; // reload all nodes if flag is set
+  var clickedNode; // keep track of selected node in the scope of the function
+
+  // reload force graph data when a node is selected
   function selectCircle(d) {
     force.stop();
     var thisNode = d.id;
+
+    // only include links connected to selected node
     links = oldLinks.filter(function(l) {
       var source = l.source;
       var target = l.target;
@@ -158,16 +180,20 @@ function generateForceDirected() {
     });
     link.remove();
     link = svgElement.selectAll('.link')
-    .data(links)
-    .enter().append('line')
-        .attr("class", "link")
-        .attr("stroke","#625EED")
-        .attr("stroke-width", 1)
-    multiplier = 5
+      .data(links)
+      .enter().append('line')
+      .attr("class", "link")
+      .attr("stroke", LINK_COLOR)
+      .attr("stroke-width", 1);
+    // toggle multiplier to a lower value to resize visualization proportionally
+    multiplier = 5;
     height = calculateHeight(links, multiplier);
     document.getElementById("basic_chloropleth").style.height = height;
+    
     flag = true;
     clickedNode = d;
+
+    // redefine visualization settings & start force to rebalance graph with new links
     force.links(links);
     force.nodes(nodes);
     force.charge(-100)
@@ -175,12 +201,9 @@ function generateForceDirected() {
     force.start()
   }
 
-  var flag = false;
-  var clickedNode;
-
   // This function will be executed for every tick of force layout
   force.on("tick", function(){
-    // Set X and Y of node
+    // set node positions (x, y)
     node
       .attr("cx", d => {
         if (clickedNode && d.id === clickedNode.id) {
@@ -196,7 +219,8 @@ function generateForceDirected() {
           d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y));
         }
       });
-    // Set X, Y of link
+    
+    // set link positions (x, y)
     if (flag) {
       link.attr("x1", d => nodes[d.source.index].x)
         .attr("y1", d => nodes[d.source.index].y)
@@ -215,17 +239,17 @@ function generateForceDirected() {
       link.attr("y2", d => d.target.y);
     }
 
-    // Shift node a little
+    // shift node a little for rebalancing
     node.attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
     });
   });
 
+  // track removed & original set of links
   var removedLinks;
-  // var oldLink = jQuery.extend(true, [], link);
   var oldLinks = jQuery.extend(true, [], links);
-  var count = 0;
 
+  // when reset button is pressed, restore all of the links in the original dataset
   d3.select("#resetButton").on("click", function() {
     links = oldLinks
     link.remove();
@@ -251,7 +275,6 @@ function generateForceDirected() {
       .attr("r", d => radius)
       .on("mouseover", mouseover)
       .on("mouseout", mouseout);
-    // node.remove();
     circle.on("click", selectCircle);
     height = calculateHeight(links) * 1.5;
     document.getElementById("basic_chloropleth").style.height = height;
@@ -263,11 +286,9 @@ function generateForceDirected() {
     force.start()
   })
 
-  circle.on("click", selectCircle)
-  d3.select(".container").on("click",function(){
-    link.attr("opacity", 1);
-  });
+  // call the selectCircle function whenever a circle is clicked
+  circle.on("click", selectCircle);
 
-  // Start the force layout calculation
+  // start the force layout calculation
   force.start();
 }

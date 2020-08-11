@@ -17,10 +17,10 @@ npm install
 npm start
 ```
 
-## Repostiroy structure
+## Repository structure
 
 - `local_country_variables/`: logic for marshalling country names.
-- `data/`: marshalled data produced by your [our data processing
+- `data/`: marshalled data produced by [our data processing
   repo](https://github.com/daylight-lab/uclab-data-processing).
 
 

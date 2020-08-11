@@ -2,8 +2,8 @@ var INPUT_DATA; // HACK we want to be passing this in.
 const MAP_HEIGHT = 750; // height of world map in pixels
 
 const GRAY = "#d3d3d3"; // default country color (no data)
-const SELECTED = "#00ff00";
-const HIGHLIGHTED = "orange";
+const SELECTED = "#00ff00"; // selected country color
+const HIGHLIGHTED = "orange"; // highlighted (moused-over) country color
 
 // maximum and minimum expected similarity scores
 const MAX_SIMILARITY = 1
@@ -15,12 +15,7 @@ const HIGHLIGHT_BORDER_WIDTH = 2
 const NUM_INCREMENTS = 5;
 const DIGITS_ROUNDED = 5;
 
-var ccMap = {}; // maps country code to country name
-
-var blue_line = [0, 0, 255];
-
-var inputData; // HACK pass this into stuff instead. used by force directed graph right now
-
+const BLUE_LINE = [0, 0, 255];
 
 /* From an object where values are floats, returns a list
 
@@ -37,7 +32,6 @@ function sortedObject (obj) {
   });
   return sortable;
 }
-
 
 /* Color utilities */
 
@@ -64,21 +58,19 @@ function numToHex(num, color_line) {
   );
 }
 
-/*
-  Convert a similarity score into a hex color.
+/* Convert a similarity score into a hex color.
 
-  TODO Simliarity scores range from 0 to 100. This may change; we may want to
-  programmatically generate min and max in the future.
-  */
-function similarityToHexColor(similarity) {
+  TODO Simliarity scores range from min similarity of all pairs in the dataset 
+  to max similarity of all pairs in the dataset. This may change; we may want to
+  programmatically generate min and max in the future. */
+function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
 	var adjustedSimilarity =
-      (similarity - MIN_SIMILARITY) / (MAX_SIMILARITY - MIN_SIMILARITY);
-	return numToHex(adjustedSimilarity, blue_line);
+      (similarity - minSimilarity) / (maxSimilarity - minSimilarity);
+	return numToHex(adjustedSimilarity, BLUE_LINE);
 }
 
 
-/*
-  Given a country, finds simliarities to it.
+/* Given a country, finds similiarities to it.
 
   Returns an object of the from
 
@@ -86,8 +78,7 @@ function similarityToHexColor(similarity) {
 
   This method handles logic around the fact that our data.json may not be
   symmetrical; in other words, the data file may contain USA->CAN but not
-  CAN->USA.
-  */
+  CAN->USA. */
 function similaritiesWith (country, inputData) {
 	var sims = {};
   for (var [countryPair, metrics] of Object.entries(inputData)) {
@@ -105,45 +96,51 @@ function similaritiesWith (country, inputData) {
 	return sims;
 }
 
+/* Given input data, creates a data object that will be passed into the chloropleth map
+  and used for special operations on highlighted / selected countries (e.g. hover text) */
 function generateDataObj(inputData) {
   var dataObj = {};
+  var countryA, countryB;
+  var currSimilarity;
   for (var countryPair of Object.keys(inputData)) {
-    var [countryA, countryB] = countryPair.split('->');
+    [countryA, countryB] = countryPair.split('->');
     if (!dataObj[countryA]) {
-      dataObj[countryA] = {'hasData': true};
+      dataObj[countryA] = {};
     }
     if (!dataObj[countryB]) {
-      dataObj[countryB] = {'hasData': true};
+      dataObj[countryB] = {};
     }
     
-    dataObj[countryA][countryB] = {'similarity': inputData[countryPair].Overall_Similarity};
-    dataObj[countryB][countryA] = {'similarity': inputData[countryPair].Overall_Similarity};
+    currSimilarity = inputData[countryPair].Overall_Similarity;
+    dataObj[countryA][countryB] = {'similarity': currSimilarity};
+    dataObj[countryB][countryA] = {'similarity': currSimilarity};
   }
-  console.log(dataObj);
   return dataObj;
 }
 
-/*
-  Given a country and the similarities object produced by `similaritiesWith`,
-  returns the fill keys for the chloropleth map.
+/* Given a country and the similarities object containing pair similarity data (and any 
+  other data attributes) returns the fill keys for the chloropleth map.
 
   Returns an object of the form
 
     { UKR: "#f0f00", ...}
 
-  Country passed in will be given the SELECTED color.
-*/
-function getFillKeys (selectedCountry, similarities) {
-  var fillKeys = {}
-  for (var [countryName, similarityScore] of Object.entries(similarities)) {
+  Country passed in will be given the SELECTED color. */
+function getFillKeys (selectedCountry, similarities, minSimilarity, maxSimilarity) {
+  var fillKeys = {};
+  for (var [countryName, countryData] of Object.entries(similarities)) {
     // color each country by similariy score
-    fillKeys[countryName] = similarityToHexColor(similarityScore);
+    fillKeys[countryName] = similarityToHexColor(countryData.similarity, minSimilarity, maxSimilarity);
   }
   // color selected country
-  fillKeys[selectedCountry] = SELECTED
+  fillKeys[selectedCountry] = SELECTED;
   return fillKeys;
 }
 
+/* Given a country and the similarities object containing pair similarity data (and any
+  other data attributes) generates a table displaying each row in the form
+
+  [alpha3 country code] | [similarity score] */
 function createTableHTML (selectedCountry, similarities) {
   var html = `<div id="selectedCountrySimilarities"><table class="dataTable">
     <tr>
@@ -153,13 +150,27 @@ function createTableHTML (selectedCountry, similarities) {
     for (var [countryName, similarityScore] of sortedObject(similarities)) {
       html+=`<tr>
                 <td>${countryName}</td>
-                <td>${similarityScore.toFixed(2)}</td>
+                <td>${similarityScore.similarity.toFixed(2)}</td>
               </tr>`
     }
     html+='</table></div>'
     return html
 }
 
+/* Given input data in the following format, finds the min & max similarities of any country
+  in the dataset.
+
+  {
+    AND->AUT: {
+      Overall_Similarity: 0.646,
+      country_code_alpha2_A: "AD",
+      country_code_alpha2_B: "AT",
+      country_code_alpha3_A: "AND",
+      country_code_alpha3_B: "AUT"
+  }
+
+  Returns an array of the form
+    [minimum similarity, maximum similarity] */
 function findMinMaxSimilarity (inputData) {
   var maxSimilarity = -Infinity
   var minSimilarity = Infinity
@@ -175,44 +186,77 @@ function findMinMaxSimilarity (inputData) {
   return [minSimilarity, maxSimilarity]
 }
 
-function createLegendHTML (currMinSimilarity, currMaxSimilarity, numIncrements) {
+/* Given the min & max similarity of any country pair in the dataset, generates a legend with
+   numIncrements number of labels
+  */
+function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
+  // sets up div structure with legend body, gradient and labels
+  document.getElementById("worldMapLegend").innerHTML = `
+    <div id="legendTitle">Similarity</div>
+      <div id="legendBody">
+      <div id="legendGradient">
+      </div>
+      <div id ="legendLabels">
+      </div>
+    </div>`;
   document.getElementById("legendGradient").style.height = MAP_HEIGHT;
-  var minColor = similarityToHexColor(currMinSimilarity);
-  var maxColor = similarityToHexColor(currMaxSimilarity);
+  
+  // find colors at the top (max) and bottom (min) of the legend gradient
+  var minColor = similarityToHexColor(minSimilarity, minSimilarity, maxSimilarity);
+  var maxColor = similarityToHexColor(maxSimilarity, minSimilarity, maxSimilarity);
+  
   document.getElementById("legendGradient").style["background-image"] = "linear-gradient(to top, " + minColor + ", " + maxColor + ")"
   document.getElementById("legendGradient").style.width = "40px";
+  
+  // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
   var legendElemText;
-  var incrementSize = (currMaxSimilarity - currMinSimilarity) / numIncrements;
+  var incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
   for (var i = 0; i < numIncrements; i++) {
     legendElemTag = document.createElement("div");
-    legendElemText = document.createTextNode(Math.round((currMaxSimilarity - incrementSize * i) * Math.pow(10, DIGITS_ROUNDED), DIGITS_ROUNDED) / Math.pow(10, DIGITS_ROUNDED).toString());
+    legendElemText = document.createTextNode((maxSimilarity - incrementSize * i).toFixed(DIGITS_ROUNDED).toString());
     legendElemTag.appendChild(legendElemText);
     legendElemTag.style.flex = 1;
     legendElemTag.style["padding-left"] = "20px";
     document.getElementById("legendLabels").appendChild(legendElemTag);
   }
+  // add the final legend label (min) aligned to the bottom of the gradient
   legendElemTag = document.createElement("div");
-  legendElemText = document.createTextNode(Math.round((currMinSimilarity) * Math.pow(10, DIGITS_ROUNDED), DIGITS_ROUNDED) / Math.pow(10, DIGITS_ROUNDED).toString());
+  legendElemText = document.createTextNode(minSimilarity.toFixed(DIGITS_ROUNDED).toString());
   legendElemTag.appendChild(legendElemText);
   legendElemTag.style.flex = 0;
   legendElemTag.style["padding-left"] = "20px";
   document.getElementById("legendLabels").appendChild(legendElemTag);
-  document.getElementById("worldMapLegend").style.display = "inline";
+
+  document.getElementById("worldMapLegend").style.display = "inline"; // make the completed legend visible
 }
 
-function createMap (inputData) {
-  inputData = JSON.parse(inputData); // HACK - not sure why we have to do this when we specify request is json in our ajax call
+/* Given input data in the following format, generates a chloropleth map.
 
+  {
+    AND->AUT: {
+      Overall_Similarity: 0.646,
+      country_code_alpha2_A: "AD",
+      country_code_alpha2_B: "AT",
+      country_code_alpha3_A: "AND",
+      country_code_alpha3_B: "AUT"
+    }
+  } */
+function createMap (inputData) {
   INPUT_DATA = inputData; // HACK we want to be passing this in.
-  var dataObj = generateDataObj(inputData);
-  var fillKeyData;
+  var dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
+  
+  // finds min & max similarity values between any country pair in the dataset
   var similarityBounds = findMinMaxSimilarity(inputData);
   var minSimilarity = similarityBounds[0];
   var maxSimilarity = similarityBounds[1];
-  var legendCreated = false;
-  var selectedCountry = null;
-  var alpha3 = null;
+  
+  var legendCreated = false; // prevents legend from reloading every time a country is selected
+
+  // tracks current selected country name e.g. "Canada", and corresponding data from dataObj
+  var selectedCountry;
+  var selectedCountryData;
+  var alpha3; // tracks 3 letter country code of selected country
 
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
@@ -223,27 +267,28 @@ function createMap (inputData) {
     },
 		done: function(datamap) {
 			datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-        // HACK setting this globally; should be passing it down.
 				selectedCountry = geography.properties.name;
+        alpha3 = geography.id;
+        
         // check that the country has corresponding data
-        alpha3 = ccMap[`"${selectedCountry}"`]
-        var similarities = similaritiesWith(alpha3, inputData)
-        if (Object.keys(similarities).length == 0) {
-          return
+        selectedCountryData = dataObj[`${alpha3}`];
+        if (!selectedCountryData || Object.keys(selectedCountryData).length <= 0) {
+          return;
         }
-        fillKeys = getFillKeys(alpha3, similarities);
-				datamap.updateChoropleth(fillKeys, { reset: true });
-				document.getElementById("selectedCountry").innerHTML =
+        
+        // recalculate fillKeys based on newly selected country
+        fillKeys = getFillKeys(alpha3, selectedCountryData, minSimilarity, maxSimilarity);
+				datamap.updateChoropleth(fillKeys);
+				
+        // display selected country name
+        document.getElementById("selectedCountry").innerHTML =
           `Selected Country: <div id="countryName">${selectedCountry}</div>`;
+
+        // display selected country similarity data with other countries
 				document.getElementById("similarityTable").innerHTML =
-          createTableHTML(selectedCountry, similarities);
-        document.getElementById("worldMapLegend").innerHTML = `<div id="legendTitle">Similarity</div>
-        <div id="legendBody">
-        <div id="legendGradient">
-        </div>
-        <div id ="legendLabels">
-        </div>
-        </div>`;
+          createTableHTML(selectedCountry, selectedCountryData);
+
+        // only create legend once while in this mode
         if (!legendCreated) {
           createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS)
         }
@@ -251,62 +296,45 @@ function createMap (inputData) {
 		},
 		geographyConfig: {
       highlightOnHover: true,
+      // only fill highlighted countries with data
       highlightFillColor: function(country) {
-        if (country.hasData) {
+        if (Object.keys(country).length > 0) {
           return HIGHLIGHTED;
         }
         return GRAY;
       },
+      // do not changed border color of any highlighted country
       highlightBorderColor: function(country) {
-        if (!country.hasData) {
-          return;
-        }
+        return;
       },
+      // only change border width of highlighted countries with data
       highlightBorderWidth: function(country) {
-        if (!country.hasData) {
-          return;
+        if (Object.keys(country).length > 0) {
+          return HIGHLIGHT_BORDER_WIDTH;
         }
-        return HIGHLIGHT_BORDER_WIDTH;
+        return;
       },
+      // display country name & corresponding similarity with selected country on mouseover
       popupTemplate: function(geography, data) {
-        console.log(geography.properties.name, data, geography.id);
-        if (geography != null && data != null) {
-          return '<div class="hoverinfo"><b>' + geography.properties.name + '</b><br>' + data[geography.id].similarity + '</div>'
+        if (geography != null && selectedCountryData != null) {
+          return '<div class="hoverinfo"><b>' + geography.properties.name + '</b><br>' + selectedCountryData[geography.id].similarity.toFixed(2) + '</div>'
         }
       }
 		},
 	});
 }
 
+/* Makes an asynchronous request to the JSON data file and calls `createMap` to generate the
+   chloropleth after parsing the resulting string data */
 function populateMap() {
-  // load country codes
-	const countryCodesURL = "local_country_variables/countries_codes_and_coordinates.csv";
-	$.ajax( {
-		url: countryCodesURL,
+  $.ajax({
+		url: "data/data.json",
 		type: "GET",
+		contentType: "application/json; charset=utf-8",
 		async: true,
-		dataType: "text",
-		success: function ( rawCCData ) {
-			var ccData = rawCCData.split(/\r?\n|\r/);
-			var currRow;
-			var name;
-			var cc3;
-			for (var i = 1; i < ccData.length; i++) {
-		    currRow = ccData[i].split(", ");
-		    name = currRow[0];
-		    cc3 = currRow[2].slice(1, currRow[2].length - 1);
-		    ccMap[name] = cc3;
-	    }
-
-	    $.ajax({
-				url: "data/data.json",
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				async: true,
-				dataType: "json",
-				success: createMap,
-			});
-		}
+		dataType: "json",
+		success: (function(data) {
+      createMap(JSON.parse(data));
+    }),
 	});
 }
-
