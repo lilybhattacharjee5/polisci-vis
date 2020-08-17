@@ -158,7 +158,7 @@ function createTableHTML (selectedCountry, similarities) {
     for (var [countryName, similarityScore] of sortedObject(similarities)) {
       html+=`<tr>
                 <td>${countryName}</td>
-                <td>${similarityScore.similarity.toFixed(2)}</td>
+                <td>${similarityScore.similarity.toFixed(DIGITS_ROUNDED)}</td>
               </tr>`
     }
     html+='</table></div>'
@@ -333,7 +333,7 @@ function createMap (inputData) {
       // display country name & corresponding similarity with selected country on mouseover
       popupTemplate: function(geography, data) {
         if (geography != null && selectedCountryData != null) {
-          return '<div class="hoverinfo"><b>' + geography.properties.name + '</b><br>' + selectedCountryData[geography.id].similarity.toFixed(2) + '</div>'
+          return '<div class="hoverinfo"><b>' + geography.properties.name + '</b><br>' + selectedCountryData[geography.id].similarity.toFixed(DIGITS_ROUNDED) + '</div>'
         }
       }
 		},
