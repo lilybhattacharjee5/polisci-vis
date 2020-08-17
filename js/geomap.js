@@ -13,9 +13,10 @@ const MIN_SIMILARITY = 0
 const HIGHLIGHT_BORDER_WIDTH = 2
 
 const NUM_INCREMENTS = 5;
-const DIGITS_ROUNDED = 5;
+const DIGITS_ROUNDED = 2;
 
-const BLUE_LINE = [0, 0, 255];
+const MIN_LEGEND_COLOR = [255, 255, 255];
+const MAX_LEGEND_COLOR = [0, 0, 255];
 
 /* From an object where values are floats, returns a list
 
@@ -50,11 +51,11 @@ function fullColorHex(r,g,b) {
   return `#${red}${green}${blue}`
 }
 
-function numToHex(num, color_line) {
+function numToHex(num, min_color, max_color) {
   return fullColorHex(
-    Math.round(num * color_line[0]),
-    Math.round(num * color_line[1]),
-    Math.round(num * color_line[2])
+    Math.round(num * (max_color[0] - min_color[0]) + min_color[0]),
+    Math.round(num * (max_color[1] - min_color[1]) + min_color[1]),
+    Math.round(num * (max_color[2] - min_color[2]) + min_color[2])
   );
 }
 
@@ -66,9 +67,15 @@ function numToHex(num, color_line) {
 function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
 	var adjustedSimilarity =
       (similarity - minSimilarity) / (maxSimilarity - minSimilarity);
-	return numToHex(adjustedSimilarity, BLUE_LINE);
+	return numToHex(adjustedSimilarity, MIN_LEGEND_COLOR, MAX_LEGEND_COLOR);
 }
 
+function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
+  var incrementNumber = Math.ceil((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
+  var incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
+  var incrementSimilarity = (incrementNumber * incrementSize) + minSimilarity;
+  return similarityToHexColor(incrementSimilarity, minSimilarity, maxSimilarity)
+}
 
 /* Given a country, finds similiarities to it.
 
@@ -130,7 +137,8 @@ function getFillKeys (selectedCountry, similarities, minSimilarity, maxSimilarit
   var fillKeys = {};
   for (var [countryName, countryData] of Object.entries(similarities)) {
     // color each country by similariy score
-    fillKeys[countryName] = similarityToHexColor(countryData.similarity, minSimilarity, maxSimilarity);
+    // similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements)
+    fillKeys[countryName] = similarityToLegendColor(countryData.similarity, minSimilarity, maxSimilarity, NUM_INCREMENTS);
   }
   // color selected country
   fillKeys[selectedCountry] = SELECTED;
@@ -205,20 +213,25 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   var minColor = similarityToHexColor(minSimilarity, minSimilarity, maxSimilarity);
   var maxColor = similarityToHexColor(maxSimilarity, minSimilarity, maxSimilarity);
   
-  document.getElementById("legendGradient").style["background-image"] = "linear-gradient(to top, " + minColor + ", " + maxColor + ")"
-  document.getElementById("legendGradient").style.width = "40px";
-  
   // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
+  var legendElemDiv;
   var legendElemText;
+  var incrementedSimilarity;
   var incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
   for (var i = 0; i < numIncrements; i++) {
+    incrementedSimilarity = (maxSimilarity - incrementSize * i).toFixed(DIGITS_ROUNDED);
     legendElemTag = document.createElement("div");
-    legendElemText = document.createTextNode((maxSimilarity - incrementSize * i).toFixed(DIGITS_ROUNDED).toString());
+    legendElemText = document.createTextNode(incrementedSimilarity.toString());
     legendElemTag.appendChild(legendElemText);
     legendElemTag.style.flex = 1;
     legendElemTag.style["padding-left"] = "20px";
     document.getElementById("legendLabels").appendChild(legendElemTag);
+
+    legendElemDiv = document.createElement("div");
+    legendElemDiv.style.flex = 1;
+    legendElemDiv.style["background-color"] = similarityToHexColor(incrementedSimilarity, minSimilarity, maxSimilarity);
+    document.getElementById("legendGradient").appendChild(legendElemDiv);
   }
   // add the final legend label (min) aligned to the bottom of the gradient
   legendElemTag = document.createElement("div");
@@ -228,7 +241,10 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   legendElemTag.style["padding-left"] = "20px";
   document.getElementById("legendLabels").appendChild(legendElemTag);
 
+  var legendTitle = document.getElementById("legendTitle");
+  legendTitle.style["padding-right"] = "30px";
   document.getElementById("worldMapLegend").style.display = "inline"; // make the completed legend visible
+  document.getElementById("legendGradient").style.width = document.getElementById("legendTitle").offsetWidth - legendTitle.style["padding-right"].slice(0, 2);
 }
 
 /* Given input data in the following format, generates a chloropleth map.
