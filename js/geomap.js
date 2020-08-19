@@ -274,6 +274,8 @@ function createMap (inputData) {
   var selectedCountryData;
   var alpha3; // tracks 3 letter country code of selected country
 
+  var hoverPriorColor;
+
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
 		projection: "mercator",
@@ -282,7 +284,17 @@ function createMap (inputData) {
       defaultFill: GRAY,
     },
 		done: function(datamap) {
-			datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+      //<div id="tooltip" display="none" style="position: absolute; display: none;"></div>
+      var tooltip = document.createElement("div");
+      // tooltip.display = "none";
+      tooltip.id = "tooltip";
+      tooltip.style.position = "absolute";
+      tooltip.style.display = "none";
+      tooltip.style["min-height"] = "20"
+      tooltip.style["width"] = "100"
+      document.getElementById("basic_chloropleth").appendChild(tooltip);
+			
+      datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
 				selectedCountry = geography.properties.name;
         alpha3 = geography.id;
         
@@ -308,28 +320,68 @@ function createMap (inputData) {
         if (!legendCreated) {
           createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS)
         }
+
+        let tooltip = document.getElementById("tooltip");
+        tooltip.style.display = "none";
+        horizontalShift = -60;
+        verticalShift = 190;
 			})
+
+      var pt = document.getElementsByClassName("datamap")[0].createSVGPoint();
+      var horizontalShift = 40;
+      var verticalShift = 200;
+
+      datamap.svg.selectAll('.datamaps-subunit').on('mouseover', function(geography, x, y) {
+        var hoveredCountry = geography.id;
+        var hoveredCountryData = dataObj[hoveredCountry];
+        if (alpha3 != hoveredCountry && hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
+          hoverPriorColor = this.style['fill'];
+          this.style['fill'] = HIGHLIGHTED;
+          this.style['stroke-width'] = HIGHLIGHT_BORDER_WIDTH;
+          let tooltip = document.getElementById("tooltip");
+
+          tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>";
+          if (selectedCountry) {
+            tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": " + selectedCountryData[geography.id].similarity.toFixed(DIGITS_ROUNDED) + "</div>";
+          }
+          
+          tooltip.style.display = "block";
+          
+          pt.x = event.clientX;
+          pt.y = event.clientY;
+          var cursorpt =  pt.matrixTransform(document.getElementsByClassName("datamap")[0].getScreenCTM().inverse());
+
+          tooltip.style.left = cursorpt.x + horizontalShift;
+          tooltip.style.top = cursorpt.y + verticalShift;
+          console.log("(" + tooltip.style.left + ", " + tooltip.style.top + ")");
+        }
+      })
+
+      datamap.svg.on('mousemove', function() {
+        console.log("move")
+        pt.x = event.clientX;
+        pt.y = event.clientY;
+        var cursorpt =  pt.matrixTransform(document.getElementsByClassName("datamap")[0].getScreenCTM().inverse());
+
+        tooltip.style.left = cursorpt.x + horizontalShift;
+        tooltip.style.top = cursorpt.y + verticalShift;
+      })
+
+      datamap.svg.selectAll('.datamaps-subunit').on('mouseout', function(geography) {
+        var hoveredCountry = geography.id;
+        var hoveredCountryData = dataObj[hoveredCountry];
+        if (hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
+          if (alpha3 == hoveredCountry) {
+            this.style['fill'] = SELECTED;
+          } else {
+            this.style['fill'] = hoverPriorColor;
+          }
+          this.style['stroke-width'] = 1;
+          document.getElementById("tooltip").style.display = "none";
+        }
+      })
 		},
 		geographyConfig: {
-      highlightOnHover: true,
-      // only fill highlighted countries with data
-      highlightFillColor: function(country) {
-        if (Object.keys(country).length > 0) {
-          return HIGHLIGHTED;
-        }
-        return GRAY;
-      },
-      // do not changed border color of any highlighted country
-      highlightBorderColor: function(country) {
-        return;
-      },
-      // only change border width of highlighted countries with data
-      highlightBorderWidth: function(country) {
-        if (Object.keys(country).length > 0) {
-          return HIGHLIGHT_BORDER_WIDTH;
-        }
-        return;
-      },
       // display country name & corresponding similarity with selected country on mouseover
       popupTemplate: function(geography, data) {
         if (geography != null && selectedCountryData != null) {
