@@ -341,7 +341,7 @@ function createMap (inputData) {
 
           tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>";
           if (selectedCountry) {
-            tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": " + selectedCountryData[geography.id].similarity.toFixed(DIGITS_ROUNDED) + "</div>";
+            tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": <b>" + selectedCountryData[geography.id].similarity.toFixed(DIGITS_ROUNDED) + "</b></div>";
           }
           
           tooltip.style.display = "block";
