@@ -293,8 +293,8 @@ function createMap (inputData) {
       document.getElementById("basic_chloropleth").appendChild(tooltip);
 
       var pt = document.getElementsByClassName("datamap")[0].createSVGPoint();
-      var horizontalShift = 48;
-      var verticalShift = 210;
+      var horizontalShift = 70;
+      var verticalShift = 190;
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
 				selectedCountry = geography.properties.name;
@@ -322,7 +322,7 @@ function createMap (inputData) {
         // only create legend once while in this mode
         if (!legendCreated) {
           createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS)
-          horizontalShift -= 100;
+          horizontalShift -= 115;
           legendCreated = true;
         }
 
