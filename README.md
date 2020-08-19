@@ -1,6 +1,6 @@
 # Internationally Blocked Domains Demo
 
-[Live Demo](https://pair-interoperability-demo.herokuapp.com/)
+[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)
 
 This interactive demo visualizes countries with similar website blocking
 patterns. See [our data processing
