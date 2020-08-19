@@ -352,12 +352,10 @@ function createMap (inputData) {
 
           tooltip.style.left = cursorpt.x + horizontalShift;
           tooltip.style.top = cursorpt.y + verticalShift;
-          console.log("(" + tooltip.style.left + ", " + tooltip.style.top + ")");
         }
       })
 
       datamap.svg.on('mousemove', function() {
-        console.log("move")
         pt.x = event.clientX;
         pt.y = event.clientY;
         var cursorpt =  pt.matrixTransform(document.getElementsByClassName("datamap")[0].getScreenCTM().inverse());
