@@ -293,7 +293,7 @@ function createMap (inputData) {
       document.getElementById("basic_chloropleth").appendChild(tooltip);
 
       var pt = document.getElementsByClassName("datamap")[0].createSVGPoint();
-      var horizontalShift = 70;
+      var horizontalShift = 68;
       var verticalShift = 190;
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
