@@ -2,7 +2,7 @@ var INPUT_DATA; // HACK we want to be passing this in.
 const MAP_HEIGHT = 750; // height of world map in pixels
 
 const GRAY = "#d3d3d3"; // default country color (no data)
-const SELECTED = "#00ff00"; // selected country color
+const SELECTED = "#228B22"; // selected country color
 const HIGHLIGHTED = "orange"; // highlighted (moused-over) country color
 
 // maximum and minimum expected similarity scores
@@ -313,6 +313,7 @@ function createMap (inputData) {
         // display selected country name
         document.getElementById("selectedCountry").innerHTML =
           `Selected Country: <div id="countryName">${selectedCountry}</div>`;
+        document.getElementById("countryName").style.color = SELECTED;
 
         // display selected country similarity data with other countries
 				document.getElementById("similarityTable").innerHTML =
@@ -322,6 +323,7 @@ function createMap (inputData) {
         if (!legendCreated) {
           createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS)
           horizontalShift -= 100;
+          legendCreated = true;
         }
 
         let tooltip = document.getElementById("tooltip");
