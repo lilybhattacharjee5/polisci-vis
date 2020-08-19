@@ -284,15 +284,17 @@ function createMap (inputData) {
       defaultFill: GRAY,
     },
 		done: function(datamap) {
-      //<div id="tooltip" display="none" style="position: absolute; display: none;"></div>
       var tooltip = document.createElement("div");
-      // tooltip.display = "none";
       tooltip.id = "tooltip";
       tooltip.style.position = "absolute";
       tooltip.style.display = "none";
       tooltip.style["min-height"] = "20"
       tooltip.style["width"] = "100"
       document.getElementById("basic_chloropleth").appendChild(tooltip);
+
+      var pt = document.getElementsByClassName("datamap")[0].createSVGPoint();
+      var horizontalShift = 40;
+      var verticalShift = 220;
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
 				selectedCountry = geography.properties.name;
@@ -319,17 +321,12 @@ function createMap (inputData) {
         // only create legend once while in this mode
         if (!legendCreated) {
           createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS)
+          horizontalShift -= 100;
         }
 
         let tooltip = document.getElementById("tooltip");
         tooltip.style.display = "none";
-        horizontalShift = -60;
-        verticalShift = 190;
 			})
-
-      var pt = document.getElementsByClassName("datamap")[0].createSVGPoint();
-      var horizontalShift = 40;
-      var verticalShift = 200;
 
       datamap.svg.selectAll('.datamaps-subunit').on('mouseover', function(geography, x, y) {
         var hoveredCountry = geography.id;
