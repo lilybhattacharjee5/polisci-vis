@@ -46,7 +46,7 @@
 
             <!-- Toggle map type -->
               <div class="mode_input">
-                <input type="radio" id="world-map" name="mode", value="world-map" onchange="toggleMode()">
+                <input type="radio" id="world-map" name="mode", value="world-map" onchange="toggleMode('USA')">
                 <label for="world-map"></label>World Map<br>
               </div>
               <div class="mode_input">
@@ -66,7 +66,7 @@
         <script src="js/geomap.js"></script>
         <script src="js/force-directed-graph.js"></script>
         <script>
-          populateMap();
+          populateMap("RUS");
        </script>
 
     </body>

@@ -118,9 +118,11 @@ function generateDataObj(inputData) {
       dataObj[countryB] = {};
     }
     
-    currSimilarity = inputData[countryPair].Overall_Similarity;
-    dataObj[countryA][countryB] = {'similarity': currSimilarity};
-    dataObj[countryB][countryA] = {'similarity': currSimilarity};
+    let pairDataObj = {
+      'similarity': inputData[countryPair].Overall_Similarity,
+    }
+    dataObj[countryA][countryB] = pairDataObj;
+    dataObj[countryB][countryA] = pairDataObj;
   }
   return dataObj;
 }
@@ -247,6 +249,85 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   document.getElementById("legendGradient").style.width = document.getElementById("legendTitle").offsetWidth - legendTitle.style["padding-right"].slice(0, 2);
 }
 
+function moveTooltip (pt) {
+  let tooltip = document.getElementById("tooltip");
+  pt.x = event.clientX;
+  pt.y = event.clientY;
+  var cursorpt =  pt.matrixTransform(document.getElementsByClassName("datamap")[0].getScreenCTM().inverse());
+
+  tooltip.style.left = cursorpt.x;
+  tooltip.style.top = cursorpt.y;
+}
+
+function mouseoverCountry (dataObj, geography, selectedCountry, selectedCountryId, pt, hoveredElement) {
+  var hoveredCountry = geography.id;
+  var hoveredCountryData = dataObj[hoveredCountry];
+  var selectedCountryData = dataObj[selectedCountryId];
+  var hoverPriorColor;
+  if (selectedCountryId != hoveredCountry && hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
+    hoverPriorColor = hoveredElement.style['fill'];
+    hoveredElement.style['fill'] = HIGHLIGHTED;
+    hoveredElement.style['stroke-width'] = HIGHLIGHT_BORDER_WIDTH;
+    let tooltip = document.getElementById("tooltip");
+
+    tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>";
+    if (selectedCountryId) {
+      tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": <b>" + selectedCountryData[hoveredCountry].similarity.toFixed(DIGITS_ROUNDED) + "</b></div>";
+    }
+    
+    tooltip.style.display = "block";
+    
+    moveTooltip(pt);
+  }
+  return hoverPriorColor;
+}
+
+function mouseoutCountry (dataObj, geography, selectedCountryId, hoveredElement, hoverPriorColor) {
+  let tooltip = document.getElementById("tooltip");
+  var hoveredCountry = geography.id;
+  var hoveredCountryData = dataObj[hoveredCountry];
+  if (hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
+    if (selectedCountryId == hoveredCountry) {
+      hoveredElement.style['fill'] = SELECTED;
+    } else {
+      hoveredElement.style['fill'] = hoverPriorColor;
+    }
+    hoveredElement.style['stroke-width'] = 1;
+    tooltip.style.display = "none";
+  }
+}
+
+function selectCountry (dataObj, selectedCountry, selectedCountryId, minSimilarity, maxSimilarity) {
+  // check that the country has corresponding data
+  var selectedCountryData = dataObj[`${selectedCountryId}`];
+  if (!selectedCountryData || Object.keys(selectedCountryData).length <= 0) {
+    return;
+  }
+  
+  // recalculate fillKeys based on newly selected country
+  var fillKeys = getFillKeys(selectedCountryId, selectedCountryData, minSimilarity, maxSimilarity);
+  
+  // display selected country name
+  document.getElementById("selectedCountry").innerHTML =
+    `Selected Country: <div id="countryName">${selectedCountry}</div>`;
+  document.getElementById("countryName").style.color = SELECTED;
+
+  // display selected country similarity data with other countries
+  document.getElementById("similarityTable").innerHTML =
+    createTableHTML(selectedCountry, selectedCountryData);
+
+  let tooltip = document.getElementById("tooltip");
+  tooltip.style.display = "none";
+
+  return fillKeys;
+}
+
+function countryNameFromId (countryId, allCountries) {
+  let idMatch = allCountries.filter(countryData => countryData.id == countryId);
+  let idMatchName = idMatch[0].properties.name;
+  return idMatchName;
+}
+
 /* Given input data in the following format, generates a chloropleth map.
 
   {
@@ -258,7 +339,7 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
       country_code_alpha3_B: "AUT"
     }
   } */
-function createMap (inputData) {
+function createMap (inputData, selectedCountryId) {
   INPUT_DATA = inputData; // HACK we want to be passing this in.
   var dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
   
@@ -270,11 +351,13 @@ function createMap (inputData) {
   var legendCreated = false; // prevents legend from reloading every time a country is selected
 
   // tracks current selected country name e.g. "Canada", and corresponding data from dataObj
-  var selectedCountry;
+  var allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
+  var selectedCountry = countryNameFromId(selectedCountryId, allCountries);
   var selectedCountryData;
-  var alpha3; // tracks 3 letter country code of selected country
 
   var hoverPriorColor;
+
+  createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS);
 
   new Datamap({
 		element: document.getElementById("basic_chloropleth"),
@@ -293,89 +376,27 @@ function createMap (inputData) {
       document.getElementById("basic_chloropleth").appendChild(tooltip);
 
       var pt = document.getElementsByClassName("datamap")[0].createSVGPoint();
-      var horizontalShift = 68;
-      var verticalShift = 190;
+
+      var selectedFillKeys = selectCountry(dataObj, selectedCountry, selectedCountryId, minSimilarity, maxSimilarity);
+      datamap.updateChoropleth(selectedFillKeys);
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-				selectedCountry = geography.properties.name;
-        alpha3 = geography.id;
-        
-        // check that the country has corresponding data
-        selectedCountryData = dataObj[`${alpha3}`];
-        if (!selectedCountryData || Object.keys(selectedCountryData).length <= 0) {
-          return;
-        }
-        
-        // recalculate fillKeys based on newly selected country
-        fillKeys = getFillKeys(alpha3, selectedCountryData, minSimilarity, maxSimilarity);
-				datamap.updateChoropleth(fillKeys);
-				
-        // display selected country name
-        document.getElementById("selectedCountry").innerHTML =
-          `Selected Country: <div id="countryName">${selectedCountry}</div>`;
-        document.getElementById("countryName").style.color = SELECTED;
-
-        // display selected country similarity data with other countries
-				document.getElementById("similarityTable").innerHTML =
-          createTableHTML(selectedCountry, selectedCountryData);
-
-        // only create legend once while in this mode
-        if (!legendCreated) {
-          createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS)
-          horizontalShift -= 115;
-          legendCreated = true;
-        }
-
-        let tooltip = document.getElementById("tooltip");
-        tooltip.style.display = "none";
+        selectedCountry = geography.properties.name;
+        selectedCountryId = geography.id;
+				var selectedFillKeys = selectCountry(dataObj, selectedCountry, selectedCountryId, minSimilarity, maxSimilarity);
+        datamap.updateChoropleth(selectedFillKeys);
 			})
 
-      datamap.svg.selectAll('.datamaps-subunit').on('mouseover', function(geography, x, y) {
-        var hoveredCountry = geography.id;
-        var hoveredCountryData = dataObj[hoveredCountry];
-        if (alpha3 != hoveredCountry && hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
-          hoverPriorColor = this.style['fill'];
-          this.style['fill'] = HIGHLIGHTED;
-          this.style['stroke-width'] = HIGHLIGHT_BORDER_WIDTH;
-          let tooltip = document.getElementById("tooltip");
-
-          tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>";
-          if (selectedCountry) {
-            tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": <b>" + selectedCountryData[geography.id].similarity.toFixed(DIGITS_ROUNDED) + "</b></div>";
-          }
-          
-          tooltip.style.display = "block";
-          
-          pt.x = event.clientX;
-          pt.y = event.clientY;
-          var cursorpt =  pt.matrixTransform(document.getElementsByClassName("datamap")[0].getScreenCTM().inverse());
-
-          tooltip.style.left = cursorpt.x + horizontalShift;
-          tooltip.style.top = cursorpt.y + verticalShift;
-        }
+      datamap.svg.selectAll('.datamaps-subunit').on('mouseover', function(geography) {
+        hoverPriorColor = mouseoverCountry(dataObj, geography, selectedCountry, selectedCountryId, pt, this);
       })
 
       datamap.svg.on('mousemove', function() {
-        pt.x = event.clientX;
-        pt.y = event.clientY;
-        var cursorpt =  pt.matrixTransform(document.getElementsByClassName("datamap")[0].getScreenCTM().inverse());
-
-        tooltip.style.left = cursorpt.x + horizontalShift;
-        tooltip.style.top = cursorpt.y + verticalShift;
-      })
+        moveTooltip(pt);
+      });
 
       datamap.svg.selectAll('.datamaps-subunit').on('mouseout', function(geography) {
-        var hoveredCountry = geography.id;
-        var hoveredCountryData = dataObj[hoveredCountry];
-        if (hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
-          if (alpha3 == hoveredCountry) {
-            this.style['fill'] = SELECTED;
-          } else {
-            this.style['fill'] = hoverPriorColor;
-          }
-          this.style['stroke-width'] = 1;
-          document.getElementById("tooltip").style.display = "none";
-        }
+        mouseoutCountry(dataObj, geography, selectedCountryId, this, hoverPriorColor);
       })
 		},
 		geographyConfig: {
@@ -391,7 +412,7 @@ function createMap (inputData) {
 
 /* Makes an asynchronous request to the JSON data file and calls `createMap` to generate the
    chloropleth after parsing the resulting string data */
-function populateMap() {
+function populateMap(selectedCountryId) {
   $.ajax({
 		url: "data/data.json",
 		type: "GET",
@@ -399,7 +420,7 @@ function populateMap() {
 		async: true,
 		dataType: "json",
 		success: (function(data) {
-      createMap(JSON.parse(data));
+      createMap(JSON.parse(data), selectedCountryId);
     }),
 	});
 }

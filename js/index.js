@@ -9,9 +9,9 @@ function input_load() {
 
 // Toggle between world map and force modes
 // Called in index.html radio button.
-function toggleMode(mode) {
+function toggleMode(selectedCountryId) {
   if (currMode == "force") {
-    enableWorldMap();
+    enableWorldMap("USA");
     currMode="world-map";
   } else if (currMode == "world-map") {
     enableForce();
@@ -21,7 +21,7 @@ function toggleMode(mode) {
 
 // Initialize world map
 // See geomap.js
-function enableWorldMap() {
+function enableWorldMap(selectedCountryId) {
   // set up map
   document.getElementById("basic_chloropleth").innerHTML = "";
   // map takes up 80% of visible screen to leave space for legend
@@ -31,7 +31,7 @@ function enableWorldMap() {
   document.getElementById("resetButton").style.display = "none";
   // make legend invisible until a country is selected
   document.getElementById("worldMapLegend").style.display = "none";
-  populateMap(750);
+  populateMap(selectedCountryId);
 }
 
 // Initialize force directed graph
