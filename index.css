@@ -58,13 +58,11 @@ h1 {
 
 #legendGradient {
   height: 50px;
-  flex: 3;
   display: flex;
   flex-direction: row;
 }
 
 #legendLabels {
-  flex: 2;
   display: flex;
   flex-direction: row;
 }
