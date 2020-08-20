@@ -182,7 +182,7 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   var incrementedSimilarity;
   var incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
   for (var i = 0; i < numIncrements; i++) {
-    incrementedSimilarity = (maxSimilarity - incrementSize * i).toFixed(DIGITS_ROUNDED);
+    incrementedSimilarity = (minSimilarity + incrementSize * i).toFixed(DIGITS_ROUNDED);
     legendElemTag = document.createElement("div");
     legendElemText = document.createTextNode(incrementedSimilarity.toString());
     legendElemTag.appendChild(legendElemText);
@@ -191,12 +191,12 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
 
     legendElemDiv = document.createElement("div");
     legendElemDiv.style.flex = 1;
-    legendElemDiv.style["background-color"] = colorScheme[numIncrements - i - 1];
+    legendElemDiv.style["background-color"] = colorScheme[i];
     document.getElementById("legendGradient").appendChild(legendElemDiv);
   }
   // add the final legend label (min) aligned to the bottom of the gradient
   legendElemTag = document.createElement("div");
-  legendElemText = document.createTextNode(minSimilarity.toFixed(DIGITS_ROUNDED).toString());
+  legendElemText = document.createTextNode(maxSimilarity.toFixed(DIGITS_ROUNDED).toString());
   legendElemTag.appendChild(legendElemText);
   document.getElementById("legendLabels").appendChild(legendElemTag);
 

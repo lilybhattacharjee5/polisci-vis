@@ -46,7 +46,7 @@ h1 {
 }
 
 #worldMapLegend {
-  width: 80%;
+  width: 20%;
   margin-left: 10%;
   margin-right: 10%;
 }
@@ -57,7 +57,7 @@ h1 {
 }
 
 #legendGradient {
-  height: 50px;
+  height: 20px;
   display: flex;
   flex-direction: row;
 }
