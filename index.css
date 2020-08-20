@@ -6,11 +6,6 @@ h1 {
   display: inline;
 }
 
-#selectedCountrySimilarities {
-  height: 500px;
-  overflow-y: scroll;
-}
-
 #resetButton {
   display: none;
   float: right;
@@ -145,11 +140,6 @@ input:checked + .slider:before {
 
 #selected_country {
   font-size: 24px;
-}
-
-#domain_table {
-  height: 500px;
-  overflow-y: auto;
 }
 
 .content .content_elem {

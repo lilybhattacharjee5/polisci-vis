@@ -152,7 +152,7 @@ function getFillKeys (selectedCountry, similarities, minSimilarity, maxSimilarit
 
   [alpha3 country code] | [similarity score] */
 function createTableHTML (selectedCountry, similarities) {
-  var html = `<div id="selectedCountrySimilarities"><table class="dataTable">
+  var html = `<table class="dataTable">
     <tr>
       <th>Country</th>
       <th>Similarity to ${selectedCountry}</th>
@@ -163,7 +163,7 @@ function createTableHTML (selectedCountry, similarities) {
                 <td>${similarityScore.similarity.toFixed(DIGITS_ROUNDED)}</td>
               </tr>`
     }
-    html+='</table></div>'
+    html+='</table>'
     return html
 }
 
