@@ -34,34 +34,9 @@ function sortedObject (obj) {
   return sortable;
 }
 
-/* Color utilities */
-
-function rgbToHex(rgb) {
-  var hex = Number(rgb).toString(16);
-  if (hex.length < 2) {
-    hex = "0" + hex;
-  }
-  return hex;
-}
-
-function fullColorHex(r,g,b) {
-  var red = rgbToHex(r);
-  var green = rgbToHex(g);
-  var blue = rgbToHex(b);
-  return `#${red}${green}${blue}`
-}
-
-function numToHex(num, min_color, max_color) {
-  return fullColorHex(
-    Math.round(num * (max_color[0] - min_color[0]) + min_color[0]),
-    Math.round(num * (max_color[1] - min_color[1]) + min_color[1]),
-    Math.round(num * (max_color[2] - min_color[2]) + min_color[2])
-  );
-}
-
 /* Convert a similarity score into a hex color.
 
-  TODO Simliarity scores range from min similarity of all pairs in the dataset 
+  TODO Similarity scores range from min similarity of all pairs in the dataset 
   to max similarity of all pairs in the dataset. This may change; we may want to
   programmatically generate min and max in the future. */
 function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
@@ -71,10 +46,8 @@ function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
 }
 
 function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
-  var incrementNumber = Math.ceil((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
-  var incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
-  var incrementSimilarity = (incrementNumber * incrementSize) + minSimilarity;
-  return similarityToHexColor(incrementSimilarity, minSimilarity, maxSimilarity)
+  var incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
+  return d3.schemeBlues[NUM_INCREMENTS][incrementNumber];
 }
 
 /* Given a country, finds similiarities to it.
@@ -138,8 +111,7 @@ function generateDataObj(inputData) {
 function getFillKeys (selectedCountry, similarities, minSimilarity, maxSimilarity) {
   var fillKeys = {};
   for (var [countryName, countryData] of Object.entries(similarities)) {
-    // color each country by similariy score
-    // similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements)
+    // color each country by similarity score
     fillKeys[countryName] = similarityToLegendColor(countryData.similarity, minSimilarity, maxSimilarity, NUM_INCREMENTS);
   }
   // color selected country
@@ -212,8 +184,7 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   document.getElementById("legendGradient").style.height = MAP_HEIGHT;
   
   // find colors at the top (max) and bottom (min) of the legend gradient
-  var minColor = similarityToHexColor(minSimilarity, minSimilarity, maxSimilarity);
-  var maxColor = similarityToHexColor(maxSimilarity, minSimilarity, maxSimilarity);
+  var colorScheme = d3.schemeBlues[numIncrements];
   
   // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
@@ -232,7 +203,7 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
 
     legendElemDiv = document.createElement("div");
     legendElemDiv.style.flex = 1;
-    legendElemDiv.style["background-color"] = similarityToHexColor(incrementedSimilarity, minSimilarity, maxSimilarity);
+    legendElemDiv.style["background-color"] = colorScheme[numIncrements - i - 1];
     document.getElementById("legendGradient").appendChild(legendElemDiv);
   }
   // add the final legend label (min) aligned to the bottom of the gradient
