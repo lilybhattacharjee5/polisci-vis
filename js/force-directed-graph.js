@@ -112,7 +112,9 @@ function generateForceDirected() {
     .data(links)
     .enter()
     .append("line")
-    .attr("stroke", LINK_COLOR)
+    .attr("stroke", d => {
+      return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+    })
     .attr("stroke-width", 1)
     .attr("class", "link");
   
@@ -183,7 +185,9 @@ function generateForceDirected() {
       .data(links)
       .enter().append('line')
       .attr("class", "link")
-      .attr("stroke", LINK_COLOR)
+      .attr("stroke", d => {
+        return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+      })
       .attr("stroke-width", 1);
     // toggle multiplier to a lower value to resize visualization proportionally
     multiplier = 5;
@@ -226,11 +230,14 @@ function generateForceDirected() {
         .attr("y1", d => nodes[d.source.index].y)
         .attr("x2", d => nodes[d.target.index].x)
         .attr("y2", d => nodes[d.target.index].y)
-        .attr("opacity", function(d) { 
-          if (d.similarity > meanSimilarity) {
-            return 1;
-          }
-          return 0.1;
+        // .attr("opacity", function(d) { 
+        //   if (d.similarity > meanSimilarity) {
+        //     return 1;
+        //   }
+        //   return 0.1;
+        // })
+        .attr("stroke", d => {
+          return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
         });
     } else {
       link.attr("x1", d => d.source.x);
@@ -258,7 +265,9 @@ function generateForceDirected() {
     .data(links)
     .enter().append('line')
         .attr("class", "link")
-        .attr("stroke","#625EED")
+        .attr("stroke", d => {
+          return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+        })
         .attr("stroke-width", 1)
     node = svgElement.selectAll(".node")
       .data(nodes)
