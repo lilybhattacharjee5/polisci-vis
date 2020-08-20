@@ -172,17 +172,6 @@ function findMinMaxSimilarity (inputData) {
    numIncrements number of labels
   */
 function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
-  // sets up div structure with legend body, gradient and labels
-  document.getElementById("worldMapLegend").innerHTML = `
-    <div id="legendTitle">Similarity</div>
-      <div id="legendBody">
-      <div id="legendGradient">
-      </div>
-      <div id ="legendLabels">
-      </div>
-    </div>`;
-  document.getElementById("legendGradient").style.height = MAP_HEIGHT;
-  
   // find colors at the top (max) and bottom (min) of the legend gradient
   var colorScheme = d3.schemeBlues[numIncrements];
   
@@ -198,7 +187,6 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
     legendElemText = document.createTextNode(incrementedSimilarity.toString());
     legendElemTag.appendChild(legendElemText);
     legendElemTag.style.flex = 1;
-    legendElemTag.style["padding-left"] = "20px";
     document.getElementById("legendLabels").appendChild(legendElemTag);
 
     legendElemDiv = document.createElement("div");
@@ -210,14 +198,10 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   legendElemTag = document.createElement("div");
   legendElemText = document.createTextNode(minSimilarity.toFixed(DIGITS_ROUNDED).toString());
   legendElemTag.appendChild(legendElemText);
-  legendElemTag.style.flex = 0;
-  legendElemTag.style["padding-left"] = "20px";
   document.getElementById("legendLabels").appendChild(legendElemTag);
 
   var legendTitle = document.getElementById("legendTitle");
-  legendTitle.style["padding-right"] = "30px";
-  document.getElementById("worldMapLegend").style.display = "inline"; // make the completed legend visible
-  document.getElementById("legendGradient").style.width = document.getElementById("legendTitle").offsetWidth - legendTitle.style["padding-right"].slice(0, 2);
+  document.getElementById("worldMapLegend").style.display = "inline-block"; // make the completed legend visible
 }
 
 function moveTooltip (pt) {
