@@ -18,6 +18,8 @@ const DIGITS_ROUNDED = 2;
 const MIN_LEGEND_COLOR = [255, 255, 255];
 const MAX_LEGEND_COLOR = [0, 0, 255];
 
+var legendCreated = false; // prevents legend from reloading every time a country is selected
+
 /* From an object where values are floats, returns a list
 
    [[key, value], ...]
@@ -172,6 +174,11 @@ function findMinMaxSimilarity (inputData) {
    numIncrements number of labels
   */
 function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
+  if (legendCreated) {
+    document.getElementById("worldMapLegend").style.display = "inline-block"; // make the completed legend visible
+    return;
+  }
+
   // find colors at the top (max) and bottom (min) of the legend gradient
   var colorScheme = d3.schemeBlues[numIncrements];
   
@@ -201,7 +208,7 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   document.getElementById("legendLabels").appendChild(legendElemTag);
 
   var legendTitle = document.getElementById("legendTitle");
-  document.getElementById("worldMapLegend").style.display = "inline-block"; // make the completed legend visible
+  legendCreated = true;
 }
 
 function moveTooltip (pt) {
@@ -302,8 +309,6 @@ function createMap (inputData, selectedCountryId) {
   var similarityBounds = findMinMaxSimilarity(inputData);
   var minSimilarity = similarityBounds[0];
   var maxSimilarity = similarityBounds[1];
-  
-  var legendCreated = false; // prevents legend from reloading every time a country is selected
 
   // tracks current selected country name e.g. "Canada", and corresponding data from dataObj
   var allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
