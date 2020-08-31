@@ -12,7 +12,7 @@ const MIN_SIMILARITY = 0
 // highlight border width for countries with data
 const HIGHLIGHT_BORDER_WIDTH = 2
 
-const NUM_INCREMENTS = 5;
+const NUM_INCREMENTS = 7;
 const DIGITS_ROUNDED = 2;
 
 const MIN_LEGEND_COLOR = [255, 255, 255];
@@ -55,8 +55,7 @@ function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
 
 export function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
   var incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
-  // return d3Color.schemeBlues[NUM_INCREMENTS][incrementNumber];
-  return ["#eff3ff","#bdd7e7","#6baed6","#3182bd","#08519c"][incrementNumber];
+  return d3Color.schemeBlues[NUM_INCREMENTS][incrementNumber];
 }
 
 /* Given a country, finds similiarities to it.
@@ -188,7 +187,7 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
 
   // find colors at the top (max) and bottom (min) of the legend gradient
   var colorScheme = ["#eff3ff","#bdd7e7","#6baed6","#3182bd","#08519c"];
-  // var colorScheme = d3Color.schemeBlues[numIncrements];
+  var colorScheme = d3Color.schemeBlues[numIncrements];
   
   // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
