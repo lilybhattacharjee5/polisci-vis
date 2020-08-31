@@ -1,11 +1,51 @@
 import { populateMap } from "./geomap.js";
 import { generateForceDirected } from "./force_directed_graph.js";
 
-// global variables
 var currMode = "world-map"; // world-map or force
 
+// global variables
+export const data = JSON.parse(require('../data/data.json'));
+
+export var MAP_HEIGHT = 750; // height of world map in pixels
+
+export var DEFAULT = "#d3d3d3"; // default country color (no data)
+export var SELECTED = "#228B22"; // selected country color
+export var HIGHLIGHTED = "orange"; // highlighted (moused-over) country color
+
+// maximum and minimum expected similarity scores
+export var MAX_SIMILARITY = 1
+export var MIN_SIMILARITY = 0
+
+// highlight border width for countries with data
+export var HIGHLIGHT_BORDER_WIDTH = 2
+
+export var NUM_INCREMENTS = 7;
+export var DIGITS_ROUNDED = 2;
+
 // This method is called in `body onload` in index.html
-export function input_load() {
+export function inputLoad(
+  mapHeight,
+  defaultFill,
+  selectedFill,
+  highlightedFill,
+  maxSimilarity,
+  minSimilarity,
+  highlightBorderWidth,
+  numIncrements,
+  digitsRounded) {
+  // set global variables
+  MAP_HEIGHT = mapHeight;
+  DEFAULT = defaultFill;
+  SELECTED = selectedFill;
+  HIGHLIGHTED = highlightedFill;
+  MAX_SIMILARITY = maxSimilarity;
+  MIN_SIMILARITY = minSimilarity;
+  HIGHLIGHT_BORDER_WIDTH = highlightBorderWidth;
+  NUM_INCREMENTS = numIncrements;
+  DIGITS_ROUNDED = digitsRounded;
+
+  populateMap("USA");
+  displayToggleMode();
   var input = document.getElementById('world-map');
   input.checked = "checked";
 }
@@ -75,6 +115,3 @@ function enableForce() {
   document.getElementById("resetButton").style.display = "flex";
   generateForceDirected();
 }
-
-populateMap("USA");
-displayToggleMode();

@@ -1,26 +1,18 @@
-var INPUT_DATA; // HACK we want to be passing this in.
-const MAP_HEIGHT = 750; // height of world map in pixels
-
-const GRAY = "#d3d3d3"; // default country color (no data)
-const SELECTED = "#228B22"; // selected country color
-const HIGHLIGHTED = "orange"; // highlighted (moused-over) country color
-
-// maximum and minimum expected similarity scores
-const MAX_SIMILARITY = 1
-const MIN_SIMILARITY = 0
-
-// highlight border width for countries with data
-const HIGHLIGHT_BORDER_WIDTH = 2
-
-const NUM_INCREMENTS = 7;
-const DIGITS_ROUNDED = 2;
-
-const MIN_LEGEND_COLOR = [255, 255, 255];
-const MAX_LEGEND_COLOR = [0, 0, 255];
+import {
+  data,
+  MAP_HEIGHT,
+  DEFAULT,
+  SELECTED,
+  HIGHLIGHTED,
+  MAX_SIMILARITY,
+  MIN_SIMILARITY,
+  HIGHLIGHT_BORDER_WIDTH,
+  NUM_INCREMENTS,
+  DIGITS_ROUNDED
+} from "./index.js";
 
 var legendCreated = false; // prevents legend from reloading every time a country is selected
 
-const data = JSON.parse(require('../data/data.json'));
 const d3 = require('d3');
 const topojson = require('topojson');
 const d3Color = require('d3-scale-chromatic');
@@ -40,17 +32,6 @@ function sortedObject (obj) {
     return b[1] - a[1];
   });
   return sortable;
-}
-
-/* Convert a similarity score into a hex color.
-
-  TODO Similarity scores range from min similarity of all pairs in the dataset 
-  to max similarity of all pairs in the dataset. This may change; we may want to
-  programmatically generate min and max in the future. */
-function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
-	var adjustedSimilarity =
-      (similarity - minSimilarity) / (maxSimilarity - minSimilarity);
-	return numToHex(adjustedSimilarity, MIN_LEGEND_COLOR, MAX_LEGEND_COLOR);
 }
 
 export function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
@@ -219,13 +200,14 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
 }
 
 function moveTooltip (pt) {
+  let map = document.getElementById("basic_chloropleth").getElementsByTagName("svg")[0];
   let tooltip = document.getElementById("tooltip");
   pt.x = event.clientX;
   pt.y = event.clientY;
   var cursorpt =  pt.matrixTransform(document.getElementsByClassName("datamap")[0].getScreenCTM().inverse());
 
-  tooltip.style.left = cursorpt.x;
-  tooltip.style.top = cursorpt.y;
+  tooltip.style.left = map.getBoundingClientRect().left + cursorpt.x + window.scrollX + 10;
+  tooltip.style.top = map.getBoundingClientRect().top + cursorpt.y + window.scrollY + 10;
 }
 
 function mouseoverCountry (dataObj, geography, selectedCountry, selectedCountryId, pt, hoveredElement) {
@@ -309,7 +291,6 @@ function countryNameFromId (countryId, allCountries) {
     }
   } */
 function createMap (inputData, selectedCountryId) {
-  // INPUT_DATA = inputData; // HACK we want to be passing this in.
   var dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
   
   // finds min & max similarity values between any country pair in the dataset
@@ -331,9 +312,10 @@ function createMap (inputData, selectedCountryId) {
 		projection: "mercator",
     data: dataObj,
     fills: {
-      defaultFill: GRAY,
+      defaultFill: DEFAULT,
     },
 		done: function(datamap) {
+      document.getElementById("basic_chloropleth").getElementsByTagName("svg")[0].style["position"] = "relative";
       var tooltip = document.createElement("div");
       tooltip.id = "tooltip";
       tooltip.style.position = "absolute";
@@ -380,14 +362,5 @@ function createMap (inputData, selectedCountryId) {
 /* Makes an asynchronous request to the JSON data file and calls `createMap` to generate the
    chloropleth after parsing the resulting string data */
 export function populateMap(selectedCountryId) {
-  // $.ajax({
-		// url: "data/data.json",
-		// type: "GET",
-		// contentType: "application/json; charset=utf-8",
-		// async: true,
-		// dataType: "json",
-		// success: (function(data) {
-      createMap(data, selectedCountryId);
- //    }),
-	// });
+  createMap(data, selectedCountryId);
 }

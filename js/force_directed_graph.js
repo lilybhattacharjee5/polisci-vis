@@ -1,8 +1,9 @@
+import {
+  data,
+  NUM_INCREMENTS,
+} from "./index.js";
 import { similarityToLegendColor } from "./geomap.js";
-const data = JSON.parse(require('../data/data.json'));
-
-const NUM_INCREMENTS = 5;
-var LINK_COLOR = "#625EED";
+// const data = JSON.parse(require('../data/data.json'));
 
 /* Separate node and link data from global INPUT_DATA variable */
 function getNodesAndLinks (inputData) {
