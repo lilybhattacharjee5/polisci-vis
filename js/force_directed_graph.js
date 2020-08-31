@@ -1,3 +1,7 @@
+import { similarityToLegendColor } from "./geomap.js";
+const data = JSON.parse(require('../data/data.json'));
+
+const NUM_INCREMENTS = 5;
 var LINK_COLOR = "#625EED";
 
 /* Separate node and link data from global INPUT_DATA variable */
@@ -76,7 +80,7 @@ function calculateHeight (links) {
 
 /* Uses the global INPUT_DATA variable to generate a force graph with undirected edges
   between countries with corresponding edge lengths based on pairwise similarity */
-function generateForceDirected() {
+export function generateForceDirected() {
   /* Initial force graph settings */
   var radius = 6; // node size
   var padding = 100; // pads graph from edges of visualization
@@ -87,7 +91,7 @@ function generateForceDirected() {
   var multiplier = 7;
   
   // extract data from dataset
-  var [nodes, links] = getNodesAndLinks(INPUT_DATA);
+  var [nodes, links] = getNodesAndLinks(data);
   // vary visualization height based on maximum edge length
   height = calculateHeight(links, multiplier);
   document.getElementById("basic_chloropleth").style.height = height;

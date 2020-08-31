@@ -20,6 +20,12 @@ const MAX_LEGEND_COLOR = [0, 0, 255];
 
 var legendCreated = false; // prevents legend from reloading every time a country is selected
 
+const data = JSON.parse(require('../data/data.json'));
+const d3 = require('d3');
+const topojson = require('topojson');
+const d3Color = require('d3-scale-chromatic');
+const Datamap = require('../libraries/datamaps.js')
+
 /* From an object where values are floats, returns a list
 
    [[key, value], ...]
@@ -47,9 +53,10 @@ function similarityToHexColor(similarity, minSimilarity, maxSimilarity) {
 	return numToHex(adjustedSimilarity, MIN_LEGEND_COLOR, MAX_LEGEND_COLOR);
 }
 
-function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
+export function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
   var incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
-  return d3.schemeBlues[NUM_INCREMENTS][incrementNumber];
+  // return d3Color.schemeBlues[NUM_INCREMENTS][incrementNumber];
+  return ["#eff3ff","#bdd7e7","#6baed6","#3182bd","#08519c"][incrementNumber];
 }
 
 /* Given a country, finds similiarities to it.
@@ -180,7 +187,8 @@ function createLegendHTML (minSimilarity, maxSimilarity, numIncrements) {
   }
 
   // find colors at the top (max) and bottom (min) of the legend gradient
-  var colorScheme = d3.schemeBlues[numIncrements];
+  var colorScheme = ["#eff3ff","#bdd7e7","#6baed6","#3182bd","#08519c"];
+  // var colorScheme = d3Color.schemeBlues[numIncrements];
   
   // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
@@ -302,7 +310,7 @@ function countryNameFromId (countryId, allCountries) {
     }
   } */
 function createMap (inputData, selectedCountryId) {
-  INPUT_DATA = inputData; // HACK we want to be passing this in.
+  // INPUT_DATA = inputData; // HACK we want to be passing this in.
   var dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
   
   // finds min & max similarity values between any country pair in the dataset
@@ -372,15 +380,15 @@ function createMap (inputData, selectedCountryId) {
 
 /* Makes an asynchronous request to the JSON data file and calls `createMap` to generate the
    chloropleth after parsing the resulting string data */
-function populateMap(selectedCountryId) {
-  $.ajax({
-		url: "data/data.json",
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		async: true,
-		dataType: "json",
-		success: (function(data) {
-      createMap(JSON.parse(data), selectedCountryId);
-    }),
-	});
+export function populateMap(selectedCountryId) {
+  // $.ajax({
+		// url: "data/data.json",
+		// type: "GET",
+		// contentType: "application/json; charset=utf-8",
+		// async: true,
+		// dataType: "json",
+		// success: (function(data) {
+      createMap(data, selectedCountryId);
+ //    }),
+	// });
 }

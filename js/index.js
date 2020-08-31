@@ -1,8 +1,11 @@
+import { populateMap } from "./geomap.js";
+import { generateForceDirected } from "./force_directed_graph.js";
+
 // global variables
 var currMode = "world-map"; // world-map or force
 
 // This method is called in `body onload` in index.html
-function input_load() {
+export function input_load() {
   var input = document.getElementById('world-map');
   input.checked = "checked";
 }
@@ -11,12 +14,35 @@ function input_load() {
 // Called in index.html radio button.
 function toggleMode(selectedCountryId) {
   if (currMode == "force") {
-    enableWorldMap("USA");
+    enableWorldMap(selectedCountryId);
     currMode="world-map";
   } else if (currMode == "world-map") {
     enableForce();
     currMode="force";
   }
+}
+
+function displayToggleMode() {
+  document.getElementById("vis_mode").innerHTML = `
+    <div class="content_elem">
+      <!-- Toggle map type -->
+      <div class="mode_input">
+        <input type="radio" id="world-map" name="mode", value="world-map">
+        <label for="world-map"></label>World Map<br>
+      </div>
+      <div class="mode_input">
+        <input type="radio" id="force" name="mode", value="force">
+        <label for="force"></label>Force</br>
+      </div>
+    </div>
+  `;
+  document.getElementById("world-map").checked = "checked";
+  document.getElementById("world-map").addEventListener("change", function() {
+    toggleMode("USA");
+  });
+  document.getElementById("force").addEventListener("change", function() {
+    toggleMode();
+  });
 }
 
 // Initialize world map
@@ -50,4 +76,5 @@ function enableForce() {
   generateForceDirected();
 }
 
-
+populateMap("USA");
+displayToggleMode();
