@@ -7,26 +7,10 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="index.css">
 
-
-        <!-- JQuery -->
-        <!-- Latest compiled JavaScript -->
-        <script
-          src="https://code.jquery.com/jquery-3.4.1.min.js"
-          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-          crossorigin="anonymous"></script>
-        <!-- d3 -->
-        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
-        <!-- topojson -->
-        <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
-        <!-- datamaps.js-->
-        <script src="libraries/datamaps.js"></script>
-
-        <script src="https://d3js.org/d3-color.v1.min.js"></script>
-<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <!-- Load bundled scripts -->
+        <script src="dist/index.bundle.js"></script>
     </head>
-    <!-- Initialize js in onload() -->
-    <body onload="input_load()">
+    <body>
         <h1 style>Internationally Blocked Domains Demo</h1>
         <div class="content">
           <p>This demo includes a map and force-directed visualization to display similarities in website blocking patterns. See <a href="https://github.com/daylight-lab/website-blocking-proxy" target="_blank">our code and data on Github</a> for more information on how these metrics are computed, and view the code for this visualization <a href="https://github.com/lilybhattacharjee5/interoperability-demo" target="_blank">here</a>. Click on a country to see shared censored website data in other countries across the world.</p>
@@ -34,46 +18,21 @@
           <p><b>Note</b>: Data is currently unavailable for grayed-out countries.</p>
         </div>
 
-        <b><h3 class="content" id="selectedCountry"></h3></b>
+        <div id='visContainer'></div>
 
-        <div id="resetButton"><button>Reset</button></div>
-        <div class="main_display" id="basic_chloropleth"></div>
-        <br />
-
-        <div class="main_display" id="worldMapLegend">
-          <div id="legendTitle">Similarity</div>
-          <div id="legendBody">
-            <div id="legendGradient"></div>
-            <div id ="legendLabels"></div>
-          </div>
-        </div>
-
-        <div class="content" id="vis_mode">
-          <div class="content_elem">
-
-            <!-- Toggle map type -->
-              <div class="mode_input">
-                <input type="radio" id="world-map" name="mode", value="world-map" onchange="toggleMode('USA')">
-                <label for="world-map"></label>World Map<br>
-              </div>
-              <div class="mode_input">
-                <input type="radio" id="force" name="mode", value="force" onchange="toggleMode()">
-                <label for="force"></label>Force</br>
-              </div>
-          </div>
-
-        </div>
-
-        <!-- Show selected country -->
-        <b><div class="content" id="similarityTable"></div></b>
-
-        <!-- Load scripts -->
-        <script src="js/index.js"></script>
-        <script src="js/geomap.js"></script>
-        <script src="js/force-directed-graph.js"></script>
         <script>
-          populateMap("USA");
-       </script>
-
+          index.initializeVisualization(
+            visId = 'visContainer',
+            mapHeight = 750,
+            defaultFill = '#d3d3d3',
+            selectedFill = '#228B22',
+            highlightedFill = 'orange',
+            maxSimilarity = 1,
+            minSimilarity = 0,
+            highlightBorderWidth = 2,
+            numIncrements = 5,
+            digitsRounded = 2
+          );
+        </script>
     </body>
 </html>

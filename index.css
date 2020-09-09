@@ -1,89 +1,14 @@
+/* Visualization wrapper HTML page styles */
+
 h1 {
   text-align: center;
-}
-
-#countryName {
-  display: inline;
-}
-
-#resetButton {
-  display: none;
-  float: right;
-  margin-right: 100px;
 }
 
 .container {
   padding: 20px;
 }
 
-#main_display {
-  display: flex;
-  justify-content: center;
-}
-
-.row_elem {
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-.content_elem {
-  margin-left: 10px;
-}
-
 .content {
   align-items: center;
   margin: 50px;
-}
-
-#legendTitle {
-  font-weight: bold;
-}
-
-#basic_chloropleth {
-  width: 80%;
-  height: 750px;
-  margin: 0 auto;
-}
-
-#worldMapLegend {
-  width: 20%;
-  margin-left: 10%;
-  margin-right: 10%;
-}
-
-#legendBody {
-  display: flex;
-  flex-direction: column;
-}
-
-#legendGradient {
-  height: 20px;
-  display: flex;
-  flex-direction: row;
-}
-
-#legendLabels {
-  display: flex;
-  flex-direction: row;
-}
-
-#vis_mode {
-  display: flex;
-}
-
-#selected_country {
-  font-size: 24px;
-}
-
-.content .content_elem {
-  display: flex;
-  flex-direction: row;
-}
-
-.mode_input {
-  padding-right: 30px;
-}
-
-#datasource_swap {
-  text-align: center;
 }
