@@ -1,0 +1,70 @@
+/* Visualization-specific styles */
+
+#similarityTable {
+  display: flex;
+}
+
+#countryName {
+  display: inline;
+}
+
+#resetButton {
+  display: none;
+  float: right;
+  margin-right: 100px;
+}
+
+#mainDisplay {
+  display: flex;
+  justify-content: center;
+}
+
+.content .contentElem {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+#visDisplay {
+  width: 80%;
+  height: 750px;
+  margin: 0 auto;
+}
+
+/* Legend styles */
+
+#visLegend {
+  width: 20%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+#visLegendTitle {
+  font-weight: bold;
+}
+
+#visLegendBody {
+  display: flex;
+  flex-direction: column;
+}
+
+#visLegendGradient {
+  height: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+#visLegendLabels {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Visualization mode styles */
+
+#visMode {
+  display: flex;
+}
+
+.modeInput {
+  padding-right: 30px;
+}

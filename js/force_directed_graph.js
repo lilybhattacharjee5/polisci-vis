@@ -1,12 +1,30 @@
+// import necessary libraries from root index file
+import {
+  jQuery,
+} from './index.js';
+
+// import global constants from root index file
 import {
   data,
   NUM_INCREMENTS,
-} from "./index.js";
-import { similarityToLegendColor } from "./geomap.js";
-// const data = JSON.parse(require('../data/data.json'));
+  MIN_SIMILARITY,
+  MAX_SIMILARITY,
+} from './index.js';
+
+// import general methods from root index file
+import {
+  alpha3ToCountryName,
+  selectCountry,
+  similarityToLegendColor,
+  generateDataObj,
+  findMinMaxSimilarity,
+  createLegendHTML,
+} from './index.js';
+
+const constants = require('./constants.js');
 
 /* Separate node and link data from global INPUT_DATA variable */
-function getNodesAndLinks (inputData) {
+function getNodesAndLinks(inputData) {
   var countryCodes = {}
   // construct a dict with the country code of every country as its key
   for (var [countryPair, similarityScore] of Object.entries(inputData)) {
@@ -59,7 +77,7 @@ function calculateMeanSimilarity (links) {
 
 /* Generate the SVG image holding the visualization */
 function generateSvg (width, height, marginLeft, marginTop) {
-  return d3.select("#basic_chloropleth")
+  return d3.select('#' + constants.visDisplay)
       .append("svg")
       .attr({"width": width, "height": height})
       .append("g")
@@ -79,14 +97,21 @@ function calculateHeight (links) {
   return maxLength * 2;
 }
 
-/* Uses the global INPUT_DATA variable to generate a force graph with undirected edges
+/* Uses the global data variable to generate a force graph with undirected edges
   between countries with corresponding edge lengths based on pairwise similarity */
 export function generateForceDirected() {
+  // finds min & max similarity values between any country pair in the dataset
+  var similarityBounds = findMinMaxSimilarity(data);
+  var minSimilarity = MIN_SIMILARITY ? MIN_SIMILARITY : similarityBounds[0];
+  var maxSimilarity = MAX_SIMILARITY ? MAX_SIMILARITY : similarityBounds[1];
+  createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS);
+
   /* Initial force graph settings */
   var radius = 6; // node size
   var padding = 100; // pads graph from edges of visualization
-  var width = $('#basic_chloropleth').width();
-  var height = $('#basic_chloropleth').height();
+  const forceGraph = document.getElementById(constants.visDisplay);
+  var width = forceGraph.offsetWidth;
+  var height = forceGraph.offsetHeight;
   // the constant by which the similarity score is multiplied
   // toggled based on whether or not a country node is selected
   var multiplier = 7;
@@ -95,7 +120,7 @@ export function generateForceDirected() {
   var [nodes, links] = getNodesAndLinks(data);
   // vary visualization height based on maximum edge length
   height = calculateHeight(links, multiplier);
-  document.getElementById("basic_chloropleth").style.height = height;
+  forceGraph.style.height = height;
 
   // create an SVG element and append it to the DOM
   var svgElement = generateSvg(width, height, 50, 20);
@@ -167,6 +192,9 @@ export function generateForceDirected() {
 
   // reload force graph data when a node is selected
   function selectCircle(d) {
+    // make similarity table visible again
+    document.getElementById('similarityTable').style.display = 'flex';
+
     force.stop();
     var thisNode = d.id;
 
@@ -197,7 +225,7 @@ export function generateForceDirected() {
     // toggle multiplier to a lower value to resize visualization proportionally
     multiplier = 5;
     height = calculateHeight(links, multiplier);
-    document.getElementById("basic_chloropleth").style.height = height;
+    document.getElementById(constants.visDisplay).style.height = height;
     
     flag = true;
     clickedNode = d;
@@ -208,6 +236,8 @@ export function generateForceDirected() {
     force.charge(-100)
     force.linkDistance(d => d.weight * multiplier)
     force.start()
+
+    selectCountry (generateDataObj(data), alpha3ToCountryName(d.id), d.id, MIN_SIMILARITY, MAX_SIMILARITY);
   }
 
   // This function will be executed for every tick of force layout
@@ -235,12 +265,6 @@ export function generateForceDirected() {
         .attr("y1", d => nodes[d.source.index].y)
         .attr("x2", d => nodes[d.target.index].x)
         .attr("y2", d => nodes[d.target.index].y)
-        // .attr("opacity", function(d) { 
-        //   if (d.similarity > meanSimilarity) {
-        //     return 1;
-        //   }
-        //   return 0.1;
-        // })
         .attr("stroke", d => {
           return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
         });
@@ -261,37 +285,40 @@ export function generateForceDirected() {
   var removedLinks;
   var oldLinks = jQuery.extend(true, [], links);
 
-  // when reset button is pressed, restore all of the links in the original dataset
-  d3.select("#resetButton").on("click", function() {
-    links = oldLinks
+  // when the reset button is pressed, restore all of the links in the original dataset
+  d3.select('#resetButton').on('click', function() {
+    // remove similarity table
+    document.getElementById('similarityTable').style.display = 'none';
+
+    links = oldLinks;
     link.remove();
-    node.remove()
+    node.remove();
     link = svgElement.selectAll('.link')
-    .data(links)
-    .enter().append('line')
-        .attr("class", "link")
-        .attr("stroke", d => {
-          return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
-        })
-        .attr("stroke-width", 1)
-    node = svgElement.selectAll(".node")
+      .data(links)
+      .enter().append('line')
+      .attr('class', 'link')
+      .attr("stroke", d => {
+        return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+      })
+      .attr('stroke-width', 1)
+    node = svgElement.selectAll('.node')
       .data(nodes)
       .enter()
-      .append("g")
-      .attr("class", "node")
+      .append('g')
+      .attr('class', 'node')
       .call(force.drag);
-    label = node.append("text")
-      .attr("dx", 12)
-      .attr("dy", "0.35em")
-      .attr("font-size", 14)
+    label = node.append('text')
+      .attr('dx', 12)
+      .attr('dy', '0.35em')
+      .attr('font-size', 14)
       .text(d => d.id);
-    circle = node.append("circle")
-      .attr("r", d => radius)
-      .on("mouseover", mouseover)
-      .on("mouseout", mouseout);
-    circle.on("click", selectCircle);
-    height = calculateHeight(links) * 1.5;
-    document.getElementById("basic_chloropleth").style.height = height;
+    circle = node.append('circle')
+      .attr('r', d => radius)
+      .on('mouseover', mouseover)
+      .on('mouseout', mouseout);
+    circle.on('click', selectCircle);
+    height = calculateHeight(links);
+    document.getElementById(constants.visDisplay).style.height = height;
     flag = false
     force.links(links);
     force.nodes(nodes);
@@ -301,7 +328,7 @@ export function generateForceDirected() {
   })
 
   // call the selectCircle function whenever a circle is clicked
-  circle.on("click", selectCircle);
+  circle.on('click', selectCircle);
 
   // start the force layout calculation
   force.start();

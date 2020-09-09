@@ -7,29 +7,10 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="index.css">
 
-        <!-- JQuery -->
-        <!-- Latest compiled JavaScript -->
-        <script
-          src="https://code.jquery.com/jquery-3.4.1.min.js"
-          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-          crossorigin="anonymous"></script>
-
-        <!-- Load scripts -->
+        <!-- Load bundled scripts -->
         <script src="dist/index.bundle.js"></script>
-        <script src="dist/geomap.bundle.js"></script>
-        <script src="dist/force_directed_graph.bundle.js"></script>
     </head>
-    <body onload='index.inputLoad(
-      mapHeight = 750,
-      defaultFill = "#d3d3d3",
-      selectedFill = "#228B22",
-      highlightedFill = "orange",
-      maxSimilarity = 1,
-      minSimilarity = 0,
-      highlightBorderWidth = 2,
-      numIncrements = 5,
-      digitsRounded = 2
-    );'>
+    <body>
         <h1 style>Internationally Blocked Domains Demo</h1>
         <div class="content">
           <p>This demo includes a map and force-directed visualization to display similarities in website blocking patterns. See <a href="https://github.com/daylight-lab/website-blocking-proxy" target="_blank">our code and data on Github</a> for more information on how these metrics are computed, and view the code for this visualization <a href="https://github.com/lilybhattacharjee5/interoperability-demo" target="_blank">here</a>. Click on a country to see shared censored website data in other countries across the world.</p>
@@ -37,24 +18,21 @@
           <p><b>Note</b>: Data is currently unavailable for grayed-out countries.</p>
         </div>
 
-        <b><h3 class="content" id="selectedCountry"></h3></b>
+        <div id='visContainer'></div>
 
-        <div id="resetButton"><button>Reset</button></div>
-        <div class="main_display" id="basic_chloropleth"></div>
-        <br />
-
-        <div class="main_display" id="worldMapLegend">
-          <div id="legendTitle">Similarity</div>
-          <div id="legendBody">
-            <div id="legendGradient"></div>
-            <div id ="legendLabels"></div>
-          </div>
-        </div>
-
-        <div class="content" id="vis_mode">
-        </div>
-
-        <!-- Show selected country -->
-        <b><div class="content" id="similarityTable"></div></b>
+        <script>
+          index.initializeVisualization(
+            visId = 'visContainer',
+            mapHeight = 750,
+            defaultFill = '#d3d3d3',
+            selectedFill = '#228B22',
+            highlightedFill = 'orange',
+            maxSimilarity = 1,
+            minSimilarity = 0,
+            highlightBorderWidth = 2,
+            numIncrements = 5,
+            digitsRounded = 2
+          );
+        </script>
     </body>
 </html>
