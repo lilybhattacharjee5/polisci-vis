@@ -38,11 +38,13 @@ export var DIGITS_ROUNDED = 2;
 export var ENABLED_MODES = [constants.geomap, constants.forceGraph];
 var DEFAULT_MODE = constants.geomap;
 
+var TABLE_PROPERTIES = [];
+
 const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
 var currMode = DEFAULT_MODE;
 var legendCreated = false; // prevents legend from reloading every time a country is selected
 
-const modeToEnableFunction = {
+export const modeToEnableFunction = {
   [constants.geomap]: {
     "enableFunction": enableWorldMap,
     "name": "World Map",
@@ -67,7 +69,8 @@ export function initializeVisualization(
   digitsRounded,
   colorScheme,
   defaultMode,
-  enabledModes) {
+  enabledModes,
+  tableProperties) {
   // set global variables
   VIS_ID = visId,
   MAP_HEIGHT = mapHeight;
@@ -82,6 +85,7 @@ export function initializeVisualization(
   COLOR_SCHEME = colorScheme;
   DEFAULT_MODE = defaultMode;
   ENABLED_MODES = enabledModes;
+  TABLE_PROPERTIES = tableProperties;
 
   currMode = DEFAULT_MODE;
 
@@ -234,19 +238,37 @@ export function generateDataObj(inputData) {
 
   [alpha3 country code] | [similarity score] */
 function createTableHTML(selectedCountry, similarities) {
+  if (TABLE_PROPERTIES.length < 1) {
+    return ``;
+  }
+
   var html = `<table class="dataTable">
     <tr>
       <th>Country</th>
       <th>Similarity to ${selectedCountry}</th>
-    </tr>`
-    for (var [countryName, similarityScore] of sortedObject(similarities)) {
-      html+=`<tr>
-                <td>${countryName}</td>
-                <td>${similarityScore.similarity.toFixed(DIGITS_ROUNDED)}</td>
-              </tr>`
-    }
-    html+='</table>'
-    return html
+    </tr>
+  `;
+
+  for (var [countryName, similarityScore] of sortedObject(similarities)) {
+    var properties = ``;
+    TABLE_PROPERTIES.forEach(property => {
+      var value = similarityScore[property];
+      if (!value) {
+        return;
+      }
+      if (typeof value === "number") {
+        value = value.toFixed(DIGITS_ROUNDED);
+      }
+      properties += `<td>${value}</td>`;
+    });
+
+    html+=`<tr>
+              <td>${countryName}</td>
+              ${properties}
+            </tr>`
+  }
+  html+='</table>'
+  return html
 }
 
 export function selectCountry(dataObj, selectedCountry, selectedCountryId, minSimilarity, maxSimilarity) {
