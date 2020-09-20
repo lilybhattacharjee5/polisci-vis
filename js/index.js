@@ -22,6 +22,7 @@ export var MAP_HEIGHT = 750; // height of world map in pixels
 export var DEFAULT = '#d3d3d3'; // default country color (no data)
 export var SELECTED = '#228B22'; // selected country color
 export var HIGHLIGHTED = 'orange'; // highlighted (moused-over) country color
+export var COLOR_SCHEME = 'schemeBlues';
 
 // maximum and minimum expected similarity scores
 export var MAX_SIMILARITY = 1
@@ -52,7 +53,8 @@ export function initializeVisualization(
   minSimilarity,
   highlightBorderWidth,
   numIncrements,
-  digitsRounded) {
+  digitsRounded,
+  colorScheme) {
   // set global variables
   VIS_ID = visId,
   MAP_HEIGHT = mapHeight;
@@ -64,6 +66,7 @@ export function initializeVisualization(
   HIGHLIGHT_BORDER_WIDTH = highlightBorderWidth;
   NUM_INCREMENTS = numIncrements;
   DIGITS_ROUNDED = digitsRounded;
+  COLOR_SCHEME = colorScheme;
 
   setupVisualizationStructure();
   geomap.populateMap("USA");
@@ -255,7 +258,7 @@ export function selectCountry(dataObj, selectedCountry, selectedCountryId, minSi
 
 export function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
   var incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
-  return d3Color.schemeBlues[NUM_INCREMENTS][incrementNumber];
+  return d3Color[COLOR_SCHEME][NUM_INCREMENTS][incrementNumber];
 }
 
 /* Given input data in the following format, finds the min & max similarities of any country
@@ -297,7 +300,7 @@ export function createLegendHTML(minSimilarity, maxSimilarity, numIncrements) {
   }
 
   // find colors at the top (max) and bottom (min) of the legend gradient
-  var colorScheme = d3Color.schemeBlues[numIncrements];
+  var colorScheme = d3Color[COLOR_SCHEME][numIncrements];
   
   // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
