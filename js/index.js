@@ -42,7 +42,18 @@ const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
 var currMode = DEFAULT_MODE;
 var legendCreated = false; // prevents legend from reloading every time a country is selected
 
-// This method is called in `body onload` in index.html
+const modeToEnableFunction = {
+  [constants.geomap]: {
+    "enableFunction": enableWorldMap,
+    "name": "World Map",
+  },
+  [constants.forceGraph]: {
+    "enableFunction": enableForce,
+    "name": "Force"
+  },
+};
+
+// This method is called in a script tag in index.html
 export function initializeVisualization(
   visId,
   mapHeight,
@@ -54,7 +65,9 @@ export function initializeVisualization(
   highlightBorderWidth,
   numIncrements,
   digitsRounded,
-  colorScheme) {
+  colorScheme,
+  defaultMode,
+  enabledModes) {
   // set global variables
   VIS_ID = visId,
   MAP_HEIGHT = mapHeight;
@@ -67,12 +80,14 @@ export function initializeVisualization(
   NUM_INCREMENTS = numIncrements;
   DIGITS_ROUNDED = digitsRounded;
   COLOR_SCHEME = colorScheme;
+  DEFAULT_MODE = defaultMode;
+  ENABLED_MODES = enabledModes;
+
+  currMode = DEFAULT_MODE;
 
   setupVisualizationStructure();
-  geomap.populateMap("USA");
+  // geomap.populateMap("USA");
   displayToggleMode();
-  var input = document.getElementById('world-map');
-  input.checked = "checked";
 }
 
 function setupVisualizationStructure() {
@@ -99,41 +114,39 @@ function setupVisualizationStructure() {
   `;
 }
 
-// Toggle between world map and force modes
-// Called in index.html radio button.
-function toggleMode(selectedCountryId) {
-  if (currMode == constants.geomap) {
-    enableWorldMap(selectedCountryId);
-  } else if (currMode == constants.forceGraph) {
-    enableForce();
-  }
-}
-
 function displayToggleMode() {
+  if (ENABLED_MODES.length <= 1) {
+    modeToEnableFunction[currMode]["enableFunction"]("USA");
+    return;
+  }
+
+  var visModeHTML = "";
+
+  ENABLED_MODES.forEach(mode => {
+    visModeHTML += `
+      <div class="modeInput">
+        <input type="radio" id="${mode}" name="mode", value="${mode}">
+        <label for="${mode}"></label>${modeToEnableFunction[mode]["name"]}<br>
+      </div>
+    `
+  });
+
   document.getElementById("visMode").innerHTML = `
     <div class="contentElem">
       <!-- Toggle map type -->
-      <div class="modeInput">
-        <input type="radio" id="world-map" name="mode", value="world-map">
-        <label for="world-map"></label>World Map<br>
-      </div>
-      <div class="modeInput">
-        <input type="radio" id="force" name="mode", value="force">
-        <label for="force"></label>Force</br>
-      </div>
+      ${visModeHTML}
     </div>
   `;
-  document.getElementById("world-map").checked = "checked";
-  
-  document.getElementById("world-map").addEventListener("change", function() {
-    currMode = constants.geomap;
-    toggleMode("USA");
+
+  ENABLED_MODES.forEach(mode => {
+    document.getElementById(mode).addEventListener("change", function() {
+      currMode = mode;
+      modeToEnableFunction[mode]["enableFunction"]("USA");
+    });
   });
-  
-  document.getElementById("force").addEventListener("change", function() {
-    currMode = constants.forceGraph;
-    toggleMode();
-  });
+
+  document.getElementById(DEFAULT_MODE).checked = "checked";
+  modeToEnableFunction[DEFAULT_MODE]["enableFunction"]("USA");
 }
 
 // Initialize world map
