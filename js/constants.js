@@ -1,3 +1,3 @@
 export const geomap = 'geomap';
-export const forceGraph = 'forceGraph';
+export const forceGraph = 'force';
 export const visDisplay = 'visDisplay';
