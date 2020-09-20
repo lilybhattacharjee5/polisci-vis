@@ -194,6 +194,7 @@ export function generateForceDirected() {
   function selectCircle(d) {
     // make similarity table visible again
     document.getElementById('similarityTable').style.display = 'flex';
+    document.getElementById('selectedCountry').style.display = 'block';
 
     force.stop();
     var thisNode = d.id;
@@ -289,6 +290,7 @@ export function generateForceDirected() {
   d3.select('#resetButton').on('click', function() {
     // remove similarity table
     document.getElementById('similarityTable').style.display = 'none';
+    document.getElementById('selectedCountry').style.display = 'none';
 
     links = oldLinks;
     link.remove();
