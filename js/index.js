@@ -19,6 +19,8 @@ export const data = JSON.parse(require('../data/data.json')); //
 export var VIS_ID = 'visContainer';
 export var MAP_HEIGHT = 750; // height of world map in pixels
 
+var SELECTED_COUNTRY = "USA";
+
 export var DEFAULT = '#d3d3d3'; // default country color (no data)
 export var SELECTED = '#228B22'; // selected country color
 export var HIGHLIGHTED = 'orange'; // highlighted (moused-over) country color
@@ -39,6 +41,7 @@ export var ENABLED_MODES = [constants.geomap, constants.forceGraph];
 var DEFAULT_MODE = constants.geomap;
 
 var TABLE_PROPERTIES = [];
+var SHOW_TABLE = true;
 
 const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
 var currMode = DEFAULT_MODE;
@@ -70,7 +73,9 @@ export function initializeVisualization(
   colorScheme,
   defaultMode,
   enabledModes,
-  tableProperties) {
+  tableProperties,
+  showTable,
+  selectedCountry) {
   // set global variables
   VIS_ID = visId,
   MAP_HEIGHT = mapHeight;
@@ -86,11 +91,12 @@ export function initializeVisualization(
   DEFAULT_MODE = defaultMode;
   ENABLED_MODES = enabledModes;
   TABLE_PROPERTIES = tableProperties;
+  SHOW_TABLE = showTable;
+  SELECTED_COUNTRY = countryNameToAlpha3(selectedCountry);
 
   currMode = DEFAULT_MODE;
 
   setupVisualizationStructure();
-  // geomap.populateMap("USA");
   displayToggleMode();
 }
 
@@ -120,7 +126,7 @@ function setupVisualizationStructure() {
 
 function displayToggleMode() {
   if (ENABLED_MODES.length <= 1) {
-    modeToEnableFunction[currMode]["enableFunction"]("USA");
+    modeToEnableFunction[currMode]["enableFunction"](SELECTED_COUNTRY);
     return;
   }
 
@@ -145,12 +151,12 @@ function displayToggleMode() {
   ENABLED_MODES.forEach(mode => {
     document.getElementById(mode).addEventListener("change", function() {
       currMode = mode;
-      modeToEnableFunction[mode]["enableFunction"]("USA");
+      modeToEnableFunction[mode]["enableFunction"](SELECTED_COUNTRY);
     });
   });
 
   document.getElementById(DEFAULT_MODE).checked = "checked";
-  modeToEnableFunction[DEFAULT_MODE]["enableFunction"]("USA");
+  modeToEnableFunction[DEFAULT_MODE]["enableFunction"](SELECTED_COUNTRY);
 }
 
 // Initialize world map
@@ -190,7 +196,8 @@ export function alpha3ToCountryName(alpha3) {
 }
 
 export function countryNameToAlpha3(countryName) {
-
+  const countryFound = allCountries.filter(countryInfo => countryInfo.properties.name === countryName);
+  return countryFound.length > 0 ? countryFound[0].id : "USA";
 }
 
 /* From an object where values are floats, returns a list
@@ -284,9 +291,11 @@ export function selectCountry(dataObj, selectedCountry, selectedCountryId, minSi
   document.getElementById("countryName").style.color = SELECTED;
 
   // display selected country similarity data with other countries
-  document.getElementById("similarityTable").innerHTML =
-    createTableHTML(selectedCountry, selectedCountryData);
-  document.getElementById("similarityTable").style.display = 'flex';
+  if (SHOW_TABLE) {
+    document.getElementById("similarityTable").innerHTML =
+      createTableHTML(selectedCountry, selectedCountryData);
+    document.getElementById("similarityTable").style.display = 'flex';
+  }
 
   return selectedCountryData;
 }
