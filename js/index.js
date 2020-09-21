@@ -60,41 +60,62 @@ export const modeToEnableFunction = {
 
 // This method is called in a script tag in index.html
 export function initializeVisualization(
-  visId,
-  mapHeight,
-  defaultFill,
-  selectedFill,
-  highlightedFill,
-  maxSimilarity,
-  minSimilarity,
-  highlightBorderWidth,
-  numIncrements,
-  digitsRounded,
-  colorScheme,
-  defaultMode,
-  enabledModes,
-  tableProperties,
-  showTable,
-  selectedCountry) {
+  // {
+  // visId: VIS_ID,
+  // mapHeight: MAP_HEIGHT,
+  // defaultFill: DEFAULT,
+  // selectedFill: SELECTED,
+  // highlightedFill: HIGHLIGHTED,
+  // maxSimilarity: MAX_SIMILARITY,
+  // minSimilarity: MIN_SIMILARITY,
+  // highlightBorderWidth: HIGHLIGHT_BORDER_WIDTH,
+  // numIncrements: NUM_INCREMENTS,
+  // digitsRounded: DIGITS_ROUNDED,
+  // colorScheme: COLOR_SCHEME,
+  // defaultMode: DEFAULT_MODE,
+  // enabledModes: ENABLED_MODES,
+  // tableProperties: TABLE_PROPERTIES,
+  // showTable: SHOW_TABLE,
+  // selectedCountry: SELECTED_COUNTRY}
+  options,
+  ) {
   // set global variables
-  VIS_ID = visId,
-  MAP_HEIGHT = mapHeight;
-  DEFAULT = defaultFill;
-  SELECTED = selectedFill;
-  HIGHLIGHTED = highlightedFill;
-  MAX_SIMILARITY = maxSimilarity;
-  MIN_SIMILARITY = minSimilarity;
-  HIGHLIGHT_BORDER_WIDTH = highlightBorderWidth;
-  NUM_INCREMENTS = numIncrements;
-  DIGITS_ROUNDED = digitsRounded;
-  COLOR_SCHEME = colorScheme;
-  DEFAULT_MODE = defaultMode;
-  ENABLED_MODES = enabledModes;
-  TABLE_PROPERTIES = tableProperties;
-  SHOW_TABLE = showTable;
-  SELECTED_COUNTRY = countryNameToAlpha3(selectedCountry);
+  if (options.visId !== undefined) VIS_ID = options.visId;
+  if (options.mapHeight !== undefined) MAP_HEIGHT = options.mapHeight;
+  if (options.defaultFill !== undefined) DEFAULT = options.defaultFill;
+  if (options.selectedFill !== undefined) SELECTED = options.selectedFill;
+  if (options.highlightedFill !== undefined) HIGHLIGHTED = options.highlightedFill;
+  if (options.maxSimilarity !== undefined) MAX_SIMILARITY = options.maxSimilarity;
+  if (options.minSimilarity !== undefined) MIN_SIMILARITY = options.minSimilarity;
+  if (options.highlightBorderWidth !== undefined) HIGHLIGHT_BORDER_WIDTH = options.highlightBorderWidth;
+  if (options.numIncrements !== undefined) NUM_INCREMENTS = options.numIncrements;
+  if (options.digitsRounded !== undefined) DIGITS_ROUNDED = options.digitsRounded;
+  if (options.colorScheme !== undefined) COLOR_SCHEME = options.colorScheme;
+  if (options.defaultMode !== undefined) DEFAULT_MODE = options.defaultMode;
+  if (options.enabledModes !== undefined) ENABLED_MODES = options.enabledModes;
+  if (options.tableProperties !== undefined) TABLE_PROPERTIES = options.tableProperties;
+  if (options.showTable !== undefined) SHOW_TABLE = options.showTable;
+  if (options.selectCountry !== undefined) SELECTED_COUNTRY = options.selectCountry;
+  // VIS_ID = visId;
+  // MAP_HEIGHT = mapHeight;
+  // DEFAULT = defaultFill;
+  // SELECTED = selectedFill;
+  // HIGHLIGHTED = highlightedFill;
+  // MAX_SIMILARITY = maxSimilarity;
+  // MIN_SIMILARITY = minSimilarity;
+  // HIGHLIGHT_BORDER_WIDTH = highlightBorderWidth;
+  // NUM_INCREMENTS = numIncrements;
+  // DIGITS_ROUNDED = digitsRounded;
+  // COLOR_SCHEME = colorScheme;
+  // DEFAULT_MODE = defaultMode;
+  // ENABLED_MODES = enabledModes;
+  // TABLE_PROPERTIES = tableProperties;
+  // SHOW_TABLE = showTable;
+  // SELECTED_COUNTRY = countryNameToAlpha3(selectedCountry);
 
   currMode = DEFAULT_MODE;
+  // console.log(colorScheme, COLOR_SCHEME);
+  // console.log(defaultMode, DEFAULT_MODE);
 
   setupVisualizationStructure();
   displayToggleMode();
@@ -170,7 +191,7 @@ function enableWorldMap(selectedCountryId) {
   // make force graph specific attributes invisible
   document.getElementById("resetButton").style.display = "none";
   // make legend invisible until a country is selected
-  document.getElementById("visLegend").style.display = "none";
+  // document.getElementById("visLegend").style.display = "none";
   geomap.populateMap(selectedCountryId);
 }
 
@@ -184,7 +205,7 @@ function enableForce() {
   // make world map specific attributes invisible
   document.getElementById("selectedCountry").innerHTML = "";
   document.getElementById("similarityTable").innerHTML = "";
-  document.getElementById("visLegend").style.display = "none";
+  // document.getElementById("visLegend").style.display = "none";
   // make force graph specific attributes visible
   document.getElementById("resetButton").style.display = "flex";
   forceGraph.generateForceDirected();

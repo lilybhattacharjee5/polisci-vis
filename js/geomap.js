@@ -143,6 +143,7 @@ function createMap(inputData, selectedCountryId) {
 
   var hoverPriorColor;
 
+  console.log(minSimilarity, maxSimilarity, NUM_INCREMENTS);
   createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS);
 
   new Datamap({

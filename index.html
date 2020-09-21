@@ -25,24 +25,24 @@
         <div id='visContainer1'></div>
 
         <script>
-          index.initializeVisualization(
-            visId = 'visContainer',
-            mapHeight = 750,
-            defaultFill = '#d3d3d3',
-            selectedFill = '#228B22',
-            highlightedFill = 'orange',
-            maxSimilarity = 1,
-            minSimilarity = 0,
-            highlightBorderWidth = 2,
-            numIncrements = 5,
-            digitsRounded = 2,
-            colorScheme = "schemeBlues",
-            defaultMode = "geomap",
-            enabledModes = ["geomap", "force"],
-            tableProperties = ["similarity"],
-            showTable = false,
-            selectedCountry = "Brazil"
-          );
+          index.initializeVisualization({
+            visId: 'visContainer',
+            mapHeight: 750,
+            defaultFill: '#d3d3d3',
+            selectedFill: '#228B22',
+            highlightedFill: 'orange',
+            maxSimilarity: 1,
+            minSimilarity: 0,
+            highlightBorderWidth: 2,
+            numIncrements: 5,
+            digitsRounded: 2,
+            // colorScheme = "schemeBlues",
+            defaultMode: "geomap",
+            enabledModes: ["geomap", "force"],
+            tableProperties: ["similarity"],
+            showTable: false,
+            // selectedCountry = "Brazil"
+          });
         </script>
 
         <!-- <script>
