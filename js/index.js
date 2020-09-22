@@ -15,37 +15,7 @@ export const jQuery = require('jquery');
 
 export const data = JSON.parse(require('../data/data.json')); // 
 
-/* global variables set to default values */
-export var VIS_ID = 'visContainer';
-export var MAP_HEIGHT = 750; // height of world map in pixels
-
-var SELECTED_COUNTRY = "USA";
-
-export var DEFAULT = '#d3d3d3'; // default country color (no data)
-export var SELECTED = '#228B22'; // selected country color
-export var HIGHLIGHTED = 'orange'; // highlighted (moused-over) country color
-export var COLOR_SCHEME = 'schemeBlues';
-
-// maximum and minimum expected similarity scores
-export var MAX_SIMILARITY = 1
-export var MIN_SIMILARITY = 0
-
-// highlight border width for countries with data
-export var HIGHLIGHT_BORDER_WIDTH = 2
-
-export var NUM_INCREMENTS = 7;
-export var DIGITS_ROUNDED = 2;
-
-// visualization modes
-export var ENABLED_MODES = [constants.geomap, constants.forceGraph];
-var DEFAULT_MODE = constants.geomap;
-
-var TABLE_PROPERTIES = [];
-var SHOW_TABLE = true;
-
 const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
-var currMode = DEFAULT_MODE;
-var legendCreated = false; // prevents legend from reloading every time a country is selected
 
 export const modeToEnableFunction = {
   [constants.geomap]: {
@@ -58,157 +28,144 @@ export const modeToEnableFunction = {
   },
 };
 
+// id names
+
 // This method is called in a script tag in index.html
-export function initializeVisualization(
-  // {
-  // visId: VIS_ID,
-  // mapHeight: MAP_HEIGHT,
-  // defaultFill: DEFAULT,
-  // selectedFill: SELECTED,
-  // highlightedFill: HIGHLIGHTED,
-  // maxSimilarity: MAX_SIMILARITY,
-  // minSimilarity: MIN_SIMILARITY,
-  // highlightBorderWidth: HIGHLIGHT_BORDER_WIDTH,
-  // numIncrements: NUM_INCREMENTS,
-  // digitsRounded: DIGITS_ROUNDED,
-  // colorScheme: COLOR_SCHEME,
-  // defaultMode: DEFAULT_MODE,
-  // enabledModes: ENABLED_MODES,
-  // tableProperties: TABLE_PROPERTIES,
-  // showTable: SHOW_TABLE,
-  // selectedCountry: SELECTED_COUNTRY}
-  options,
-  ) {
-  // set global variables
-  if (options.visId !== undefined) VIS_ID = options.visId;
-  if (options.mapHeight !== undefined) MAP_HEIGHT = options.mapHeight;
-  if (options.defaultFill !== undefined) DEFAULT = options.defaultFill;
-  if (options.selectedFill !== undefined) SELECTED = options.selectedFill;
-  if (options.highlightedFill !== undefined) HIGHLIGHTED = options.highlightedFill;
-  if (options.maxSimilarity !== undefined) MAX_SIMILARITY = options.maxSimilarity;
-  if (options.minSimilarity !== undefined) MIN_SIMILARITY = options.minSimilarity;
-  if (options.highlightBorderWidth !== undefined) HIGHLIGHT_BORDER_WIDTH = options.highlightBorderWidth;
-  if (options.numIncrements !== undefined) NUM_INCREMENTS = options.numIncrements;
-  if (options.digitsRounded !== undefined) DIGITS_ROUNDED = options.digitsRounded;
-  if (options.colorScheme !== undefined) COLOR_SCHEME = options.colorScheme;
-  if (options.defaultMode !== undefined) DEFAULT_MODE = options.defaultMode;
-  if (options.enabledModes !== undefined) ENABLED_MODES = options.enabledModes;
-  if (options.tableProperties !== undefined) TABLE_PROPERTIES = options.tableProperties;
-  if (options.showTable !== undefined) SHOW_TABLE = options.showTable;
-  if (options.selectCountry !== undefined) SELECTED_COUNTRY = options.selectCountry;
-  // VIS_ID = visId;
-  // MAP_HEIGHT = mapHeight;
-  // DEFAULT = defaultFill;
-  // SELECTED = selectedFill;
-  // HIGHLIGHTED = highlightedFill;
-  // MAX_SIMILARITY = maxSimilarity;
-  // MIN_SIMILARITY = minSimilarity;
-  // HIGHLIGHT_BORDER_WIDTH = highlightBorderWidth;
-  // NUM_INCREMENTS = numIncrements;
-  // DIGITS_ROUNDED = digitsRounded;
-  // COLOR_SCHEME = colorScheme;
-  // DEFAULT_MODE = defaultMode;
-  // ENABLED_MODES = enabledModes;
-  // TABLE_PROPERTIES = tableProperties;
-  // SHOW_TABLE = showTable;
-  // SELECTED_COUNTRY = countryNameToAlpha3(selectedCountry);
+export function initializeVisualization(options) {
+  // modify default parameters according to passed-in options
+  if (options.visId === undefined) options.visId = constants.VIS_ID;
+  if (options.mapHeight === undefined) options.mapHeight = constants.MAP_HEIGHT;
+  if (options.defaultFill === undefined) options.defaultFill = constants.DEFAULT_FILL;
+  if (options.selectedFill === undefined) options.selectedFill = constants.SELECTED_FILL;
+  if (options.highlightedFill === undefined) options.highlightedFill = constants.HIGHLIGHTED_FILL;
+  if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
+  if (options.minSimilarity === undefined) options.minSimilarity = constants.MIN_SIMILARITY;
+  if (options.highlightBorderWidth === undefined) options.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
+  if (options.numIncrements === undefined) options.numIncrements = constants.NUM_INCREMENTS;
+  if (options.digitsRounded === undefined) options.digitsRounded = constants.DIGITS_ROUNDED;
+  if (options.colorScheme === undefined) options.colorScheme = constants.COLOR_SCHEME;
+  if (options.defaultMode === undefined) options.defaultMode = constants.DEFAULT_MODE;
+  if (options.enabledModes === undefined) options.enabledModes = constants.ENABLED_MODES;
+  if (options.tableProperties === undefined) options.tableProperties = constants.TABLE_PROPERTIES;
+  if (options.showTable === undefined) options.showTable = constants.SHOW_TABLE;
+  if (options.selectedCountry === undefined) options.selectedCountry = constants.SELECTED_COUNTRY;
 
-  currMode = DEFAULT_MODE;
-  // console.log(colorScheme, COLOR_SCHEME);
-  // console.log(defaultMode, DEFAULT_MODE);
+  options.currMode = options.defaultMode;
+  options.legendCreated = false; // prevents legend from reloading every time a country is selected
+  options.startCountry = options.selectedCountry;
 
-  setupVisualizationStructure();
-  displayToggleMode();
+  setupVisualizationStructure(options);
+  displayToggleMode(options);
 }
 
-function setupVisualizationStructure() {
-  document.getElementById(VIS_ID).innerHTML = `
-    <b><h3 class="content" id="selectedCountry"></h3></b>
+function setupVisualizationStructure(options) {
+  // pull out necessary options attributes
+  var visId = options.visId;
 
-    <div id="resetButton"><button>Reset</button></div>
-    <div class="mainDisplay" id="${constants.visDisplay}"></div>
+  document.getElementById(visId).innerHTML = `
+    <b><h3 class="content" id="${visId}_selectedCountry"></h3></b>
+
+    <div class="resetButton" id="${visId}_resetButton"><button>Reset</button></div>
+    <div class="visDisplay" id="${visId}_${constants.visDisplay}"></div>
     <br />
 
-    <div class="mainDisplay" id="visLegend">
-      <div id="visLegendTitle">Similarity</div>
-      <div id="visLegendBody">
-        <div id="visLegendGradient"></div>
-        <div id ="visLegendLabels"></div>
+    <div class="visLegend" id="${visId}_visLegend">
+      <div class="visLegendTitle" id="${visId}_visLegendTitle">Similarity</div>
+      <div class="visLegendBody" id="${visId}_visLegendBody">
+        <div class="visLegendGradient" id="${visId}_visLegendGradient"></div>
+        <div class="visLegendLabels" id ="${visId}_visLegendLabels"></div>
       </div>
     </div>
 
-    <div class="content" id="visMode">
+    <div class="content visMode" id="${visId}_visMode">
     </div>
 
     <!-- Show selected country -->
-    <div class="content" id="similarityTable"></div>
+    <div class="content similarityTable" id="${visId}_similarityTable"></div>
   `;
+
+  document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.mapHeight;
 }
 
-function displayToggleMode() {
-  if (ENABLED_MODES.length <= 1) {
-    modeToEnableFunction[currMode]["enableFunction"](SELECTED_COUNTRY);
+function displayToggleMode(options) {
+  // pull out necessary options attributes
+  var visId = options.visId;
+  var selectedCountry = options.selectedCountry;
+  var enabledModes = options.enabledModes;
+  var currMode = options.currMode;
+  var defaultMode = options.defaultMode;
+
+  if (enabledModes.length <= 1) {
+    modeToEnableFunction[currMode]["enableFunction"](options);
     return;
   }
 
   var visModeHTML = "";
 
-  ENABLED_MODES.forEach(mode => {
+  enabledModes.forEach(mode => {
     visModeHTML += `
       <div class="modeInput">
-        <input type="radio" id="${mode}" name="mode", value="${mode}">
+        <input type="radio" id="${visId}_${mode}" name="${visId}_mode", value="${mode}">
         <label for="${mode}"></label>${modeToEnableFunction[mode]["name"]}<br>
       </div>
     `
   });
 
-  document.getElementById("visMode").innerHTML = `
+  document.getElementById(`${visId}_visMode`).innerHTML = `
     <div class="contentElem">
       <!-- Toggle map type -->
       ${visModeHTML}
     </div>
   `;
 
-  ENABLED_MODES.forEach(mode => {
-    document.getElementById(mode).addEventListener("change", function() {
-      currMode = mode;
-      modeToEnableFunction[mode]["enableFunction"](SELECTED_COUNTRY);
+  enabledModes.forEach(mode => {
+    document.getElementById(`${visId}_${mode}`).addEventListener("change", function() {
+      options.currMode = mode;
+      options.selectedCountry = options.startCountry;
+      modeToEnableFunction[mode]["enableFunction"](options);
     });
   });
 
-  document.getElementById(DEFAULT_MODE).checked = "checked";
-  modeToEnableFunction[DEFAULT_MODE]["enableFunction"](SELECTED_COUNTRY);
+  document.getElementById(`${visId}_${defaultMode}`).checked = true;
+  modeToEnableFunction[defaultMode]["enableFunction"](options);
 }
 
 // Initialize world map
 // See geomap.js
-function enableWorldMap(selectedCountryId) {
+function enableWorldMap(options) {
+  // pull out necessary options attributes
+  var visId = options.visId;
+  var mapHeight = options.mapHeight;
+
   // set up map
-  document.getElementById(constants.visDisplay).innerHTML = "";
+  document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
   // map takes up 80% of visible screen to leave space for legend
-  document.getElementById(constants.visDisplay).style.width = "80%";
-  document.getElementById(constants.visDisplay).style.height = "750px";
+  document.getElementById(visId + "_" + constants.visDisplay).style.width = "80%";
+  document.getElementById(visId + "_" + constants.visDisplay).style.height = mapHeight;
   // make force graph specific attributes invisible
-  document.getElementById("resetButton").style.display = "none";
+  document.getElementById(visId + "_" + "resetButton").style.display = "none";
   // make legend invisible until a country is selected
   // document.getElementById("visLegend").style.display = "none";
-  geomap.populateMap(selectedCountryId);
+  geomap.populateMap(options);
 }
 
 // Initialize force directed graph
 // See force-directed-graph.js
-function enableForce() {
+function enableForce(options) {
+  // pull out necessary options attributes
+  var visId = options.visId;
+
   // set up force graph
-  document.getElementById(constants.visDisplay).innerHTML = "";
+  document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
   // force graph should take up the whole width of the visible screen
-  document.getElementById(constants.visDisplay).style.width = "100%";
+  document.getElementById(visId + "_" + constants.visDisplay).style.width = "100%";
   // make world map specific attributes invisible
-  document.getElementById("selectedCountry").innerHTML = "";
-  document.getElementById("similarityTable").innerHTML = "";
+  document.getElementById(visId + "_" + "selectedCountry").innerHTML = "";
+  document.getElementById(visId + "_" + "similarityTable").innerHTML = "";
   // document.getElementById("visLegend").style.display = "none";
   // make force graph specific attributes visible
-  document.getElementById("resetButton").style.display = "flex";
-  forceGraph.generateForceDirected();
+  document.getElementById(visId + "_" + "resetButton").style.display = "flex";
+  forceGraph.generateForceDirected(options);
 }
 
 export function alpha3ToCountryName(alpha3) {
@@ -218,7 +175,7 @@ export function alpha3ToCountryName(alpha3) {
 
 export function countryNameToAlpha3(countryName) {
   const countryFound = allCountries.filter(countryInfo => countryInfo.properties.name === countryName);
-  return countryFound.length > 0 ? countryFound[0].id : "USA";
+  return countryFound.length > 0 ? countryFound[0].id : constants.SELECTED_COUNTRY;
 }
 
 /* From an object where values are floats, returns a list
@@ -265,27 +222,30 @@ export function generateDataObj(inputData) {
   other data attributes) generates a table displaying each row in the form
 
   [alpha3 country code] | [similarity score] */
-function createTableHTML(selectedCountry, similarities) {
-  if (TABLE_PROPERTIES.length < 1) {
+function createTableHTML(selectedCountryName, similarities, options) {
+  var tableProperties = options.tableProperties;
+  var digitsRounded = options.digitsRounded;
+
+  if (tableProperties.length < 1) {
     return ``;
   }
 
   var html = `<table class="dataTable">
     <tr>
       <th>Country</th>
-      <th>Similarity to ${selectedCountry}</th>
+      <th>Similarity to ${selectedCountryName}</th>
     </tr>
   `;
 
   for (var [countryName, similarityScore] of sortedObject(similarities)) {
     var properties = ``;
-    TABLE_PROPERTIES.forEach(property => {
+    tableProperties.forEach(property => {
       var value = similarityScore[property];
       if (!value) {
         return;
       }
       if (typeof value === "number") {
-        value = value.toFixed(DIGITS_ROUNDED);
+        value = value.toFixed(digitsRounded);
       }
       properties += `<td>${value}</td>`;
     });
@@ -299,31 +259,44 @@ function createTableHTML(selectedCountry, similarities) {
   return html
 }
 
-export function selectCountry(dataObj, selectedCountry, selectedCountryId, minSimilarity, maxSimilarity) {
+export function selectCountry(dataObj, selectedCountryName, options) {
+  var maxSimilarity = options.maxSimilarity;
+  var minSimilarity = options.minSimilarity;
+  var selectedCountry = countryNameToAlpha3(selectedCountryName);
+  var visId = options.visId;
+  var selectedFill = options.selectedFill;
+  var showTable = options.showTable;
+
   // check that the country has corresponding data
-  var selectedCountryData = dataObj[`${selectedCountryId}`];
+  var selectedCountryData = dataObj[`${selectedCountry}`];
   if (!selectedCountryData || Object.keys(selectedCountryData).length <= 0) {
     return;
   }
   
   // display selected country name
-  document.getElementById("selectedCountry").innerHTML =
-    `Selected Country: <div id="countryName">${selectedCountry}</div>`;
-  document.getElementById("countryName").style.color = SELECTED;
+  document.getElementById(`${visId}_selectedCountry`).innerHTML =
+    `Selected Country: <div class="countryName" id="${visId}_countryName">${selectedCountryName}</div>`;
+  document.getElementById(`${visId}_countryName`).style.color = selectedFill;
 
   // display selected country similarity data with other countries
-  if (SHOW_TABLE) {
-    document.getElementById("similarityTable").innerHTML =
-      createTableHTML(selectedCountry, selectedCountryData);
-    document.getElementById("similarityTable").style.display = 'flex';
+  if (showTable) {
+    document.getElementById(`${visId}_similarityTable`).innerHTML =
+      createTableHTML(selectedCountryName, selectedCountryData, options);
+    document.getElementById(`${visId}_similarityTable`).style.display = 'flex';
   }
 
+  options.selectedCountry = selectedCountry;
   return selectedCountryData;
 }
 
-export function similarityToLegendColor(similarity, minSimilarity, maxSimilarity, numIncrements) {
+export function similarityToLegendColor(similarity, options) {
+  var numIncrements = options.numIncrements;
+  var minSimilarity = options.minSimilarity;
+  var maxSimilarity = options.maxSimilarity;
+  var colorScheme = options.colorScheme;
+
   var incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
-  return d3Color[COLOR_SCHEME][NUM_INCREMENTS][incrementNumber];
+  return d3Color[colorScheme][numIncrements][incrementNumber];
 }
 
 /* Given input data in the following format, finds the min & max similarities of any country
@@ -358,14 +331,23 @@ export function findMinMaxSimilarity(inputData) {
 /* Given the min & max similarity of any country pair in the dataset, generates a legend with
    numIncrements number of labels
   */
-export function createLegendHTML(minSimilarity, maxSimilarity, numIncrements) {
+export function createLegendHTML(options) {
+  // pull out necessary options attributes
+  var visId = options.visId;
+  var minSimilarity = options.minSimilarity;
+  var maxSimilarity = options.maxSimilarity;
+  var numIncrements = options.numIncrements;
+  var legendCreated = options.legendCreated;
+  var colorScheme = options.colorScheme;
+  var digitsRounded = options.digitsRounded;
+
   if (legendCreated) {
-    document.getElementById("visLegend").style.display = "inline-block"; // make the completed legend visible
+    document.getElementById(`${visId}_visLegend`).style.display = "inline-block"; // make the completed legend visible
     return;
   }
 
   // find colors at the top (max) and bottom (min) of the legend gradient
-  var colorScheme = d3Color[COLOR_SCHEME][numIncrements];
+  var legendColorScheme = d3Color[colorScheme][numIncrements];
   
   // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
@@ -374,25 +356,24 @@ export function createLegendHTML(minSimilarity, maxSimilarity, numIncrements) {
   var incrementedSimilarity;
   var incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
   for (var i = 0; i < numIncrements; i++) {
-    incrementedSimilarity = (minSimilarity + incrementSize * i).toFixed(DIGITS_ROUNDED);
+    incrementedSimilarity = (minSimilarity + incrementSize * i).toFixed(digitsRounded);
     legendElemTag = document.createElement("div");
     legendElemText = document.createTextNode(incrementedSimilarity.toString());
     legendElemTag.appendChild(legendElemText);
     legendElemTag.style.flex = 1;
-    document.getElementById("visLegendLabels").appendChild(legendElemTag);
+    document.getElementById(`${visId}_visLegendLabels`).appendChild(legendElemTag);
 
     legendElemDiv = document.createElement("div");
     legendElemDiv.style.flex = 1;
-    legendElemDiv.style["background-color"] = colorScheme[i];
-    document.getElementById("visLegendGradient").appendChild(legendElemDiv);
+    legendElemDiv.style["background-color"] = legendColorScheme[i];
+    document.getElementById(`${visId}_visLegendGradient`).appendChild(legendElemDiv);
   }
   // add the final legend label (min) aligned to the bottom of the gradient
   legendElemTag = document.createElement("div");
-  legendElemText = document.createTextNode(maxSimilarity.toFixed(DIGITS_ROUNDED).toString());
+  legendElemText = document.createTextNode(maxSimilarity.toFixed(digitsRounded).toString());
   legendElemTag.appendChild(legendElemText);
-  document.getElementById("visLegendLabels").appendChild(legendElemTag);
+  document.getElementById(`${visId}_visLegendLabels`).appendChild(legendElemTag);
 
-  var legendTitle = document.getElementById("visLegendTitle");
-  legendCreated = true;
+  var legendTitle = document.getElementById(`${visId}_visLegendTitle`);
+  options.legendCreated = true;
 }
-

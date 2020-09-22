@@ -1,22 +1,17 @@
 /* Visualization-specific styles */
 
-#similarityTable {
+.similarityTable {
   display: flex;
 }
 
-#countryName {
+.countryName {
   display: inline;
 }
 
-#resetButton {
+.resetButton {
   display: none;
   float: right;
   margin-right: 100px;
-}
-
-#mainDisplay {
-  display: flex;
-  justify-content: center;
 }
 
 .content .contentElem {
@@ -25,43 +20,42 @@
   flex-direction: row;
 }
 
-#visDisplay {
-  width: 80%;
-  height: 750px;
+.visDisplay {
+  width: 100%;
   margin: 0 auto;
 }
 
 /* Legend styles */
 
-#visLegend {
+.visLegend {
   width: 20%;
   margin-left: 10%;
   margin-right: 10%;
 }
 
-#visLegendTitle {
+.visLegendTitle {
   font-weight: bold;
 }
 
-#visLegendBody {
+.visLegendBody {
   display: flex;
   flex-direction: column;
 }
 
-#visLegendGradient {
+.visLegendGradient {
   height: 20px;
   display: flex;
   flex-direction: row;
 }
 
-#visLegendLabels {
+.visLegendLabels {
   display: flex;
   flex-direction: row;
 }
 
 /* Visualization mode styles */
 
-#visMode {
+.visMode {
   display: flex;
 }
 
