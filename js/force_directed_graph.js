@@ -6,9 +6,6 @@ import {
 // import global constants from root index file
 import {
   data,
-  NUM_INCREMENTS,
-  MIN_SIMILARITY,
-  MAX_SIMILARITY,
 } from './index.js';
 
 // import general methods from root index file
@@ -76,8 +73,10 @@ function calculateMeanSimilarity (links) {
 }
 
 /* Generate the SVG image holding the visualization */
-function generateSvg (width, height, marginLeft, marginTop) {
-  return d3.select('#' + constants.visDisplay)
+function generateSvg (width, height, marginLeft, marginTop, options) {
+  var visId = options.visId;
+
+  return d3.select(`#${visId}_${constants.visDisplay}`)
       .append("svg")
       .attr({"width": width, "height": height})
       .append("g")
@@ -89,7 +88,7 @@ function calculateHeight (links) {
   var maxLength = -Infinity;
   var currLength;
   for (var link of links) {
-    currLength = link.weight * 7;
+    currLength = link.weight * 5;
     if (currLength > maxLength) {
       maxLength = currLength;
     }
@@ -99,31 +98,34 @@ function calculateHeight (links) {
 
 /* Uses the global data variable to generate a force graph with undirected edges
   between countries with corresponding edge lengths based on pairwise similarity */
-export function generateForceDirected() {
+export function generateForceDirected(options) {
   // finds min & max similarity values between any country pair in the dataset
-  var similarityBounds = findMinMaxSimilarity(data);
-  var minSimilarity = MIN_SIMILARITY ? MIN_SIMILARITY : similarityBounds[0];
-  var maxSimilarity = MAX_SIMILARITY ? MAX_SIMILARITY : similarityBounds[1];
-  createLegendHTML(minSimilarity, maxSimilarity, NUM_INCREMENTS);
+  var minSimilarity = options.minSimilarity;
+  var maxSimilarity = options.maxSimilarity;
+  var visId = options.visId;
+  var numIncrements = options.numIncrements;
+  var mapHeight = options.mapHeight;
+  var multiplier = options.multiplier;
+  
+  createLegendHTML(options);
 
   /* Initial force graph settings */
   var radius = 6; // node size
   var padding = 100; // pads graph from edges of visualization
-  const forceGraph = document.getElementById(constants.visDisplay);
+  const forceGraph = document.getElementById(`${visId}_${constants.visDisplay}`);
   var width = forceGraph.offsetWidth;
   var height = forceGraph.offsetHeight;
   // the constant by which the similarity score is multiplied
   // toggled based on whether or not a country node is selected
-  var multiplier = 7;
   
   // extract data from dataset
   var [nodes, links] = getNodesAndLinks(data);
   // vary visualization height based on maximum edge length
-  height = calculateHeight(links, multiplier);
-  forceGraph.style.height = height;
+  // height = calculateHeight(links, multiplier);
+  forceGraph.style.height = mapHeight;
 
   // create an SVG element and append it to the DOM
-  var svgElement = generateSvg(width, height, 50, 20);
+  var svgElement = generateSvg(width, height, 50, 20, options);
 
   // calculate average similarity of all visible nodes to find edge weight threshhold
   var meanSimilarity = calculateMeanSimilarity(links);
@@ -143,7 +145,7 @@ export function generateForceDirected() {
     .enter()
     .append("line")
     .attr("stroke", d => {
-      return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+      return similarityToLegendColor(d.similarity / 100, options)
     })
     .attr("stroke-width", 1)
     .attr("class", "link");
@@ -193,8 +195,8 @@ export function generateForceDirected() {
   // reload force graph data when a node is selected
   function selectCircle(d) {
     // make similarity table visible again
-    document.getElementById('similarityTable').style.display = 'flex';
-    document.getElementById('selectedCountry').style.display = 'block';
+    document.getElementById(`${visId}_similarityTable`).style.display = 'flex';
+    document.getElementById(`${visId}_selectedCountry`).style.display = 'block';
 
     force.stop();
     var thisNode = d.id;
@@ -220,13 +222,11 @@ export function generateForceDirected() {
       .enter().append('line')
       .attr("class", "link")
       .attr("stroke", d => {
-        return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+        return similarityToLegendColor(d.similarity / 100, options)
       })
       .attr("stroke-width", 1);
-    // toggle multiplier to a lower value to resize visualization proportionally
-    multiplier = 5;
-    height = calculateHeight(links, multiplier);
-    document.getElementById(constants.visDisplay).style.height = height;
+    // height = calculateHeight(links, multiplier);
+    // document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
     
     flag = true;
     clickedNode = d;
@@ -238,7 +238,7 @@ export function generateForceDirected() {
     force.linkDistance(d => d.weight * multiplier)
     force.start()
 
-    selectCountry (generateDataObj(data), alpha3ToCountryName(d.id), d.id, MIN_SIMILARITY, MAX_SIMILARITY);
+    selectCountry (generateDataObj(data), alpha3ToCountryName(d.id), options);
   }
 
   // This function will be executed for every tick of force layout
@@ -267,7 +267,7 @@ export function generateForceDirected() {
         .attr("x2", d => nodes[d.target.index].x)
         .attr("y2", d => nodes[d.target.index].y)
         .attr("stroke", d => {
-          return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+          return similarityToLegendColor(d.similarity / 100, options)
         });
     } else {
       link.attr("x1", d => d.source.x);
@@ -287,10 +287,10 @@ export function generateForceDirected() {
   var oldLinks = jQuery.extend(true, [], links);
 
   // when the reset button is pressed, restore all of the links in the original dataset
-  d3.select('#resetButton').on('click', function() {
+  d3.select(`#${visId}_resetButton`).on('click', function() {
     // remove similarity table
-    document.getElementById('similarityTable').style.display = 'none';
-    document.getElementById('selectedCountry').style.display = 'none';
+    document.getElementById(`${visId}_similarityTable`).style.display = 'none';
+    document.getElementById(`${visId}_selectedCountry`).style.display = 'none';
 
     links = oldLinks;
     link.remove();
@@ -300,7 +300,7 @@ export function generateForceDirected() {
       .enter().append('line')
       .attr('class', 'link')
       .attr("stroke", d => {
-        return similarityToLegendColor(d.similarity / 100, 0, 1, NUM_INCREMENTS)
+        return similarityToLegendColor(d.similarity / 100, options)
       })
       .attr('stroke-width', 1)
     node = svgElement.selectAll('.node')
@@ -319,13 +319,13 @@ export function generateForceDirected() {
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
     circle.on('click', selectCircle);
-    height = calculateHeight(links);
-    document.getElementById(constants.visDisplay).style.height = height;
+    // height = calculateHeight(links);
+    // document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
     flag = false
     force.links(links);
     force.nodes(nodes);
     force.charge(-3000)
-    force.linkDistance(d => d.weight * 7)
+    force.linkDistance(d => d.weight * 5)
     force.start()
   })
 
