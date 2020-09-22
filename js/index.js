@@ -49,6 +49,7 @@ export function initializeVisualization(options) {
   if (options.tableProperties === undefined) options.tableProperties = constants.TABLE_PROPERTIES;
   if (options.showTable === undefined) options.showTable = constants.SHOW_TABLE;
   if (options.selectedCountry === undefined) options.selectedCountry = constants.SELECTED_COUNTRY;
+  if (options.multiplier === undefined) options.multiplier = constants.MULTIPLIER;
 
   options.currMode = options.defaultMode;
   options.legendCreated = false; // prevents legend from reloading every time a country is selected

@@ -88,7 +88,7 @@ function calculateHeight (links) {
   var maxLength = -Infinity;
   var currLength;
   for (var link of links) {
-    currLength = link.weight * 7;
+    currLength = link.weight * 5;
     if (currLength > maxLength) {
       maxLength = currLength;
     }
@@ -104,6 +104,8 @@ export function generateForceDirected(options) {
   var maxSimilarity = options.maxSimilarity;
   var visId = options.visId;
   var numIncrements = options.numIncrements;
+  var mapHeight = options.mapHeight;
+  var multiplier = options.multiplier;
   
   createLegendHTML(options);
 
@@ -115,13 +117,12 @@ export function generateForceDirected(options) {
   var height = forceGraph.offsetHeight;
   // the constant by which the similarity score is multiplied
   // toggled based on whether or not a country node is selected
-  var multiplier = 7;
   
   // extract data from dataset
   var [nodes, links] = getNodesAndLinks(data);
   // vary visualization height based on maximum edge length
-  height = calculateHeight(links, multiplier);
-  forceGraph.style.height = height;
+  // height = calculateHeight(links, multiplier);
+  forceGraph.style.height = mapHeight;
 
   // create an SVG element and append it to the DOM
   var svgElement = generateSvg(width, height, 50, 20, options);
@@ -224,10 +225,8 @@ export function generateForceDirected(options) {
         return similarityToLegendColor(d.similarity / 100, options)
       })
       .attr("stroke-width", 1);
-    // toggle multiplier to a lower value to resize visualization proportionally
-    multiplier = 5;
-    height = calculateHeight(links, multiplier);
-    document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
+    // height = calculateHeight(links, multiplier);
+    // document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
     
     flag = true;
     clickedNode = d;
@@ -320,13 +319,13 @@ export function generateForceDirected(options) {
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
     circle.on('click', selectCircle);
-    height = calculateHeight(links);
-    document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
+    // height = calculateHeight(links);
+    // document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
     flag = false
     force.links(links);
     force.nodes(nodes);
     force.charge(-3000)
-    force.linkDistance(d => d.weight * 7)
+    force.linkDistance(d => d.weight * 5)
     force.start()
   })
 

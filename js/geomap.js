@@ -57,8 +57,11 @@ function moveTooltip (pt, options) {
   pt.y = event.clientY;
   var cursorpt =  pt.matrixTransform(document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0].getScreenCTM().inverse());
 
-  tooltip.style.left = map.getBoundingClientRect().left + cursorpt.x + window.scrollX + 10;
-  tooltip.style.top = map.getBoundingClientRect().top + cursorpt.y + window.scrollY + 10;
+  const left = (map.getBoundingClientRect().left + cursorpt.x + window.scrollX + 10) + 'px';
+  const top = (map.getBoundingClientRect().top + cursorpt.y + window.scrollY + 10) + 'px';
+
+  tooltip.style.left = left;
+  tooltip.style.top = top;
 }
 
 function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredElement, options) {

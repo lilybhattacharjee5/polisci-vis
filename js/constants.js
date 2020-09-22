@@ -29,3 +29,5 @@ export var DEFAULT_MODE = geomap;
 
 export var TABLE_PROPERTIES = [];
 export var SHOW_TABLE = true;
+
+export var MULTIPLIER = 5;
