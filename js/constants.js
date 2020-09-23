@@ -4,7 +4,7 @@ export const visDisplay = 'visDisplay';
 
 /* global variables set to default values */
 export var VIS_ID = 'visContainer';
-export var MAP_HEIGHT = "750px"; // height of world map in pixels
+export var VIS_HEIGHT = "750px"; // height of visualization in pixels
 
 export var SELECTED_COUNTRY = "USA";
 

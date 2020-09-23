@@ -96,6 +96,11 @@ function calculateHeight (links) {
   return maxLength * 2;
 }
 
+function findNode(nodes, alpha3) {
+  const countryNode = nodes.filter(nodeInfo => nodeInfo.id === alpha3);
+  return countryNode.length > 0 ? countryNode[0] : null;
+}
+
 /* Uses the global data variable to generate a force graph with undirected edges
   between countries with corresponding edge lengths based on pairwise similarity */
 export function generateForceDirected(options) {
@@ -104,8 +109,10 @@ export function generateForceDirected(options) {
   var maxSimilarity = options.maxSimilarity;
   var visId = options.visId;
   var numIncrements = options.numIncrements;
-  var mapHeight = options.mapHeight;
-  var multiplier = options.multiplier;
+  const forceProperties = options[constants.forceGraph + 'Properties'];
+  var mapHeight = forceProperties.mapHeight;
+  var multiplier = forceProperties.linkMultiplier;
+  var selectedCountry = forceProperties.selectedCountry;
   
   createLegendHTML(options);
 
@@ -331,6 +338,11 @@ export function generateForceDirected(options) {
 
   // call the selectCircle function whenever a circle is clicked
   circle.on('click', selectCircle);
+
+  const selectedNode = findNode(nodes, selectedCountry);
+  if (selectedNode) {
+    selectCircle(selectedNode);
+  }
 
   // start the force layout calculation
   force.start();
