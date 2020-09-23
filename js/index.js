@@ -31,16 +31,11 @@ export const modeToEnableFunction = {
 // id names
 
 // This method is called in a script tag in index.html
-export function initializeVisualization(options) {
+export function InteroperabilityVisualization(options) {
   // modify default parameters according to passed-in options
   if (options.visId === undefined) options.visId = constants.VIS_ID;
-  if (options.mapHeight === undefined) options.mapHeight = constants.MAP_HEIGHT;
-  if (options.defaultFill === undefined) options.defaultFill = constants.DEFAULT_FILL;
-  if (options.selectedFill === undefined) options.selectedFill = constants.SELECTED_FILL;
-  if (options.highlightedFill === undefined) options.highlightedFill = constants.HIGHLIGHTED_FILL;
   if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
   if (options.minSimilarity === undefined) options.minSimilarity = constants.MIN_SIMILARITY;
-  if (options.highlightBorderWidth === undefined) options.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
   if (options.numIncrements === undefined) options.numIncrements = constants.NUM_INCREMENTS;
   if (options.digitsRounded === undefined) options.digitsRounded = constants.DIGITS_ROUNDED;
   if (options.colorScheme === undefined) options.colorScheme = constants.COLOR_SCHEME;
@@ -48,12 +43,29 @@ export function initializeVisualization(options) {
   if (options.enabledModes === undefined) options.enabledModes = constants.ENABLED_MODES;
   if (options.tableProperties === undefined) options.tableProperties = constants.TABLE_PROPERTIES;
   if (options.showTable === undefined) options.showTable = constants.SHOW_TABLE;
-  if (options.selectedCountry === undefined) options.selectedCountry = constants.SELECTED_COUNTRY;
-  if (options.multiplier === undefined) options.multiplier = constants.MULTIPLIER;
+
+  // geomap-specific parameters
+  if (options.enabledModes.includes(constants.geomap)) {
+    var geomapProperties = options.geomapProperties;
+    if (geomapProperties.selectedCountry === undefined) geomapProperties.selectedCountry = constants.SELECTED_COUNTRY;
+    if (geomapProperties.visHeight === undefined) geomapProperties.visHeight = constants.VIS_HEIGHT;
+    if (geomapProperties.defaultFill === undefined) geomapProperties.defaultFill = constants.DEFAULT_FILL;
+    if (geomapProperties.selectedFill === undefined) geomapProperties.selectedFill = constants.SELECTED_FILL;
+    if (geomapProperties.highlightedFill === undefined) geomapProperties.highlightedFill = constants.HIGHLIGHTED_FILL;
+    if (geomapProperties.highlightBorderWidth === undefined) geomapProperties.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
+    geomapProperties.startCountry = geomapProperties.selectedCountry;
+  }
+
+  // force graph-specific parameters
+  if (options.enabledModes.includes(constants.forceGraph)) {
+    var forceProperties = options.forceProperties;
+    if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
+    if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
+    forceProperties.startCountry = forceProperties.selectedCountry;
+  }
 
   options.currMode = options.defaultMode;
   options.legendCreated = false; // prevents legend from reloading every time a country is selected
-  options.startCountry = options.selectedCountry;
 
   setupVisualizationStructure(options);
   displayToggleMode(options);
@@ -91,10 +103,10 @@ function setupVisualizationStructure(options) {
 function displayToggleMode(options) {
   // pull out necessary options attributes
   var visId = options.visId;
-  var selectedCountry = options.selectedCountry;
   var enabledModes = options.enabledModes;
   var currMode = options.currMode;
   var defaultMode = options.defaultMode;
+  var selectedCountry = options[defaultMode + 'Properties'].selectedCountry;
 
   if (enabledModes.length <= 1) {
     modeToEnableFunction[currMode]["enableFunction"](options);
@@ -122,7 +134,7 @@ function displayToggleMode(options) {
   enabledModes.forEach(mode => {
     document.getElementById(`${visId}_${mode}`).addEventListener("change", function() {
       options.currMode = mode;
-      options.selectedCountry = options.startCountry;
+      options[options.currMode + 'Properties'].selectedCountry = options[options.currMode + 'Properties'].startCountry;
       modeToEnableFunction[mode]["enableFunction"](options);
     });
   });
@@ -136,17 +148,16 @@ function displayToggleMode(options) {
 function enableWorldMap(options) {
   // pull out necessary options attributes
   var visId = options.visId;
-  var mapHeight = options.mapHeight;
+  var visHeight = options[constants.geomap + 'Properties'].visHeight;
 
   // set up map
   document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
+  document.getElementById(visId + "_" + "selectedCountry").style.display = "block";
   // map takes up 80% of visible screen to leave space for legend
   document.getElementById(visId + "_" + constants.visDisplay).style.width = "80%";
-  document.getElementById(visId + "_" + constants.visDisplay).style.height = mapHeight;
+  document.getElementById(visId + "_" + constants.visDisplay).style.height = visHeight;
   // make force graph specific attributes invisible
   document.getElementById(visId + "_" + "resetButton").style.display = "none";
-  // make legend invisible until a country is selected
-  // document.getElementById("visLegend").style.display = "none";
   geomap.populateMap(options);
 }
 
@@ -155,6 +166,7 @@ function enableWorldMap(options) {
 function enableForce(options) {
   // pull out necessary options attributes
   var visId = options.visId;
+  var visHeight = options[constants.forceGraph + 'Properties'].visHeight;
 
   // set up force graph
   document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
@@ -163,7 +175,7 @@ function enableForce(options) {
   // make world map specific attributes invisible
   document.getElementById(visId + "_" + "selectedCountry").innerHTML = "";
   document.getElementById(visId + "_" + "similarityTable").innerHTML = "";
-  // document.getElementById("visLegend").style.display = "none";
+  document.getElementById(visId + "_" + constants.visDisplay).style.height = visHeight;
   // make force graph specific attributes visible
   document.getElementById(visId + "_" + "resetButton").style.display = "flex";
   forceGraph.generateForceDirected(options);
@@ -265,8 +277,10 @@ export function selectCountry(dataObj, selectedCountryName, options) {
   var minSimilarity = options.minSimilarity;
   var selectedCountry = countryNameToAlpha3(selectedCountryName);
   var visId = options.visId;
-  var selectedFill = options.selectedFill;
   var showTable = options.showTable;
+  const currMode = options.currMode;
+  const modeProperties = options[currMode + 'Properties'];
+  var selectedFill = modeProperties.selectedFill;
 
   // check that the country has corresponding data
   var selectedCountryData = dataObj[`${selectedCountry}`];
@@ -286,7 +300,7 @@ export function selectCountry(dataObj, selectedCountryName, options) {
     document.getElementById(`${visId}_similarityTable`).style.display = 'flex';
   }
 
-  options.selectedCountry = selectedCountry;
+  modeProperties.selectedCountry = selectedCountry;
   return selectedCountryData;
 }
 

@@ -22,36 +22,32 @@
 
         <div id='visContainer'></div>
 
-        <div id='visContainer1'></div>
-
         <script>
-          index.initializeVisualization({
-            visId: 'visContainer',
-            mapHeight: "750px",
-            numIncrements: 5,
-            tableProperties: ["similarity"],
-          });
+            index.InteroperabilityVisualization({
+                visId: 'visContainer',
+                numIncrements: 5,
+                minSimilarity: 0,
+                maxSimilarity: 1,
+                digitsRounded: 2,
+                colorScheme: 'schemeBlues',
+                defaultMode: 'force',
+                enabledModes: ['force'],
+                tableProperties: ['similarity'],
+                showTable: true,
+                geomapProperties: {
+                    visHeight: '750px',
+                    defaultFill: '#d3d3d3',
+                    selectedFill: '#228B22',
+                    highlightedFill: 'orange',
+                    highlightBorderWidth: 2,
+                    selectedCountry: 'USA',
+                },
+                forceProperties: {
+                    visHeight: '750px',
+                    selectedCountry: 'CHN',
+                    linkMultiplier: 5,
+                },
+            });
         </script>
-
-        <!-- <script>
-          index.initializeVisualization({
-            visId: 'visContainer1',
-            mapHeight: "750px",
-            defaultFill: '#d3d3d3',
-            selectedFill: '#228B22',
-            highlightedFill: 'orange',
-            maxSimilarity: 1,
-            minSimilarity: 0,
-            highlightBorderWidth: 2,
-            numIncrements: 7,
-            digitsRounded: 2,
-            colorScheme: "schemeBlues",
-            defaultMode: "geomap",
-            enabledModes: ["geomap", "force"],
-            tableProperties: ["similarity"],
-            showTable: true,
-            selectedCountry: "Brazil"
-          });
-        </script> -->
     </body>
 </html>
