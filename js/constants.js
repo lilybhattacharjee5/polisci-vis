@@ -31,3 +31,4 @@ export var TABLE_PROPERTIES = [];
 export var SHOW_TABLE = true;
 
 export var MULTIPLIER = 5;
+export var INTERACTIVE = true;

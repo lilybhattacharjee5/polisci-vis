@@ -72,15 +72,13 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredE
   var selectedCountry = geomapProperties.selectedCountry;
   var highlightedFill = geomapProperties.highlightedFill;
   var highlightBorderWidth = geomapProperties.highlightBorderWidth;
+  var interactive = geomapProperties.interactive;
 
   var hoveredCountry = geography.id;
   var hoveredCountryData = dataObj[hoveredCountry];
   var selectedCountryData = dataObj[selectedCountry];
   var hoverPriorColor;
   if (selectedCountry != hoveredCountry && hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
-    hoverPriorColor = hoveredElement.style['fill'];
-    hoveredElement.style['fill'] = highlightedFill;
-    hoveredElement.style['stroke-width'] = highlightBorderWidth;
     let tooltip = document.getElementById(`${visId}_tooltip`);
 
     tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>";
@@ -91,6 +89,14 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredE
     tooltip.style.display = "block";
     
     moveTooltip(pt, options);
+
+    if (!interactive){
+      return;
+    }
+
+    hoverPriorColor = hoveredElement.style['fill'];
+    hoveredElement.style['fill'] = highlightedFill;
+    hoveredElement.style['stroke-width'] = highlightBorderWidth;
   }
   return hoverPriorColor;
 }
@@ -100,18 +106,24 @@ function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, o
   const geomapProperties = options[constants.geomap + 'Properties'];
   var selectedCountry = geomapProperties.selectedCountry;
   var selectedFill = geomapProperties.selectedFill;
+  var interactive = geomapProperties.interactive;
   
   let tooltip = document.getElementById(`${visId}_tooltip`);
   var hoveredCountry = geography.id;
   var hoveredCountryData = dataObj[hoveredCountry];
   if (hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
+    tooltip.style.display = "none";
+
+    if (!interactive) {
+      return;
+    }
+
     if (selectedCountry == hoveredCountry) {
       hoveredElement.style['fill'] = selectedFill;
     } else {
       hoveredElement.style['fill'] = hoverPriorColor;
     }
     hoveredElement.style['stroke-width'] = 1;
-    tooltip.style.display = "none";
   }
 }
 
@@ -152,6 +164,7 @@ function createMap(inputData, options) {
   const geomapProperties = options[constants.geomap + 'Properties'];
   var selectedCountry = geomapProperties.selectedCountry;
   var defaultFill = geomapProperties.defaultFill;
+  var interactive = geomapProperties.interactive;
 
   var dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
 
@@ -187,6 +200,9 @@ function createMap(inputData, options) {
       datamap.updateChoropleth(selectedFillKeys);
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+        if (!interactive) {
+          return;
+        }
         selectedCountryName = geography.properties.name;
         selectedCountry = geography.id;
 				var selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);

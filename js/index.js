@@ -53,6 +53,7 @@ export function InteroperabilityVisualization(options) {
     if (geomapProperties.selectedFill === undefined) geomapProperties.selectedFill = constants.SELECTED_FILL;
     if (geomapProperties.highlightedFill === undefined) geomapProperties.highlightedFill = constants.HIGHLIGHTED_FILL;
     if (geomapProperties.highlightBorderWidth === undefined) geomapProperties.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
+    if (geomapProperties.interactive === undefined) geomapProperties.interactive = constants.INTERACTIVE;
     geomapProperties.startCountry = geomapProperties.selectedCountry;
   }
 
@@ -61,6 +62,7 @@ export function InteroperabilityVisualization(options) {
     var forceProperties = options.forceProperties;
     if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
     if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
+    if (forceProperties.interactive === undefined) forceProperties.interactive = constants.INTERACTIVE;
     forceProperties.startCountry = forceProperties.selectedCountry;
   }
 
@@ -167,6 +169,7 @@ function enableForce(options) {
   // pull out necessary options attributes
   var visId = options.visId;
   var visHeight = options[constants.forceGraph + 'Properties'].visHeight;
+  var interactive = options[constants.forceGraph + 'Properties'].interactive;
 
   // set up force graph
   document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
@@ -177,7 +180,9 @@ function enableForce(options) {
   document.getElementById(visId + "_" + "similarityTable").innerHTML = "";
   document.getElementById(visId + "_" + constants.visDisplay).style.height = visHeight;
   // make force graph specific attributes visible
-  document.getElementById(visId + "_" + "resetButton").style.display = "flex";
+  if (interactive) {
+    document.getElementById(visId + "_" + "resetButton").style.display = "flex";
+  }
   forceGraph.generateForceDirected(options);
 }
 
