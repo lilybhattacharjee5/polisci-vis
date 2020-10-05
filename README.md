@@ -21,6 +21,10 @@ npm install
 npm start
 ```
 
+## Building our webpack bundle
+To build the visualization webpack bundle, you can use either of the following commands: 
+`npx webpack` or `npm run build`. The resulting bundled Javascript is accessible in `dist/index.bundle.js`.
+
 ## Integrating our visualization
 
 To include this visualization on a webpage, take the following steps:
@@ -53,19 +57,26 @@ index.InteroperabilityVisualization({
         highlightedFill: 'orange',
         highlightBorderWidth: 2,
         selectedCountry: 'USA',
+        interactive: true,
     },
     forceProperties: {
         visHeight: '750px',
         selectedCountry: 'CHN',
         linkMultiplier: 5,
+        interactive: false,
     },
 });
 </script>
 ```
 
-The function accepts the following parameters:
+The function accepts the following **required** parameters:
 - **visId**: string; the id of the div that the visualization will be in
-	- defaults to 'visContainer'
+	- defaults to 'visContainer' (but will error if this id is not on the embedding page)
+- **defaultMode**: string; the mode of the visualization that is initially visible to the user
+	- defaults to 'geomap'
+	- possible values: 'geomap', 'force'
+
+The following parameters are **optional**:
 - **numIncrements**: int; the number of increments in the visualization legend
 	- defaults to 5
 - **minSimilarity**: int / float; the minimum country-pair similarity value
@@ -78,9 +89,6 @@ The function accepts the following parameters:
 	- **must** be a valid color scheme from the [d3-chromatic library](https://github.com/d3/d3-scale-chromatic)
 	- sequential color scales are recommended for the most meaningful visual results
 	- defaults to 'schemeBlues'
-- **defaultMode**: string; the mode of the visualization that is initially visible to the user
-	- defaults to 'geomap'
-	- possible values: 'geomap', 'force'
 - **enabledModes**: list of strings; the modes of the visualization that the user can toggle between
 	- defaults to ['geomap', 'force']
 	- only supports combinations of 'geomap', 'force' (the 2 currently supported modes)
@@ -101,13 +109,15 @@ The function accepts the following parameters:
 		- defaults to 2
 	- *selectedCountry*: initially selected country in map mode
 		- defaults to 'USA'
+	- *interactive*: boolean; determines whether viewers can interact with the visualization to change its appearance (e.g. clicking)
+		- defaults to true
 - **forceProperties**: force graph-specific properties
-	- *visHeight*: string; height in pixels of the visualization's force mode e.g. '750px'
-		- defaults to '750px'
+	- *visHeight*
 	- *selectedCountry*: initially selected country in force mode
 		- no default value -- if not passed in, the full force graph with all input data will be visible
 	- *linkMultiplier*: int / float; constant by which edge lengths are multiplied in the force graph for visual reasons (i.e. so edges aren't too short)
 		- defaults to 5
+	- *interactive*
 
 It is not necessary to pass in mode-specific properties if the mode is not within `enabledModes` for the specific visualization. For example, if `enabledModes` does not contain `force`, `forceProperties` may be omitted from the passed properties.
 

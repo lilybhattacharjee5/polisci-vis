@@ -113,6 +113,7 @@ export function generateForceDirected(options) {
   var mapHeight = forceProperties.mapHeight;
   var multiplier = forceProperties.linkMultiplier;
   var selectedCountry = forceProperties.selectedCountry;
+  var interactive = forceProperties.interactive;
   
   createLegendHTML(options);
 
@@ -159,6 +160,10 @@ export function generateForceDirected(options) {
   
   // Increase node size & decrease opacity on node mouseover
   function mouseover(d) {
+    if (!interactive) {
+      return;
+    }
+
     d3.select(this).transition()
       .duration(100)
       .attr("r", radius * 2)
@@ -168,6 +173,10 @@ export function generateForceDirected(options) {
 
   // Reverse the effects of mouseover on the node
   function mouseout(d) {
+    if (!interactive) {
+      return;
+    }
+
     d3.select(this).transition()
       .duration(100)
       .attr("r", radius)
@@ -201,6 +210,10 @@ export function generateForceDirected(options) {
 
   // reload force graph data when a node is selected
   function selectCircle(d) {
+    if (!interactive) {
+      return;
+    }
+
     // make similarity table visible again
     document.getElementById(`${visId}_similarityTable`).style.display = 'flex';
     document.getElementById(`${visId}_selectedCountry`).style.display = 'block';
@@ -341,7 +354,10 @@ export function generateForceDirected(options) {
 
   const selectedNode = findNode(nodes, selectedCountry);
   if (selectedNode) {
+    const tempInteractive = interactive;
+    interactive = true;
     selectCircle(selectedNode);
+    interactive = tempInteractive;
   }
 
   // start the force layout calculation
