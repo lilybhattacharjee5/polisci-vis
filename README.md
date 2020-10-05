@@ -21,6 +21,10 @@ npm install
 npm start
 ```
 
+## Building our webpack bundle
+To build the visualization webpack bundle, you can use either of the following commands: 
+`npx webpack` or `npm run build`. The resulting bundled Javascript is accessible in `dist/index.bundle.js`.
+
 ## Integrating our visualization
 
 To include this visualization on a webpage, take the following steps:
