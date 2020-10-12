@@ -198,6 +198,8 @@ function createMap(inputData, options) {
 
       var selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
       datamap.updateChoropleth(selectedFillKeys);
+
+      // datamap.svg['viewBox'] = "100%";
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
         if (!interactive) {
@@ -219,7 +221,10 @@ function createMap(inputData, options) {
 
       datamap.svg.selectAll('.datamaps-subunit').on('mouseout', function(geography) {
         mouseoutCountry(dataObj, geography, this, hoverPriorColor, options);
-      })
+      });
+
+      datamap.svg.width = "100%";
+      datamap.svg.height = "100%";
 		},
 		geographyConfig: {
       // display country name & corresponding similarity with selected country on mouseover
