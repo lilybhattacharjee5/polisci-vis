@@ -4,7 +4,8 @@
   "description": "[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)",
   "main": "server.js",
   "scripts": {
-    "start": "serve"
+    "start": "serve",
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",

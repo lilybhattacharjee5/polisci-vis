@@ -99,7 +99,11 @@ function setupVisualizationStructure(options) {
     <div class="content similarityTable" id="${visId}_similarityTable"></div>
   `;
 
-  document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.mapHeight;
+  window.addEventListener('resize', function(event) {
+    modeToEnableFunction[options.currMode]["enableFunction"](options);
+  });
+
+  document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.geomapProperties.visHeight;
 }
 
 function displayToggleMode(options) {
