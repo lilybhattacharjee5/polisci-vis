@@ -13,7 +13,7 @@ export const Datamap = require('../libraries/datamaps.js')
 export const d3Color = require('d3-scale-chromatic');
 export const jQuery = require('jquery');
 
-export const data = JSON.parse(require('../data/data.json')); // 
+export const data = JSON.parse(require('../data/data.json'));
 
 const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
 
@@ -28,49 +28,47 @@ export const modeToEnableFunction = {
   },
 };
 
-// id names
-
 // This method is called in a script tag in index.html
 export function InteroperabilityVisualization(options) {
-  // modify default parameters according to passed-in options
-  if (options.visId === undefined) options.visId = constants.VIS_ID;
-  if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
-  if (options.minSimilarity === undefined) options.minSimilarity = constants.MIN_SIMILARITY;
-  if (options.numIncrements === undefined) options.numIncrements = constants.NUM_INCREMENTS;
-  if (options.digitsRounded === undefined) options.digitsRounded = constants.DIGITS_ROUNDED;
-  if (options.colorScheme === undefined) options.colorScheme = constants.COLOR_SCHEME;
-  if (options.defaultMode === undefined) options.defaultMode = constants.DEFAULT_MODE;
-  if (options.enabledModes === undefined) options.enabledModes = constants.ENABLED_MODES;
-  if (options.tableProperties === undefined) options.tableProperties = constants.TABLE_PROPERTIES;
-  if (options.showTable === undefined) options.showTable = constants.SHOW_TABLE;
+    // modify default parameters according to passed-in options
+    if (options.visId === undefined) options.visId = constants.VIS_ID;
+    if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
+    if (options.minSimilarity === undefined) options.minSimilarity = constants.MIN_SIMILARITY;
+    if (options.numIncrements === undefined) options.numIncrements = constants.NUM_INCREMENTS;
+    if (options.digitsRounded === undefined) options.digitsRounded = constants.DIGITS_ROUNDED;
+    if (options.colorScheme === undefined) options.colorScheme = constants.COLOR_SCHEME;
+    if (options.defaultMode === undefined) options.defaultMode = constants.DEFAULT_MODE;
+    if (options.enabledModes === undefined) options.enabledModes = constants.ENABLED_MODES;
+    if (options.tableProperties === undefined) options.tableProperties = constants.TABLE_PROPERTIES;
+    if (options.showTable === undefined) options.showTable = constants.SHOW_TABLE;
 
-  // geomap-specific parameters
-  if (options.enabledModes.includes(constants.geomap)) {
-    var geomapProperties = options.geomapProperties;
-    if (geomapProperties.selectedCountry === undefined) geomapProperties.selectedCountry = constants.SELECTED_COUNTRY;
-    if (geomapProperties.visHeight === undefined) geomapProperties.visHeight = constants.VIS_HEIGHT;
-    if (geomapProperties.defaultFill === undefined) geomapProperties.defaultFill = constants.DEFAULT_FILL;
-    if (geomapProperties.selectedFill === undefined) geomapProperties.selectedFill = constants.SELECTED_FILL;
-    if (geomapProperties.highlightedFill === undefined) geomapProperties.highlightedFill = constants.HIGHLIGHTED_FILL;
-    if (geomapProperties.highlightBorderWidth === undefined) geomapProperties.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
-    if (geomapProperties.interactive === undefined) geomapProperties.interactive = constants.INTERACTIVE;
-    geomapProperties.startCountry = geomapProperties.selectedCountry;
-  }
+    // geomap-specific parameters
+    if (options.enabledModes.includes(constants.geomap)) {
+      var geomapProperties = options.geomapProperties;
+      if (geomapProperties.selectedCountry === undefined) geomapProperties.selectedCountry = constants.SELECTED_COUNTRY;
+      if (geomapProperties.visHeight === undefined) geomapProperties.visHeight = constants.VIS_HEIGHT;
+      if (geomapProperties.defaultFill === undefined) geomapProperties.defaultFill = constants.DEFAULT_FILL;
+      if (geomapProperties.selectedFill === undefined) geomapProperties.selectedFill = constants.SELECTED_FILL;
+      if (geomapProperties.highlightedFill === undefined) geomapProperties.highlightedFill = constants.HIGHLIGHTED_FILL;
+      if (geomapProperties.highlightBorderWidth === undefined) geomapProperties.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
+      if (geomapProperties.interactive === undefined) geomapProperties.interactive = constants.INTERACTIVE;
+      geomapProperties.startCountry = geomapProperties.selectedCountry;
+    }
 
-  // force graph-specific parameters
-  if (options.enabledModes.includes(constants.forceGraph)) {
-    var forceProperties = options.forceProperties;
-    if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
-    if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
-    if (forceProperties.interactive === undefined) forceProperties.interactive = constants.INTERACTIVE;
-    forceProperties.startCountry = forceProperties.selectedCountry;
-  }
+    // force graph-specific parameters
+    if (options.enabledModes.includes(constants.forceGraph)) {
+      var forceProperties = options.forceProperties;
+      if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
+      if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
+      if (forceProperties.interactive === undefined) forceProperties.interactive = constants.INTERACTIVE;
+      forceProperties.startCountry = forceProperties.selectedCountry;
+    }
 
-  options.currMode = options.defaultMode;
-  options.legendCreated = false; // prevents legend from reloading every time a country is selected
+    options.currMode = options.defaultMode;
+    options.legendCreated = false; // prevents legend from reloading every time a country is selected
 
-  setupVisualizationStructure(options);
-  displayToggleMode(options);
+    setupVisualizationStructure(options);
+    displayToggleMode(options);
 }
 
 function setupVisualizationStructure(options) {
