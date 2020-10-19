@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const mode = 'production';
+
 module.exports = {
 	entry: './js/index.js',
 	output: {
@@ -8,8 +10,13 @@ module.exports = {
 		path: path.resolve(__dirname, 'dist'),
 		library: 'index',
 	},
-	mode: 'production',
-	devtool: 'inline-source-map',
+	mode: mode,
+	performance: {
+		hints: false,
+		maxEntrypointSize: 512000,
+		maxAssetSize: 512000,
+	},
+	devtool: (mode === 'development') ? 'inline-source-map' : false,
 	module: {
 		rules: [
 			{
