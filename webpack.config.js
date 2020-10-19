@@ -6,9 +6,10 @@ const mode = 'production';
 module.exports = {
 	entry: './js/index.js',
 	output: {
-		filename: 'index.bundle.js',
+		filename: '[name].bundle.js',
 		path: path.resolve(__dirname, 'dist'),
-		library: 'index',
+		publicPath: path.join(__dirname, 'dist/'),
+		library: 'main',
 	},
 	mode: mode,
 	performance: {

@@ -8,7 +8,7 @@
         <link rel="stylesheet" type="text/css" href="index.css">
 
         <!-- Load bundled scripts -->
-        <script src="dist/index.bundle.js"></script>
+        <script src="dist/main.bundle.js"></script>
 
         <title>Internationally Blocked Domains Demo</title>
     </head>
@@ -23,8 +23,9 @@
         <div id='visContainer'></div>
 
         <script>
-            index.InteroperabilityVisualization({
+            main.InteroperabilityVisualization({
                 visId: 'visContainer',
+                dataPath: '../data/data.json',
                 numIncrements: 5,
                 minSimilarity: 0,
                 maxSimilarity: 1,

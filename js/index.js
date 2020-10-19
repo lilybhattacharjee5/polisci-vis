@@ -13,7 +13,7 @@ export const Datamap = require('../libraries/datamaps.js')
 export const d3Color = require('d3-scale-chromatic');
 export const jQuery = require('jquery');
 
-export const data = JSON.parse(require('../data/data.json'));
+export var data;
 
 const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
 
@@ -30,6 +30,8 @@ export const modeToEnableFunction = {
 
 // This method is called in a script tag in index.html
 export function InteroperabilityVisualization(options) {
+  import('../data/data.json').then(({default: jsonData}) => {
+    data = JSON.parse(jsonData);
     // modify default parameters according to passed-in options
     if (options.visId === undefined) options.visId = constants.VIS_ID;
     if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
@@ -69,6 +71,7 @@ export function InteroperabilityVisualization(options) {
 
     setupVisualizationStructure(options);
     displayToggleMode(options);
+  });
 }
 
 function setupVisualizationStructure(options) {
