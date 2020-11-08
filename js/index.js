@@ -15,7 +15,7 @@ export const jQuery = require('jquery');
 
 export const data = JSON.parse(require('../data/data.json'));
 
-const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
+const allCountries = require('../data/country_codes_and_coordinates.csv');
 
 export const modeToEnableFunction = {
   [constants.geomap]: {
@@ -189,13 +189,13 @@ function enableForce(options) {
 }
 
 export function alpha3ToCountryName(alpha3) {
-  const countryFound = allCountries.filter(countryInfo => countryInfo.id === alpha3);
-  return countryFound.length > 0 ? countryFound[0].properties.name : alpha3;
+  const countryFound = allCountries.filter(countryInfo => countryInfo["Alpha-3 code"] === alpha3);
+  return countryFound.length > 0 ? countryFound[0]["Country"] : alpha3;
 }
 
 export function countryNameToAlpha3(countryName) {
-  const countryFound = allCountries.filter(countryInfo => countryInfo.properties.name === countryName);
-  return countryFound.length > 0 ? countryFound[0].id : constants.SELECTED_COUNTRY;
+  const countryFound = allCountries.filter(countryInfo => countryInfo["Country"] === countryName);
+  return countryFound.length > 0 ? countryFound[0]["Alpha-3 code"] : constants.SELECTED_COUNTRY;
 }
 
 /* From an object where values are floats, returns a list

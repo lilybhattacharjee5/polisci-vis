@@ -19,21 +19,21 @@
   "homepage": "https://github.com/lilybhattacharjee5/interoperability-demo#readme",
   "dependencies": {
     "connect": "^3.7.0",
+    "css-loader": "^4.3.0",
     "d3": "^3.5.17",
     "d3-scale-chromatic": "^1.5.0",
-    "datamaps": "^0.5.9",
+    "file-system": "^2.2.2",
     "html-webpack-plugin": "^4.4.1",
-    "jquery": "^3.4.1",
-    "serve": "^11.3.0",
+    "jquery": "^3.5.1",
+    "json-loader": "^0.5.7",
+    "serve": "^11.3.2",
     "serve-static": "^1.14.1",
     "server": "^1.0.22",
-    "topojson": "^3.0.2",
-    "css-loader": "^4.3.0",
-    "style-loader": "^1.2.1"
+    "style-loader": "^1.2.1",
+    "topojson": "^3.0.2"
   },
   "devDependencies": {
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "json-loader": "^0.5.7",
+    "csv-loader": "^3.0.3",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },
