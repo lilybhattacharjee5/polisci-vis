@@ -23,8 +23,26 @@ const constants = require('./constants.js');
 
 /**
 * Description. Separate node and link data from global INPUT_DATA variable
-* @param  inputData   [?]
-* @return   Returns [?]
+* @param  inputData   formatted dictionary mapping country pairs e.g. AND->AUT to a dictionary of 
+* calculated metrics
+* @return   Returns a list in which the first element is a list of node objects and the second
+* element is a list of link objects in the following form:
+* [
+*   [
+*     {
+*       id: alpha 3 code
+*     },
+*     ...
+*   ],
+*   [
+*     {
+*       source: alpha 3 code representing the node corresponding to the source country,
+*       target: alpha 3 code representing the node corresponding to the target country,
+*       similarity: float metric value between 0 and 1 inclusive,
+*       weight: attribute used to determine link distance,
+*     }
+*   ] 
+* ]
 */
 function getNodesAndLinks(inputData) {
   let countryCodes = {}
@@ -68,8 +86,17 @@ function getNodesAndLinks(inputData) {
 /** 
 * Description. Calculate the average similarity value in the dataset to determine which edges will
 * have high (low similarity, almost transparent) vs. low opacity (high similarity)
-* @param  links   [?]
-* @return   Returns [?]
+* @param  links   array of link objects of the following form:
+* [
+*   {
+*     source: alpha 3 code representing the node corresponding to the source country,
+*     target: alpha 3 code representing the node corresponding to the target country,
+*     similarity: float metric value between 0 and 1 inclusive,
+*     weight: attribute used to determine link distance,
+*   }
+* ]
+* @return   Returns a float value representing the mean similarity value between any two source,
+* target pairs
 */
 function calculateMeanSimilarity (links) {
   let count = 0;
@@ -83,11 +110,11 @@ function calculateMeanSimilarity (links) {
 
 /**
 * Description. Generate the SVG image holding the visualization 
-* @param  width       [?]
-* @param  height      [?]
-* @param  marginLeft  [?]
-* @param  marginTop   [?]
-* @param  options     [?]
+* @param  width       css width value for the SVG visualization container
+* @param  height      css height value for the SVG visualization container
+* @param  marginLeft  css margin left value for the SVG visualization container
+* @param  marginTop   css margin top value for the SVG visualization container
+* @param  options     a dictionary of user-defined options (see README for details)
 */
 function generateSvg (width, height, marginLeft, marginTop, options) {
   const visId = options.visId;
@@ -101,8 +128,9 @@ function generateSvg (width, height, marginLeft, marginTop, options) {
 /** 
 * Description. Calculate the height of the force visualization as the max edge length * 2 
 * (in case there are 2 such edge lengths that end up spanning the height after rebalancing)
-* @param  links   [?]
-* @return   Returns [?]
+* @param  links   array of link objects with attributes including source, target, similarity, weight, etc.
+* @return   Returns the maximum possible height (in px) for the visualization to properly fit visible
+* edges
 */
 function calculateHeight (links) {
   let maxLength = -Infinity;
@@ -117,10 +145,10 @@ function calculateHeight (links) {
 }
 
 /**
-* Description. [?]
-* @param  nodes   [?]
-* @param  alpha3  [?]
-* @return Returns [?]
+* Description. Finds the node object that matches the passed-in alpha 3 code.
+* @param  nodes   array of node objects with attributes including id, etc.
+* @param  alpha3  a 3-letter country code
+* @return Returns the first node that matches the query i.e. the id is the same as the alpha 3 parameter
 */
 function findNode(nodes, alpha3) {
   const countryNode = nodes.filter(nodeInfo => nodeInfo.id === alpha3);
@@ -130,7 +158,7 @@ function findNode(nodes, alpha3) {
 /**
 * Description. Uses the global data variable to generate a force graph with undirected edges
 * between countries with corresponding edge lengths based on pairwise similarity 
-* @param  options   [?]
+* @param  options   a dictionary of user-defined options (see README for details)
 */
 export function generateForceDirected(options) {
   // finds min & max similarity values between any country pair in the dataset

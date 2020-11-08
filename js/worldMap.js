@@ -24,9 +24,9 @@ const constants = require('./constants.js');
 * Description. Given a country and the similarities object containing pair similarity data (and any 
 * other data attributes) returns the fill keys for the chloropleth map. Country passed in will be 
 * given the SELECTED color.
-* @param  selectedCountryName [?]
-* @param  similarities        [?]
-* @param  options             [?]
+* @param  selectedCountryName name of selected country e.g. United States
+* @param  similarities        similarities data for all country pairs of the form USA->XXX
+* @param  options             a dictionary of user-defined options (see README for details)
 * @return Returns an object of the form
 *
 *   { UKR: "#f0f00", ...}
@@ -47,9 +47,9 @@ function getFillKeys (selectedCountryName, similarities, options) {
 }
 
 /**
-* Description. [?]
-* @param  mousePos        [?]
-* @param  options         [?]
+* Description. Places / moves a tooltip at a constant offset from the current position of the mouse.
+* @param  mousePos        current position of the mouse
+* @param  options         a dictionary of user-defined options (see README for details)
 */
 function moveTooltip (mousePos, options) {
   const visId = options.visId;
@@ -68,14 +68,16 @@ function moveTooltip (mousePos, options) {
 }
 
 /**
-* Description. [?]
-* @param  dataObj               [?]
-* @param  geography             [?]
-* @param  selectedCountryName   [?]
-* @param  mousePos              [?]
-* @param  hoveredElement        [?]
-* @param  options               [?]
-* @return   Returns [?]
+* Description. Handles world map visualization mode actions on mouse over -- including, moving the
+* tooltip and populating it with updated data, changing the color of the newly hovered country
+* @param  dataObj               an object with alpha 3 country code keys e.g. USA, and values that 
+* are nested objects corresponding to each possible pair containing the key i.e. the form USA->XXX
+* @param  geography             contains hovered country-specific data, including name
+* @param  selectedCountryName   name of selected country e.g. United States
+* @param  mousePos              current position of the mouse
+* @param  hoveredElement        the datamaps country object that is now being hovered over
+* @param  options               a dictionary of user-defined options (see README for details)
+* @return   Returns the previous color of the country that is now being hovered over
 */
 function mouseoverCountry (dataObj, geography, selectedCountryName, mousePos, hoveredElement, options) {
   const visId = options.visId;
@@ -116,12 +118,14 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, mousePos, ho
 }
 
 /**
-* Description. [?]
-* @param  dataObj           [?]
-* @param  geography         [?]
-* @param  hoveredElement    [?]
-* @param  hoverPriorColor   [?]
-* @param  options           [?]
+* Description. Handles world map visualization mode actions on mouse out -- including removing the
+* tooltip, resetting the color of the previously hovered country
+* @param  dataObj           an object with alpha 3 country code keys e.g. USA, and values that 
+* are nested objects corresponding to each possible pair containing the key i.e. the form USA->XXX
+* @param  geography         contains hovered country-specific data, including name
+* @param  hoveredElement    the datamaps country object that is now being hovered over
+* @param  hoverPriorColor   the previous (hex) color of the hovered country (that is now being moused out)
+* @param  options           a dictionary of user-defined options (see README for details)
 */
 function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, options) {
   const visId = options.visId;
@@ -150,11 +154,14 @@ function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, o
 }
 
 /*
-* Description. [?]
-* @param  dataObj               [?]
-* @param  selectedCountryName   [?]
-* @param  options               [?]
-* @return   Returns [?]
+* Description. Handles world map mode-specific actions when a country is selected, including calculating
+* new fill keys for non-selected countries based on selected country->XXX metrics, removing the tooltip
+* which should not be visible when mousing over a selected country
+* @param  dataObj               an object with alpha 3 country code keys e.g. USA, and values that 
+* are nested objects corresponding to each possible pair containing the key i.e. the form USA->XXX
+* @param  selectedCountryName   name of selected country e.g. United States
+* @param  options               a dictionary of user-defined options (see README for details)
+* @return   Returns a fillKeys object mapping 3-letter country codes to hex color e.g. AUS->#xxxxxx
 */
 function selectCountryWorldMap (dataObj, selectedCountryName, options) {
   const visId = options.visId;
@@ -181,8 +188,9 @@ function selectCountryWorldMap (dataObj, selectedCountryName, options) {
 *     country_code_alpha3_B: "AUT"
 *   }
 * } 
-* @param  inputData   [?]
-* @param  options     [?]
+* @param  inputData   formatted dictionary mapping country pairs e.g. AND->AUT to a dictionary of 
+* calculated metrics
+* @param  options     a dictionary of user-defined options (see README for details)
 */
 function createMap(inputData, options) {
   // pull out necessary options attributes
@@ -264,7 +272,7 @@ function createMap(inputData, options) {
 
 /** 
 * Description. Calls `createMap` to generate the chloropleth after parsing the data JSON file 
-* @param  options [?]
+* @param  options a dictionary of user-defined options (see README for details)
 */
 export function populateMap(options) {
   createMap(data, options);

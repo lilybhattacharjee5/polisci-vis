@@ -30,8 +30,23 @@ export const modeToEnableFunction = {
 };
 
 /** 
-* Description. This method is called in a script tag in index.html
-* @param  options   [?]
+* Description. This method is called in a script tag in any html file to generate an interoperability
+* visualization.
+* @param  options   a dictionary of user-defined options in the following format:
+* {
+*   visId: name of id containing visualization
+*   numIncrements: number of increments in legend
+*   minSimilarity: minimum similarity value to lower bound legend
+*   maxSimilarity: maximum similarity value to upper bound legend
+*   digitsRounded: number of digits past the decimal point to round metric values to
+*   colorScheme: a d3 scale chromatic scheme name e.g. 'schemePurples'
+*   defaultMode: the default visualization view (e.g. 'worldMap')
+*   enabledModes: views that the user can toggle between in the visualization
+*   tableProperties: data attributes that will be visible in the similarity table
+*   showTable: boolean determining whether or not the similarity table will be visible
+*   worldMapProperties: world map mode-specific properties (see README for details)
+*   forcePropeties: force mode-specific properties (see README for details)
+* }
 */
 export function InteroperabilityVisualization(options) {
     // modify default parameters according to passed-in options
@@ -76,8 +91,9 @@ export function InteroperabilityVisualization(options) {
 }
 
 /** 
-* Description. [?]
-* @param  options   [?]
+* Description. Sets up the skeleton of the divs that make up the visualization e.g. main view, legend, etc.
+* Adds listener to the resize button that allows the force graph (if enabled) to be reloaded on click.
+* @param  options   a dictionary of user-defined options (see README for details)
 */
 function setupVisualizationStructure(options) {
   // pull out necessary options attributes
@@ -114,8 +130,9 @@ function setupVisualizationStructure(options) {
 }
 
 /**
-* Description. [?]
-* @param  options   [?]
+* Description. Displays the toggle mode option below the current visualization view if there is 
+* more than 1 enabled mode.
+* @param  options   a dictionary of user-defined options (see README for details)
 */
 function displayToggleMode(options) {
   // pull out necessary options attributes
@@ -160,8 +177,8 @@ function displayToggleMode(options) {
 }
 
 /** 
-* Description: Initialize world map. See worldMap.js
-* @param  options   [?]
+* Description: Initialize world map mode (see worldMap.js)
+* @param  options   a dictionary of user-defined options (see README for details)
 */
 function enableWorldMap(options) {
   // pull out necessary options attributes
@@ -180,8 +197,8 @@ function enableWorldMap(options) {
 }
 
 /** 
-* Description. Initialize force directed graph. See force-directed-graph.js
-* @param  options   [?]
+* Description. Initialize force graph mode (see force-directed-graph.js)
+* @param  options   a dictionary of user-defined options (see README for details)
 */
 function enableForce(options) {
   // pull out necessary options attributes
@@ -205,9 +222,10 @@ function enableForce(options) {
 }
 
 /**
-* Description. [?]
-* @param  alpha3  [?]
-* @return   Returns [?]
+* Description. Converts an alpha 3 country code e.g. USA to a country name i.e. United States using
+* an externally loaded csv mapper
+* @param  alpha3  a 3-letter country code
+* @return   Returns the country name that matches the alpha 3 code
 */
 export function alpha3ToCountryName(alpha3) {
   const countryFound = allCountries.filter(countryInfo => countryInfo["Alpha-3 code"] === alpha3);
@@ -215,9 +233,10 @@ export function alpha3ToCountryName(alpha3) {
 }
 
 /**
-* Description. [?]
-* @param  countryName   [?]
-* @return   Returns [?]
+* Description. Converts a country name e.g. United States to an alpha 3 country code i.e. USA using
+* an externally loaded csv mapper
+* @param  countryName   a country name
+* @return   Returns the 3-letter country code that matches the country name
 */
 export function countryNameToAlpha3(countryName) {
   const countryFound = allCountries.filter(countryInfo => countryInfo["Country"] === countryName);
@@ -228,8 +247,8 @@ export function countryNameToAlpha3(countryName) {
 * Description. From an object where values are floats, returns a list
 *    [[key, value], ...]
 * Sorted by value.
-* @param  obj   [?]
-* @return   Returns [?]
+* @param  obj   an object with key of any type and float values, may be unsorted
+* @return   Returns a list of key-value pairs sorted (descending) by value
 */
 function sortedObject (obj) {
   let sortable = [];
@@ -245,8 +264,18 @@ function sortedObject (obj) {
 /**
 * Description. Given input data, creates a data object that will be passed into the chloropleth map
 * and used for special operations on highlighted / selected countries (e.g. hover text)
-* @param  inputData   [?]
-* @return   Returns [?]
+* @param  inputData   an object mapping country pairs e.g. USA->CHN to an object containing further
+* information about the pair, including calculated metrics
+* @return   Returns an object with alpha 3 country code keys e.g. USA, and values that are nested
+* objects corresponding to each possible pair containing the key in the following format:
+* {
+*   USA: {
+*     CHN: {
+*       // USA->CHN metrics  
+*     },
+*     ...
+*   } 
+* }
 */
 export function generateDataObj (inputData) {
   let dataObj = {};
@@ -273,10 +302,11 @@ export function generateDataObj (inputData) {
 * Description. Given a country and the similarities object containing pair similarity data (and any
 * other data attributes) generates a table displaying each row in the form
 *   [alpha3 country code] | [similarity score]
-* @param  selectedCountryName   [?]
-* @param  similarities          [?]
-* @param  options               [?]
-* @return   Returns [?]
+* @param  selectedCountryName   name of selected country e.g. United States
+* @param  similarities          similarities data for all country pairs of the form USA->XXX
+* @param  options               a dictionary of user-defined options (see README for details)
+* @return   Returns the html corresponding to a similarity table that displays the sorted 
+* `similarities` data
 */
 function createTableHTML(selectedCountryName, similarities, options) {
   const tableProperties = options.tableProperties;
@@ -316,9 +346,12 @@ function createTableHTML(selectedCountryName, similarities, options) {
 }
 
 /**
-* Description.
-* @param  dataObj               [?]
-* @param  selectedCountryName   [?]
+* Description. Performs shared mode actions when a country in the main visualization view is selected, 
+* including checking if the country has country pair data, displaying the selected country name, 
+* and, if the similarity table is enabled, displaying the pair data
+* @param  dataObj               an object with alpha 3 country code keys e.g. USA, and values that 
+* are nested objects corresponding to each possible pair containing the key i.e. the form USA->XXX
+* @param  selectedCountryName   the selected country name
 * @param  options               dictionary of user parameters to visualization
 * @return   Returns 
 */

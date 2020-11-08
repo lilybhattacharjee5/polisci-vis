@@ -23,16 +23,17 @@ npm start
 
 ## Building our webpack bundle
 To build the visualization webpack bundle, you can use either of the following commands: 
-`npx webpack` or `npm run build`. The resulting bundled Javascript is accessible in `dist/index.bundle.js`.
+`npx webpack` or `npm run build`. The resulting bundled Javascript is accessible in `dist/main.bundle.js` and `dist/vendors.bundle.js`.
 
 ## Integrating our visualization
 
 To include this visualization on a webpage, take the following steps:
-1. Copy `dist/index.bundle.js` into your project's directory.
+1. Copy `dist/main.bundle.js` and `dist/vendors.bundle.js` into your project's directory.
 
-2. Import this bundled script in your main HTML page.
+2. Import these bundled scripts in your main HTML page. Make sure to import `vendors` before `main` as `vendors` contains compressed library dependencies.
 ```
-<script src="js/index.bundle.js"></script>
+<script src="js/vendors.bundle.js"></script>
+<script src="js/main.bundle.js"></script>
 ```
 
 3. Create a div with an id in your webpage that will house the visualization.
@@ -50,7 +51,7 @@ index.InteroperabilityVisualization({
     enabledModes: ['force'],
     tableProperties: ['similarity'],
     showTable: true,
-    geomapProperties: {
+    worldMapProperties: {
         visHeight: '750px',
         defaultFill: '#d3d3d3',
         selectedFill: '#228B22',
