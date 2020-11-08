@@ -48,7 +48,7 @@ export function InteroperabilityVisualization(options) {
 
     // worldMap-specific parameters
     if (options.enabledModes.includes(constants.worldMap)) {
-      var worldMapProperties = options.worldMapProperties;
+      let worldMapProperties = options.worldMapProperties;
       if (worldMapProperties.selectedCountry === undefined) worldMapProperties.selectedCountry = constants.SELECTED_COUNTRY;
       if (worldMapProperties.visHeight === undefined) worldMapProperties.visHeight = constants.VIS_HEIGHT;
       if (worldMapProperties.defaultFill === undefined) worldMapProperties.defaultFill = constants.DEFAULT_FILL;
@@ -61,7 +61,7 @@ export function InteroperabilityVisualization(options) {
 
     // force graph-specific parameters
     if (options.enabledModes.includes(constants.force)) {
-      var forceProperties = options.forceProperties;
+      let forceProperties = options.forceProperties;
       if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
       if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
       if (forceProperties.interactive === undefined) forceProperties.interactive = constants.INTERACTIVE;
@@ -81,7 +81,7 @@ export function InteroperabilityVisualization(options) {
 */
 function setupVisualizationStructure(options) {
   // pull out necessary options attributes
-  var visId = options.visId;
+  const visId = options.visId;
 
   document.getElementById(visId).innerHTML = `
     <b><h3 class="${constants.content}" id="${visId}_${constants.selectedCountry}"></h3></b>
@@ -106,27 +106,30 @@ function setupVisualizationStructure(options) {
   `;
 
   // reload the visualization when the window is resized so svg is redrawn
-  window.addEventListener('resize', function(event) {
+  window.addEventListener('resize', function() {
     modeToEnableFunction[options.currMode]["enableFunction"](options);
   });
 
   document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.worldMapProperties.visHeight;
 }
 
+/**
+* Description. [?]
+* @param  options   [?]
+*/
 function displayToggleMode(options) {
   // pull out necessary options attributes
-  var visId = options.visId;
-  var enabledModes = options.enabledModes;
-  var currMode = options.currMode;
-  var defaultMode = options.defaultMode;
-  var selectedCountry = options[defaultMode + 'Properties'].selectedCountry;
+  const visId = options.visId;
+  const enabledModes = options.enabledModes;
+  const currMode = options.currMode;
+  const defaultMode = options.defaultMode;
 
   if (enabledModes.length <= 1) {
     modeToEnableFunction[currMode]["enableFunction"](options);
     return;
   }
 
-  var visModeHTML = "";
+  let visModeHTML = "";
 
   enabledModes.forEach(mode => {
     visModeHTML += `
@@ -162,8 +165,8 @@ function displayToggleMode(options) {
 */
 function enableWorldMap(options) {
   // pull out necessary options attributes
-  var visId = options.visId;
-  var visHeight = options[`${constants.worldMap}${constants.properties}`].visHeight;
+  const visId = options.visId;
+  const visHeight = options[`${constants.worldMap}${constants.properties}`].visHeight;
 
   // set up map
   document.getElementById(`${visId}_${constants.visDisplay}`).innerHTML = "";
@@ -182,9 +185,9 @@ function enableWorldMap(options) {
 */
 function enableForce(options) {
   // pull out necessary options attributes
-  var visId = options.visId;
-  var visHeight = options[`${constants.force}${constants.properties}`].visHeight;
-  var interactive = options[`${constants.force}${constants.properties}`].interactive;
+  const visId = options.visId;
+  const visHeight = options[`${constants.force}${constants.properties}`].visHeight;
+  const interactive = options[`${constants.force}${constants.properties}`].interactive;
 
   // set up force graph
   document.getElementById(`${visId}_${constants.visDisplay}`).innerHTML = "";
@@ -229,8 +232,8 @@ export function countryNameToAlpha3(countryName) {
 * @return   Returns [?]
 */
 function sortedObject (obj) {
-  var sortable = [];
-  for (var item in obj) {
+  let sortable = [];
+  for (let item in obj) {
     sortable.push([item, obj[item]]);
   }
   sortable.sort(function(a, b) {
@@ -246,10 +249,9 @@ function sortedObject (obj) {
 * @return   Returns [?]
 */
 export function generateDataObj (inputData) {
-  var dataObj = {};
-  var countryA, countryB;
-  var currSimilarity;
-  for (var countryPair of Object.keys(inputData)) {
+  let dataObj = {};
+  let countryA, countryB;
+  for (let countryPair of Object.keys(inputData)) {
     [countryA, countryB] = countryPair.split('->');
     if (!dataObj[countryA]) {
       dataObj[countryA] = {};
@@ -277,24 +279,24 @@ export function generateDataObj (inputData) {
 * @return   Returns [?]
 */
 function createTableHTML(selectedCountryName, similarities, options) {
-  var tableProperties = options.tableProperties;
-  var digitsRounded = options.digitsRounded;
+  const tableProperties = options.tableProperties;
+  const digitsRounded = options.digitsRounded;
 
   if (tableProperties.length < 1) {
     return ``;
   }
 
-  var html = `<table class="dataTable">
+  let html = `<table class="dataTable">
     <tr>
       <th>Country</th>
       <th>Similarity to ${selectedCountryName}</th>
     </tr>
   `;
 
-  for (var [countryName, similarityScore] of sortedObject(similarities)) {
-    var properties = ``;
+  for (let [countryName, similarityScore] of sortedObject(similarities)) {
+    let properties = ``;
     tableProperties.forEach(property => {
-      var value = similarityScore[property];
+      let value = similarityScore[property];
       if (!value) {
         return;
       }
@@ -321,17 +323,15 @@ function createTableHTML(selectedCountryName, similarities, options) {
 * @return   Returns 
 */
 export function selectCountry(dataObj, selectedCountryName, options) {
-  var maxSimilarity = options.maxSimilarity;
-  var minSimilarity = options.minSimilarity;
-  var selectedCountry = countryNameToAlpha3(selectedCountryName);
-  var visId = options.visId;
-  var showTable = options.showTable;
+  const selectedCountry = countryNameToAlpha3(selectedCountryName);
+  const visId = options.visId;
+  const showTable = options.showTable;
   const currMode = options.currMode;
   const modeProperties = options[`${currMode}${constants.properties}`];
-  var selectedFill = modeProperties.selectedFill;
+  const selectedFill = modeProperties.selectedFill;
 
   // check that the country has corresponding data
-  var selectedCountryData = dataObj[`${selectedCountry}`];
+  const selectedCountryData = dataObj[`${selectedCountry}`];
   if (!selectedCountryData || Object.keys(selectedCountryData).length <= 0) {
     return;
   }
@@ -362,12 +362,12 @@ export function selectCountry(dataObj, selectedCountryName, options) {
 * color
 */
 export function similarityToLegendColor(similarity, options) {
-  var numIncrements = options.numIncrements;
-  var minSimilarity = options.minSimilarity;
-  var maxSimilarity = options.maxSimilarity;
-  var colorScheme = options.colorScheme;
+  const numIncrements = options.numIncrements;
+  const minSimilarity = options.minSimilarity;
+  const maxSimilarity = options.maxSimilarity;
+  const colorScheme = options.colorScheme;
 
-  var incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
+  const incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
   return d3Color[colorScheme][numIncrements][incrementNumber];
 }
 
@@ -388,10 +388,10 @@ export function similarityToLegendColor(similarity, options) {
 *    [minimum similarity, maximum similarity]
 */
 export function findMinMaxSimilarity(inputData) {
-  var maxSimilarity = -Infinity;
-  var minSimilarity = Infinity;
-  for (var [countryPair, metrics] of Object.entries(inputData)) {
-    var similarityScore = metrics.Overall_Similarity;
+  let maxSimilarity = -Infinity;
+  let minSimilarity = Infinity;
+  for (let metrics of Object.values(inputData)) {
+    const similarityScore = metrics.Overall_Similarity;
     if (similarityScore < minSimilarity) {
       minSimilarity = similarityScore;
     }
@@ -428,12 +428,12 @@ export function createLegendHTML(options) {
   const legendColorScheme = d3Color[colorScheme][numIncrements];
   
   // generates numIncrements number of legend labels at equidistant positions along the gradient
-  var legendElemTag;
-  var legendElemDiv;
-  var legendElemText;
-  var incrementedSimilarity;
-  var incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
-  for (var i = 0; i < numIncrements; i++) {
+  let legendElemTag;
+  let legendElemDiv;
+  let legendElemText;
+  let incrementedSimilarity;
+  let incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
+  for (let i = 0; i < numIncrements; i++) {
     incrementedSimilarity = (minSimilarity + incrementSize * i).toFixed(digitsRounded);
     legendElemTag = document.createElement("div");
     legendElemText = document.createTextNode(incrementedSimilarity.toString());

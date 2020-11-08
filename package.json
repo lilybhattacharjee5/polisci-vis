@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "csv-loader": "^3.0.3",
+    "eslint": "^7.13.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },

@@ -1,9 +1,6 @@
 // import necessary libraries from root index file
 import {
-  d3,
-  topojson,
   Datamap,
-  d3Color,
 } from './index.js';
 
 // import global constants from root index file
@@ -16,7 +13,6 @@ import {
   selectCountry,
   similarityToLegendColor,
   generateDataObj,
-  findMinMaxSimilarity,
   createLegendHTML,
   alpha3ToCountryName
 } from './index.js';
@@ -36,15 +32,12 @@ const constants = require('./constants.js');
 *   { UKR: "#f0f00", ...}
 */
 function getFillKeys (selectedCountryName, similarities, options) {
-  var minSimilarity = options.minSimilarity;
-  var maxSimilarity = options.maxSimilarity;
-  var numIncrements = options.numIncrements;
   const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
-  var selectedCountry = worldMapProperties.selectedCountry;
-  var selectedFill = worldMapProperties.selectedFill;
+  const selectedCountry = worldMapProperties.selectedCountry;
+  const selectedFill = worldMapProperties.selectedFill;
 
-  var fillKeys = {};
-  for (var [countryName, countryData] of Object.entries(similarities)) {
+  let fillKeys = {};
+  for (let [countryName, countryData] of Object.entries(similarities)) {
     // color each country by similarity score
     fillKeys[countryName] = similarityToLegendColor(countryData.similarity, options);
   }
@@ -85,18 +78,18 @@ function moveTooltip (mousePos, options) {
 * @return   Returns [?]
 */
 function mouseoverCountry (dataObj, geography, selectedCountryName, mousePos, hoveredElement, options) {
-  var visId = options.visId;
-  var digitsRounded = options.digitsRounded;
+  const visId = options.visId;
+  const digitsRounded = options.digitsRounded;
   const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
-  var selectedCountry = worldMapProperties.selectedCountry;
-  var highlightedFill = worldMapProperties.highlightedFill;
-  var highlightBorderWidth = worldMapProperties.highlightBorderWidth;
-  var interactive = worldMapProperties.interactive;
+  const selectedCountry = worldMapProperties.selectedCountry;
+  const highlightedFill = worldMapProperties.highlightedFill;
+  const highlightBorderWidth = worldMapProperties.highlightBorderWidth;
+  const interactive = worldMapProperties.interactive;
 
-  var hoveredCountry = geography.id;
-  var hoveredCountryData = dataObj[hoveredCountry];
-  var selectedCountryData = dataObj[selectedCountry];
-  var hoverPriorColor;
+  const hoveredCountry = geography.id;
+  const hoveredCountryData = dataObj[hoveredCountry];
+  const selectedCountryData = dataObj[selectedCountry];
+  let hoverPriorColor;
   if (selectedCountry != hoveredCountry && hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
     let tooltip = document.getElementById(`${visId}_${constants.tooltip}`);
 
@@ -131,15 +124,15 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, mousePos, ho
 * @param  options           [?]
 */
 function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, options) {
-  var visId = options.visId;
+  const visId = options.visId;
   const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
-  var selectedCountry = worldMapProperties.selectedCountry;
-  var selectedFill = worldMapProperties.selectedFill;
-  var interactive = worldMapProperties.interactive;
+  const selectedCountry = worldMapProperties.selectedCountry;
+  const selectedFill = worldMapProperties.selectedFill;
+  const interactive = worldMapProperties.interactive;
   
   let tooltip = document.getElementById(`${visId}_${constants.tooltip}`);
-  var hoveredCountry = geography.id;
-  var hoveredCountryData = dataObj[hoveredCountry];
+  const hoveredCountry = geography.id;
+  const hoveredCountryData = dataObj[hoveredCountry];
   if (hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
     tooltip.style.display = "none";
 
@@ -164,15 +157,12 @@ function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, o
 * @return   Returns [?]
 */
 function selectCountryWorldMap (dataObj, selectedCountryName, options) {
-  var selectedCountry = options[`${constants.worldMap}${constants.properties}`].selectedCountry;
-  var minSimilarity = options.minSimilarity;
-  var maxSimilarity = options.maxSimilarity;
-  var visId = options.visId;
+  const visId = options.visId;
 
   const selectedCountryData = selectCountry(dataObj, selectedCountryName, options);
 
   // recalculate fillKeys based on newly selected country
-  var fillKeys = getFillKeys(selectedCountryName, selectedCountryData, options);
+  const fillKeys = getFillKeys(selectedCountryName, selectedCountryData, options);
   
   let tooltip = document.getElementById(`${visId}_${constants.tooltip}`);
   tooltip.style.display = "none";
@@ -196,23 +186,20 @@ function selectCountryWorldMap (dataObj, selectedCountryName, options) {
 */
 function createMap(inputData, options) {
   // pull out necessary options attributes
-  var visId = options.visId;
-  var minSimilarity = options.minSimilarity;
-  var maxSimilarity = options.maxSimilarity;
-  var digitsRounded = options.digitsRounded;
+  const visId = options.visId;
+  const digitsRounded = options.digitsRounded;
   const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
-  var selectedCountry = worldMapProperties.selectedCountry;
-  var defaultFill = worldMapProperties.defaultFill;
-  var interactive = worldMapProperties.interactive;
+  let selectedCountry = worldMapProperties.selectedCountry;
+  const defaultFill = worldMapProperties.defaultFill;
+  const interactive = worldMapProperties.interactive;
 
-  var dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
+  const dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
 
   // tracks current selected country name e.g. "Canada", and corresponding data from dataObj
-  var allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
-  var selectedCountryName = alpha3ToCountryName(selectedCountry, allCountries);
-  var selectedCountryData;
+  let selectedCountryName = alpha3ToCountryName(selectedCountry);
+  let selectedCountryData;
 
-  var hoverPriorColor;
+  let hoverPriorColor;
 
   createLegendHTML(options);
 
@@ -225,7 +212,7 @@ function createMap(inputData, options) {
     },
 		done: function(datamap) {
       document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0].style["position"] = "relative";
-      var tooltip = document.createElement("div");
+      let tooltip = document.createElement("div");
       tooltip.id = `${visId}_tooltip`;
       tooltip.style.position = "absolute";
       tooltip.style.display = "none";
@@ -233,9 +220,9 @@ function createMap(inputData, options) {
       tooltip.style["width"] = "100"
       document.getElementById(`${visId}_${constants.visDisplay}`).appendChild(tooltip);
 
-      var pt = document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0].createSVGPoint();
+      let mousePos = document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0].createSVGPoint();
 
-      var selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
+      let selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
       datamap.updateChoropleth(selectedFillKeys);
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
@@ -244,16 +231,16 @@ function createMap(inputData, options) {
         }
         selectedCountryName = geography.properties.name;
         selectedCountry = geography.id;
-				var selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
+				let selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
         datamap.updateChoropleth(selectedFillKeys);
 			})
 
       datamap.svg.selectAll('.datamaps-subunit').on('mouseover', function(geography) {
-        hoverPriorColor = mouseoverCountry(dataObj, geography, selectedCountryName, pt, this, options);
+        hoverPriorColor = mouseoverCountry(dataObj, geography, selectedCountryName, mousePos, this, options);
       })
 
       datamap.svg.on('mousemove', function() {
-        moveTooltip(pt, options);
+        moveTooltip(mousePos, options);
       });
 
       datamap.svg.selectAll('.datamaps-subunit').on('mouseout', function(geography) {
@@ -265,7 +252,7 @@ function createMap(inputData, options) {
 		},
 		geographyConfig: {
       // display country name & corresponding similarity with selected country on mouseover
-      popupTemplate: function(geography, data) {
+      popupTemplate: function(geography) {
         if (geography != null && selectedCountryData != null) {
           return `<div class="${constants.hoverinfo}"><b>` + geography.properties.name + '</b><br>' 
             + selectedCountryData[geography.id].similarity.toFixed(digitsRounded) + '</div>'

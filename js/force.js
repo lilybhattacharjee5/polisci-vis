@@ -1,6 +1,7 @@
 // import necessary libraries from root index file
 import {
   jQuery,
+  d3,
 } from './index.js';
 
 // import global constants from root index file
@@ -14,7 +15,6 @@ import {
   selectCountry,
   similarityToLegendColor,
   generateDataObj,
-  findMinMaxSimilarity,
   createLegendHTML,
 } from './index.js';
 
@@ -27,31 +27,31 @@ const constants = require('./constants.js');
 * @return   Returns [?]
 */
 function getNodesAndLinks(inputData) {
-  var countryCodes = {}
+  let countryCodes = {}
   // construct a dict with the country code of every country as its key
-  for (var [countryPair, similarityScore] of Object.entries(inputData)) {
-    var [countryA, countryB] = countryPair.split('->');
+  for (let countryPair of Object.keys(inputData)) {
+    let [countryA, countryB] = countryPair.split('->');
     countryCodes[countryA] = null;
     countryCodes[countryB] = null;
   }
   // marshall that into the d3-force shape
   // [{"id": "nodeName", ...}]
-  var nodes = [];
+  let nodes = [];
   // simultaneously, associate alpha codes to node index
-  var alphaToIndex = {}
-  var i = 0
-  for (var alpha3 of Object.keys(countryCodes)) {
+  let alphaToIndex = {};
+  let i = 0;
+  for (let alpha3 of Object.keys(countryCodes)) {
     nodes.push({"id": alpha3});
     alphaToIndex[alpha3] = i;
-    i+=1;
+    i += 1;
   }
 
   // now we produce links
-  var links = []
-  for (var [countryPair, metrics] of Object.entries(inputData)) {
+  let links = []
+  for (let [countryPair, metrics] of Object.entries(inputData)) {
     // TODO why do we need to *100? hidden constants?
-    var similarityScore = metrics.Overall_Similarity*100;
-    var [countryA, countryB] = countryPair.split('->');
+    let similarityScore = metrics.Overall_Similarity*100;
+    let [countryA, countryB] = countryPair.split('->');
     if (100 - similarityScore >= 0 && similarityScore > 0) {
       links.push({
         source: alphaToIndex[countryA],
@@ -72,9 +72,9 @@ function getNodesAndLinks(inputData) {
 * @return   Returns [?]
 */
 function calculateMeanSimilarity (links) {
-  var count = 0;
-  var similaritySum = 0;
-  for (var link of links) {
+  let count = 0;
+  let similaritySum = 0;
+  for (let link of links) {
     similaritySum += link.similarity;
     count++;
   }
@@ -90,7 +90,7 @@ function calculateMeanSimilarity (links) {
 * @param  options     [?]
 */
 function generateSvg (width, height, marginLeft, marginTop, options) {
-  var visId = options.visId;
+  const visId = options.visId;
 
   return d3.select(`#${visId}_${constants.visDisplay}`)
       .append("svg")
@@ -105,9 +105,9 @@ function generateSvg (width, height, marginLeft, marginTop, options) {
 * @return   Returns [?]
 */
 function calculateHeight (links) {
-  var maxLength = -Infinity;
-  var currLength;
-  for (var link of links) {
+  let maxLength = -Infinity;
+  let currLength;
+  for (let link of links) {
     currLength = link.weight * 5;
     if (currLength > maxLength) {
       maxLength = currLength;
@@ -134,37 +134,31 @@ function findNode(nodes, alpha3) {
 */
 export function generateForceDirected(options) {
   // finds min & max similarity values between any country pair in the dataset
-  var minSimilarity = options.minSimilarity;
-  var maxSimilarity = options.maxSimilarity;
-  var visId = options.visId;
-  var numIncrements = options.numIncrements;
+  const visId = options.visId;
   const forceProperties = options[`${constants.force}${constants.properties}`];
-  var mapHeight = forceProperties.mapHeight;
-  var multiplier = forceProperties.linkMultiplier;
-  var selectedCountry = forceProperties.selectedCountry;
-  var interactive = forceProperties.interactive;
+  const mapHeight = forceProperties.mapHeight;
+  const multiplier = forceProperties.linkMultiplier;
+  const selectedCountry = forceProperties.selectedCountry;
+  let interactive = forceProperties.interactive;
   
   createLegendHTML(options);
 
   /* Initial force graph settings */
-  var radius = 6; // node size
-  var padding = 100; // pads graph from edges of visualization
+  const radius = 6; // node size
+  const padding = 100; // pads graph from edges of visualization
   const forceGraph = document.getElementById(`${visId}_${constants.visDisplay}`);
-  var width = forceGraph.offsetWidth;
-  var height = forceGraph.offsetHeight;
+  const width = forceGraph.offsetWidth;
+  const height = forceGraph.offsetHeight;
   
   // extract data from dataset
-  var [nodes, links] = getNodesAndLinks(data);
+  let [nodes, links] = getNodesAndLinks(data);
   forceGraph.style.height = mapHeight;
 
   // create an SVG element and append it to the DOM
-  var svgElement = generateSvg(width, height, 50, 20, options);
-
-  // calculate average similarity of all visible nodes to find edge weight threshhold
-  var meanSimilarity = calculateMeanSimilarity(links);
+  const svgElement = generateSvg(width, height, 50, 20, options);
   
   // create force layout
-  var forceLayout = d3.layout.force()
+  let forceLayout = d3.layout.force()
     .size([width, height])
     .nodes(nodes)
     .links(links)
@@ -173,7 +167,7 @@ export function generateForceDirected(options) {
     .linkDistance(d => d.weight * multiplier); // set edge length based on multiplier
 
   // add links to SVG
-  var link = svgElement.selectAll(".link")
+  let link = svgElement.selectAll(".link")
     .data(links)
     .enter()
     .append("line")
@@ -184,7 +178,7 @@ export function generateForceDirected(options) {
     .attr("class", "link");
   
   // Increase node size & decrease opacity on node mouseover
-  function mouseover(d) {
+  function mouseover() {
     if (!interactive) {
       return;
     }
@@ -197,7 +191,7 @@ export function generateForceDirected(options) {
   }
 
   // Reverse the effects of mouseover on the node
-  function mouseout(d) {
+  function mouseout() {
     if (!interactive) {
       return;
     }
@@ -210,7 +204,7 @@ export function generateForceDirected(options) {
   }
 
   // add nodes to SVG
-  var node = svgElement.selectAll(".node")
+  let node = svgElement.selectAll(".node")
     .data(nodes)
     .enter()
     .append("g")
@@ -218,20 +212,20 @@ export function generateForceDirected(options) {
     .call(forceLayout.drag);
   
   // add labels to each node
-  var label = node.append("text")
+  node.append("text")
     .attr("dx", 12)
     .attr("dy", "0.35em")
     .attr("font-size", 14)
     .text(d => d.id);
   
   // add circles to each node & attach mouseover, mouseout functions
-  var circle = node.append("circle")
-    .attr("r", d => radius)
+  let circle = node.append("circle")
+    .attr("r", () => radius)
     .on("mouseover", mouseover)
     .on("mouseout", mouseout);
 
-  var flag = false; // reload all nodes if flag is set
-  var clickedNode; // keep track of selected node in the scope of the function
+  let flag = false; // reload all nodes if flag is set
+  let clickedNode; // keep track of selected node in the scope of the function
 
   // reload force graph data when a node is selected
   function selectCircle(d) {
@@ -244,20 +238,20 @@ export function generateForceDirected(options) {
     document.getElementById(`${visId}_${constants.selectedCountry}`).style.display = 'block';
 
     forceLayout.stop();
-    var thisNode = d.id;
+    let thisNode = d.id;
 
     // only include links connected to selected node
     links = oldLinks.filter(function(l) {
-      var source = l.source;
-      var target = l.target;
+      let source = l.source;
+      let target = l.target;
       if (typeof source != "number") {
         source = l.source.index;
       }
       if (typeof target != "number") {
         target = l.target.index;
       }
-      var sourceName = nodes[source].id;
-      var targetName = nodes[target].id;
+      let sourceName = nodes[source].id;
+      let targetName = nodes[target].id;
 
       return (sourceName === thisNode) || (targetName === thisNode);
     });
@@ -281,7 +275,7 @@ export function generateForceDirected(options) {
     forceLayout.linkDistance(d => d.weight * multiplier)
     forceLayout.start()
 
-    selectCountry (generateDataObj(data), alpha3ToCountryName(d.id), options);
+    selectCountry(generateDataObj(data), alpha3ToCountryName(d.id), options);
   }
 
   // This function will be executed for every tick of force layout
@@ -325,9 +319,8 @@ export function generateForceDirected(options) {
     });
   });
 
-  // track removed & original set of links
-  var removedLinks;
-  var oldLinks = jQuery.extend(true, [], links);
+  // track original set of links
+  let oldLinks = jQuery.extend(true, [], links);
 
   // when the reset button is pressed, restore all of the links in the original dataset
   d3.select(`#${visId}_${constants.resetButton}`).on('click', function() {
@@ -352,13 +345,13 @@ export function generateForceDirected(options) {
       .append('g')
       .attr('class', 'node')
       .call(forceLayout.drag);
-    label = node.append('text')
+    node.append('text')
       .attr('dx', 12)
       .attr('dy', '0.35em')
       .attr('font-size', 14)
       .text(d => d.id);
     circle = node.append('circle')
-      .attr('r', d => radius)
+      .attr('r', () => radius)
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
     circle.on('click', selectCircle);
