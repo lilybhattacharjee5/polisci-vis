@@ -1,5 +1,5 @@
-export const geomap = 'geomap';
-export const forceGraph = 'force';
+export const worldMap = 'worldMap';
+export const force = 'force';
 export const visDisplay = 'visDisplay';
 
 /* global variables set to default values */
@@ -24,8 +24,8 @@ export var NUM_INCREMENTS = 7;
 export var DIGITS_ROUNDED = 2;
 
 // visualization modes
-export var ENABLED_MODES = [geomap, forceGraph];
-export var DEFAULT_MODE = geomap;
+export var ENABLED_MODES = [worldMap, force];
+export var DEFAULT_MODE = worldMap;
 
 export var TABLE_PROPERTIES = [];
 export var SHOW_TABLE = true;

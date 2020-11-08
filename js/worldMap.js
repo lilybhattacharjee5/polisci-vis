@@ -35,9 +35,9 @@ function getFillKeys (selectedCountryName, similarities, options) {
   var minSimilarity = options.minSimilarity;
   var maxSimilarity = options.maxSimilarity;
   var numIncrements = options.numIncrements;
-  const geomapProperties = options[constants.geomap + 'Properties'];
-  var selectedCountry = geomapProperties.selectedCountry;
-  var selectedFill = geomapProperties.selectedFill;
+  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  var selectedCountry = worldMapProperties.selectedCountry;
+  var selectedFill = worldMapProperties.selectedFill;
 
   var fillKeys = {};
   for (var [countryName, countryData] of Object.entries(similarities)) {
@@ -68,11 +68,11 @@ function moveTooltip (pt, options) {
 function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredElement, options) {
   var visId = options.visId;
   var digitsRounded = options.digitsRounded;
-  const geomapProperties = options[constants.geomap + 'Properties'];
-  var selectedCountry = geomapProperties.selectedCountry;
-  var highlightedFill = geomapProperties.highlightedFill;
-  var highlightBorderWidth = geomapProperties.highlightBorderWidth;
-  var interactive = geomapProperties.interactive;
+  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  var selectedCountry = worldMapProperties.selectedCountry;
+  var highlightedFill = worldMapProperties.highlightedFill;
+  var highlightBorderWidth = worldMapProperties.highlightBorderWidth;
+  var interactive = worldMapProperties.interactive;
 
   var hoveredCountry = geography.id;
   var hoveredCountryData = dataObj[hoveredCountry];
@@ -103,10 +103,10 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredE
 
 function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, options) {
   var visId = options.visId;
-  const geomapProperties = options[constants.geomap + 'Properties'];
-  var selectedCountry = geomapProperties.selectedCountry;
-  var selectedFill = geomapProperties.selectedFill;
-  var interactive = geomapProperties.interactive;
+  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  var selectedCountry = worldMapProperties.selectedCountry;
+  var selectedFill = worldMapProperties.selectedFill;
+  var interactive = worldMapProperties.interactive;
   
   let tooltip = document.getElementById(`${visId}_tooltip`);
   var hoveredCountry = geography.id;
@@ -128,7 +128,7 @@ function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, o
 }
 
 function selectCountryWorldMap (dataObj, selectedCountryName, options) {
-  var selectedCountry = options[constants.geomap + 'Properties'].selectedCountry;
+  var selectedCountry = options[constants.worldMap + 'Properties'].selectedCountry;
   var minSimilarity = options.minSimilarity;
   var maxSimilarity = options.maxSimilarity;
   var visId = options.visId;
@@ -161,10 +161,10 @@ function createMap(inputData, options) {
   var minSimilarity = options.minSimilarity;
   var maxSimilarity = options.maxSimilarity;
   var digitsRounded = options.digitsRounded;
-  const geomapProperties = options[constants.geomap + 'Properties'];
-  var selectedCountry = geomapProperties.selectedCountry;
-  var defaultFill = geomapProperties.defaultFill;
-  var interactive = geomapProperties.interactive;
+  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  var selectedCountry = worldMapProperties.selectedCountry;
+  var defaultFill = worldMapProperties.defaultFill;
+  var interactive = worldMapProperties.interactive;
 
   var dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
 

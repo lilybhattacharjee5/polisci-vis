@@ -109,7 +109,7 @@ export function generateForceDirected(options) {
   var maxSimilarity = options.maxSimilarity;
   var visId = options.visId;
   var numIncrements = options.numIncrements;
-  const forceProperties = options[constants.forceGraph + 'Properties'];
+  const forceProperties = options[constants.force + 'Properties'];
   var mapHeight = forceProperties.mapHeight;
   var multiplier = forceProperties.linkMultiplier;
   var selectedCountry = forceProperties.selectedCountry;
@@ -139,7 +139,7 @@ export function generateForceDirected(options) {
   var meanSimilarity = calculateMeanSimilarity(links);
   
   // create force layout
-  var force = d3.layout.force()
+  var forceLayout = d3.layout.force()
     .size([width, height])
     .nodes(nodes)
     .links(links)
@@ -190,7 +190,7 @@ export function generateForceDirected(options) {
     .enter()
     .append("g")
     .attr("class", "node")
-    .call(force.drag);
+    .call(forceLayout.drag);
   
   // add labels to each node
   var label = node.append("text")
@@ -218,7 +218,7 @@ export function generateForceDirected(options) {
     document.getElementById(`${visId}_similarityTable`).style.display = 'flex';
     document.getElementById(`${visId}_selectedCountry`).style.display = 'block';
 
-    force.stop();
+    forceLayout.stop();
     var thisNode = d.id;
 
     // only include links connected to selected node
@@ -252,17 +252,17 @@ export function generateForceDirected(options) {
     clickedNode = d;
 
     // redefine visualization settings & start force to rebalance graph with new links
-    force.links(links);
-    force.nodes(nodes);
-    force.charge(-100)
-    force.linkDistance(d => d.weight * multiplier)
-    force.start()
+    forceLayout.links(links);
+    forceLayout.nodes(nodes);
+    forceLayout.charge(-100)
+    forceLayout.linkDistance(d => d.weight * multiplier)
+    forceLayout.start()
 
     selectCountry (generateDataObj(data), alpha3ToCountryName(d.id), options);
   }
 
   // This function will be executed for every tick of force layout
-  force.on("tick", function(){
+  forceLayout.on("tick", function(){
     // set node positions (x, y)
     node
       .attr("cx", d => {
@@ -342,11 +342,11 @@ export function generateForceDirected(options) {
     // height = calculateHeight(links);
     // document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
     flag = false
-    force.links(links);
-    force.nodes(nodes);
-    force.charge(-3000)
-    force.linkDistance(d => d.weight * 5)
-    force.start()
+    forceLayout.links(links);
+    forceLayout.nodes(nodes);
+    forceLayout.charge(-3000)
+    forceLayout.linkDistance(d => d.weight * 5)
+    forceLayout.start()
   })
 
   // call the selectCircle function whenever a circle is clicked
@@ -361,5 +361,5 @@ export function generateForceDirected(options) {
   }
 
   // start the force layout calculation
-  force.start();
+  forceLayout.start();
 }

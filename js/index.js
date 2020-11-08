@@ -1,6 +1,6 @@
 /* import visualization mode-specific files => 1 compressed output file */
-const geomap = require('./geomap.js');
-const forceGraph = require('./force_directed_graph.js');
+const worldMap = require('./worldMap.js');
+const force = require('./force_directed_graph.js');
 const constants = require('./constants.js');
 
 /* import css */
@@ -18,11 +18,11 @@ export const data = JSON.parse(require('../data/data.json'));
 const allCountries = require('../data/country_codes_and_coordinates.csv');
 
 export const modeToEnableFunction = {
-  [constants.geomap]: {
+  [constants.worldMap]: {
     "enableFunction": enableWorldMap,
     "name": "World Map",
   },
-  [constants.forceGraph]: {
+  [constants.force]: {
     "enableFunction": enableForce,
     "name": "Force"
   },
@@ -42,21 +42,21 @@ export function InteroperabilityVisualization(options) {
     if (options.tableProperties === undefined) options.tableProperties = constants.TABLE_PROPERTIES;
     if (options.showTable === undefined) options.showTable = constants.SHOW_TABLE;
 
-    // geomap-specific parameters
-    if (options.enabledModes.includes(constants.geomap)) {
-      var geomapProperties = options.geomapProperties;
-      if (geomapProperties.selectedCountry === undefined) geomapProperties.selectedCountry = constants.SELECTED_COUNTRY;
-      if (geomapProperties.visHeight === undefined) geomapProperties.visHeight = constants.VIS_HEIGHT;
-      if (geomapProperties.defaultFill === undefined) geomapProperties.defaultFill = constants.DEFAULT_FILL;
-      if (geomapProperties.selectedFill === undefined) geomapProperties.selectedFill = constants.SELECTED_FILL;
-      if (geomapProperties.highlightedFill === undefined) geomapProperties.highlightedFill = constants.HIGHLIGHTED_FILL;
-      if (geomapProperties.highlightBorderWidth === undefined) geomapProperties.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
-      if (geomapProperties.interactive === undefined) geomapProperties.interactive = constants.INTERACTIVE;
-      geomapProperties.startCountry = geomapProperties.selectedCountry;
+    // worldMap-specific parameters
+    if (options.enabledModes.includes(constants.worldMap)) {
+      var worldMapProperties = options.worldMapProperties;
+      if (worldMapProperties.selectedCountry === undefined) worldMapProperties.selectedCountry = constants.SELECTED_COUNTRY;
+      if (worldMapProperties.visHeight === undefined) worldMapProperties.visHeight = constants.VIS_HEIGHT;
+      if (worldMapProperties.defaultFill === undefined) worldMapProperties.defaultFill = constants.DEFAULT_FILL;
+      if (worldMapProperties.selectedFill === undefined) worldMapProperties.selectedFill = constants.SELECTED_FILL;
+      if (worldMapProperties.highlightedFill === undefined) worldMapProperties.highlightedFill = constants.HIGHLIGHTED_FILL;
+      if (worldMapProperties.highlightBorderWidth === undefined) worldMapProperties.highlightBorderWidth = constants.HIGHLIGHT_BORDER_WIDTH;
+      if (worldMapProperties.interactive === undefined) worldMapProperties.interactive = constants.INTERACTIVE;
+      worldMapProperties.startCountry = worldMapProperties.selectedCountry;
     }
 
     // force graph-specific parameters
-    if (options.enabledModes.includes(constants.forceGraph)) {
+    if (options.enabledModes.includes(constants.force)) {
       var forceProperties = options.forceProperties;
       if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
       if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
@@ -101,7 +101,7 @@ function setupVisualizationStructure(options) {
     modeToEnableFunction[options.currMode]["enableFunction"](options);
   });
 
-  document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.geomapProperties.visHeight;
+  document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.worldMapProperties.visHeight;
 }
 
 function displayToggleMode(options) {
@@ -148,11 +148,11 @@ function displayToggleMode(options) {
 }
 
 // Initialize world map
-// See geomap.js
+// See worldMap.js
 function enableWorldMap(options) {
   // pull out necessary options attributes
   var visId = options.visId;
-  var visHeight = options[constants.geomap + 'Properties'].visHeight;
+  var visHeight = options[constants.worldMap + 'Properties'].visHeight;
 
   // set up map
   document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
@@ -162,7 +162,7 @@ function enableWorldMap(options) {
   document.getElementById(visId + "_" + constants.visDisplay).style.height = visHeight;
   // make force graph specific attributes invisible
   document.getElementById(visId + "_" + "resetButton").style.display = "none";
-  geomap.populateMap(options);
+  worldMap.populateMap(options);
 }
 
 // Initialize force directed graph
@@ -170,8 +170,8 @@ function enableWorldMap(options) {
 function enableForce(options) {
   // pull out necessary options attributes
   var visId = options.visId;
-  var visHeight = options[constants.forceGraph + 'Properties'].visHeight;
-  var interactive = options[constants.forceGraph + 'Properties'].interactive;
+  var visHeight = options[constants.force + 'Properties'].visHeight;
+  var interactive = options[constants.force + 'Properties'].interactive;
 
   // set up force graph
   document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
@@ -185,7 +185,7 @@ function enableForce(options) {
   if (interactive) {
     document.getElementById(visId + "_" + "resetButton").style.display = "flex";
   }
-  forceGraph.generateForceDirected(options);
+  force.generateForceDirected(options);
 }
 
 export function alpha3ToCountryName(alpha3) {
