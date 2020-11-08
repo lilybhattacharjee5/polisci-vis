@@ -21,21 +21,25 @@ import {
   alpha3ToCountryName
 } from './index.js';
 
+// import constants from external file
 const constants = require('./constants.js');
 
-/* Given a country and the similarities object containing pair similarity data (and any 
-  other data attributes) returns the fill keys for the chloropleth map.
-
-  Returns an object of the form
-
-    { UKR: "#f0f00", ...}
-
-  Country passed in will be given the SELECTED color. */
+/**
+* Description. Given a country and the similarities object containing pair similarity data (and any 
+* other data attributes) returns the fill keys for the chloropleth map. Country passed in will be 
+* given the SELECTED color.
+* @param  selectedCountryName [?]
+* @param  similarities        [?]
+* @param  options             [?]
+* @return Returns an object of the form
+*
+*   { UKR: "#f0f00", ...}
+*/
 function getFillKeys (selectedCountryName, similarities, options) {
   var minSimilarity = options.minSimilarity;
   var maxSimilarity = options.maxSimilarity;
   var numIncrements = options.numIncrements;
-  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
   var selectedCountry = worldMapProperties.selectedCountry;
   var selectedFill = worldMapProperties.selectedFill;
 
@@ -49,26 +53,41 @@ function getFillKeys (selectedCountryName, similarities, options) {
   return fillKeys;
 }
 
-function moveTooltip (pt, options) {
-  var visId = options.visId;
+/**
+* Description. [?]
+* @param  mousePos        [?]
+* @param  options         [?]
+*/
+function moveTooltip (mousePos, options) {
+  const visId = options.visId;
 
-  let map = document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0];
-  let tooltip = document.getElementById(`${visId}_tooltip`);
-  pt.x = event.clientX;
-  pt.y = event.clientY;
-  var cursorpt =  pt.matrixTransform(document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0].getScreenCTM().inverse());
+  const map = document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0];
+  let tooltip = document.getElementById(`${visId}_${constants.tooltip}`);
+  mousePos.x = event.clientX;
+  mousePos.y = event.clientY;
+  const mousePosTransformed =  mousePos.matrixTransform(document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0].getScreenCTM().inverse());
 
-  const left = (map.getBoundingClientRect().left + cursorpt.x + window.scrollX + 10) + 'px';
-  const top = (map.getBoundingClientRect().top + cursorpt.y + window.scrollY + 10) + 'px';
+  const left = (map.getBoundingClientRect().left + mousePosTransformed.x + window.scrollX + constants.tooltipOffset) + 'px';
+  const top = (map.getBoundingClientRect().top + mousePosTransformed.y + window.scrollY + constants.tooltipOffset) + 'px';
 
   tooltip.style.left = left;
   tooltip.style.top = top;
 }
 
-function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredElement, options) {
+/**
+* Description. [?]
+* @param  dataObj               [?]
+* @param  geography             [?]
+* @param  selectedCountryName   [?]
+* @param  mousePos              [?]
+* @param  hoveredElement        [?]
+* @param  options               [?]
+* @return   Returns [?]
+*/
+function mouseoverCountry (dataObj, geography, selectedCountryName, mousePos, hoveredElement, options) {
   var visId = options.visId;
   var digitsRounded = options.digitsRounded;
-  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
   var selectedCountry = worldMapProperties.selectedCountry;
   var highlightedFill = worldMapProperties.highlightedFill;
   var highlightBorderWidth = worldMapProperties.highlightBorderWidth;
@@ -79,16 +98,18 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredE
   var selectedCountryData = dataObj[selectedCountry];
   var hoverPriorColor;
   if (selectedCountry != hoveredCountry && hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
-    let tooltip = document.getElementById(`${visId}_tooltip`);
+    let tooltip = document.getElementById(`${visId}_${constants.tooltip}`);
 
-    tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>";
+    tooltip.innerHTML = `<div class='${constants.hoverinfo}'><center><b>` + geography.properties.name + "</b></center>";
     if (selectedCountry) {
-      tooltip.innerHTML = "<div class='hoverinfo'><center><b>" + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": <b>" + selectedCountryData[hoveredCountry].similarity.toFixed(digitsRounded) + "</b></div>";
+      tooltip.innerHTML = `<div class='${constants.hoverinfo}'><center><b>` 
+        + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": <b>" 
+        + selectedCountryData[hoveredCountry].similarity.toFixed(digitsRounded) + "</b></div>";
     }
     
     tooltip.style.display = "block";
     
-    moveTooltip(pt, options);
+    moveTooltip(mousePos, options);
 
     if (!interactive){
       return;
@@ -101,14 +122,22 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, pt, hoveredE
   return hoverPriorColor;
 }
 
+/**
+* Description. [?]
+* @param  dataObj           [?]
+* @param  geography         [?]
+* @param  hoveredElement    [?]
+* @param  hoverPriorColor   [?]
+* @param  options           [?]
+*/
 function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, options) {
   var visId = options.visId;
-  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
   var selectedCountry = worldMapProperties.selectedCountry;
   var selectedFill = worldMapProperties.selectedFill;
   var interactive = worldMapProperties.interactive;
   
-  let tooltip = document.getElementById(`${visId}_tooltip`);
+  let tooltip = document.getElementById(`${visId}_${constants.tooltip}`);
   var hoveredCountry = geography.id;
   var hoveredCountryData = dataObj[hoveredCountry];
   if (hoveredCountryData && Object.keys(hoveredCountryData).length > 0) {
@@ -127,8 +156,15 @@ function mouseoutCountry (dataObj, geography, hoveredElement, hoverPriorColor, o
   }
 }
 
+/*
+* Description. [?]
+* @param  dataObj               [?]
+* @param  selectedCountryName   [?]
+* @param  options               [?]
+* @return   Returns [?]
+*/
 function selectCountryWorldMap (dataObj, selectedCountryName, options) {
-  var selectedCountry = options[constants.worldMap + 'Properties'].selectedCountry;
+  var selectedCountry = options[`${constants.worldMap}${constants.properties}`].selectedCountry;
   var minSimilarity = options.minSimilarity;
   var maxSimilarity = options.maxSimilarity;
   var visId = options.visId;
@@ -138,30 +174,33 @@ function selectCountryWorldMap (dataObj, selectedCountryName, options) {
   // recalculate fillKeys based on newly selected country
   var fillKeys = getFillKeys(selectedCountryName, selectedCountryData, options);
   
-  let tooltip = document.getElementById(`${visId}_tooltip`);
+  let tooltip = document.getElementById(`${visId}_${constants.tooltip}`);
   tooltip.style.display = "none";
   
   return fillKeys;
 }
 
-/* Given input data in the following format, generates a chloropleth map.
-
-  {
-    AND->AUT: {
-      Overall_Similarity: 0.646,
-      country_code_alpha2_A: "AD",
-      country_code_alpha2_B: "AT",
-      country_code_alpha3_A: "AND",
-      country_code_alpha3_B: "AUT"
-    }
-  } */
+/** 
+* Description. Given input data in the following format, generates a chloropleth map.
+* {
+*   AND->AUT: {
+*     Overall_Similarity: 0.646,
+*     country_code_alpha2_A: "AD",
+*     country_code_alpha2_B: "AT",
+*     country_code_alpha3_A: "AND",
+*     country_code_alpha3_B: "AUT"
+*   }
+* } 
+* @param  inputData   [?]
+* @param  options     [?]
+*/
 function createMap(inputData, options) {
   // pull out necessary options attributes
   var visId = options.visId;
   var minSimilarity = options.minSimilarity;
   var maxSimilarity = options.maxSimilarity;
   var digitsRounded = options.digitsRounded;
-  const worldMapProperties = options[constants.worldMap + 'Properties'];
+  const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
   var selectedCountry = worldMapProperties.selectedCountry;
   var defaultFill = worldMapProperties.defaultFill;
   var interactive = worldMapProperties.interactive;
@@ -198,8 +237,6 @@ function createMap(inputData, options) {
 
       var selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
       datamap.updateChoropleth(selectedFillKeys);
-
-      // datamap.svg['viewBox'] = "100%";
 			
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
         if (!interactive) {
@@ -230,15 +267,18 @@ function createMap(inputData, options) {
       // display country name & corresponding similarity with selected country on mouseover
       popupTemplate: function(geography, data) {
         if (geography != null && selectedCountryData != null) {
-          return '<div class="hoverinfo"><b>' + geography.properties.name + '</b><br>' + selectedCountryData[geography.id].similarity.toFixed(digitsRounded) + '</div>'
+          return `<div class="${constants.hoverinfo}"><b>` + geography.properties.name + '</b><br>' 
+            + selectedCountryData[geography.id].similarity.toFixed(digitsRounded) + '</div>'
         }
       }
 		},
 	});
 }
 
-/* Makes an asynchronous request to the JSON data file and calls `createMap` to generate the
-   chloropleth after parsing the resulting string data */
+/** 
+* Description. Calls `createMap` to generate the chloropleth after parsing the data JSON file 
+* @param  options [?]
+*/
 export function populateMap(options) {
   createMap(data, options);
 }

@@ -1,18 +1,19 @@
-/* import visualization mode-specific files => 1 compressed output file */
+// import visualization mode-specific files => 1 compressed output file
 const worldMap = require('./worldMap.js');
-const force = require('./force_directed_graph.js');
+const force = require('./force.js');
 const constants = require('./constants.js');
 
-/* import css */
+// import css
 import css from './index.css';
 
-/* load required libraries that can be imported into other visualization-specific files */
+// load required libraries that can be imported into other visualization-specific files
 export const d3 = require('d3');
 export const topojson = require('topojson');
 export const Datamap = require('../libraries/datamaps.js')
 export const d3Color = require('d3-scale-chromatic');
 export const jQuery = require('jquery');
 
+// import constants from external file
 export const data = JSON.parse(require('../data/data.json'));
 
 const allCountries = require('../data/country_codes_and_coordinates.csv');
@@ -28,7 +29,10 @@ export const modeToEnableFunction = {
   },
 };
 
-// This method is called in a script tag in index.html
+/** 
+* Description. This method is called in a script tag in index.html
+* @param  options   [?]
+*/
 export function InteroperabilityVisualization(options) {
     // modify default parameters according to passed-in options
     if (options.visId === undefined) options.visId = constants.VIS_ID;
@@ -71,32 +75,37 @@ export function InteroperabilityVisualization(options) {
     displayToggleMode(options);
 }
 
+/** 
+* Description. [?]
+* @param  options   [?]
+*/
 function setupVisualizationStructure(options) {
   // pull out necessary options attributes
   var visId = options.visId;
 
   document.getElementById(visId).innerHTML = `
-    <b><h3 class="content" id="${visId}_selectedCountry"></h3></b>
+    <b><h3 class="${constants.content}" id="${visId}_${constants.selectedCountry}"></h3></b>
 
-    <div class="resetButton" id="${visId}_resetButton"><button>Reset</button></div>
-    <div class="visDisplay" id="${visId}_${constants.visDisplay}"></div>
+    <div class="${constants.resetButton}" id="${visId}_${constants.resetButton}"><button>Reset</button></div>
+    <div class="${constants.visDisplay}" id="${visId}_${constants.visDisplay}"></div>
     <br />
 
-    <div class="visLegend" id="${visId}_visLegend">
-      <div class="visLegendTitle" id="${visId}_visLegendTitle">Similarity</div>
-      <div class="visLegendBody" id="${visId}_visLegendBody">
-        <div class="visLegendGradient" id="${visId}_visLegendGradient"></div>
-        <div class="visLegendLabels" id ="${visId}_visLegendLabels"></div>
+    <div class="${constants.visLegend}" id="${visId}_${constants.visLegend}">
+      <div class="${constants.visLegendTitle}" id="${visId}_${constants.visLegendTitle}">Similarity</div>
+      <div class="${constants.visLegendBody}" id="${visId}_${constants.visLegendBody}">
+        <div class="${constants.visLegendGradient}" id="${visId}_${constants.visLegendGradient}"></div>
+        <div class="${constants.visLegendLabels}" id ="${visId}_${constants.visLegendLabels}"></div>
       </div>
     </div>
 
-    <div class="content visMode" id="${visId}_visMode">
+    <div class="${constants.content} ${constants.visMode}" id="${visId}_${constants.visMode}">
     </div>
 
     <!-- Show selected country -->
-    <div class="content similarityTable" id="${visId}_similarityTable"></div>
+    <div class="${constants.content} ${constants.similarityTable}" id="${visId}_${constants.similarityTable}"></div>
   `;
 
+  // reload the visualization when the window is resized so svg is redrawn
   window.addEventListener('resize', function(event) {
     modeToEnableFunction[options.currMode]["enableFunction"](options);
   });
@@ -121,7 +130,7 @@ function displayToggleMode(options) {
 
   enabledModes.forEach(mode => {
     visModeHTML += `
-      <div class="modeInput">
+      <div class="${constants.modeInput}">
         <input type="radio" id="${visId}_${mode}" name="${visId}_mode", value="${mode}">
         <label for="${mode}"></label>${modeToEnableFunction[mode]["name"]}<br>
       </div>
@@ -147,62 +156,78 @@ function displayToggleMode(options) {
   modeToEnableFunction[defaultMode]["enableFunction"](options);
 }
 
-// Initialize world map
-// See worldMap.js
+/** 
+* Description: Initialize world map. See worldMap.js
+* @param  options   [?]
+*/
 function enableWorldMap(options) {
   // pull out necessary options attributes
   var visId = options.visId;
-  var visHeight = options[constants.worldMap + 'Properties'].visHeight;
+  var visHeight = options[`${constants.worldMap}${constants.properties}`].visHeight;
 
   // set up map
-  document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
-  document.getElementById(visId + "_" + "selectedCountry").style.display = "block";
+  document.getElementById(`${visId}_${constants.visDisplay}`).innerHTML = "";
+  document.getElementById(`${visId}_${constants.selectedCountry}`).style.display = "block";
   // map takes up 80% of visible screen to leave space for legend
-  document.getElementById(visId + "_" + constants.visDisplay).style.width = "80%";
-  document.getElementById(visId + "_" + constants.visDisplay).style.height = visHeight;
+  document.getElementById(`${visId}_${constants.visDisplay}`).style.width = constants.VIS_WIDTH_WORLDMAP;
+  document.getElementById(`${visId}_${constants.visDisplay}`).style.height = visHeight;
   // make force graph specific attributes invisible
-  document.getElementById(visId + "_" + "resetButton").style.display = "none";
+  document.getElementById(`${visId}_${constants.resetButton}`).style.display = "none";
   worldMap.populateMap(options);
 }
 
-// Initialize force directed graph
-// See force-directed-graph.js
+/** 
+* Description. Initialize force directed graph. See force-directed-graph.js
+* @param  options   [?]
+*/
 function enableForce(options) {
   // pull out necessary options attributes
   var visId = options.visId;
-  var visHeight = options[constants.force + 'Properties'].visHeight;
-  var interactive = options[constants.force + 'Properties'].interactive;
+  var visHeight = options[`${constants.force}${constants.properties}`].visHeight;
+  var interactive = options[`${constants.force}${constants.properties}`].interactive;
 
   // set up force graph
-  document.getElementById(visId + "_" + constants.visDisplay).innerHTML = "";
+  document.getElementById(`${visId}_${constants.visDisplay}`).innerHTML = "";
   // force graph should take up the whole width of the visible screen
-  document.getElementById(visId + "_" + constants.visDisplay).style.width = "100%";
+  document.getElementById(`${visId}_${constants.visDisplay}`).style.width = constants.VIS_WIDTH_FORCE;
   // make world map specific attributes invisible
-  document.getElementById(visId + "_" + "selectedCountry").innerHTML = "";
-  document.getElementById(visId + "_" + "similarityTable").innerHTML = "";
-  document.getElementById(visId + "_" + constants.visDisplay).style.height = visHeight;
+  document.getElementById(`${visId}_${constants.selectedCountry}`).innerHTML = "";
+  document.getElementById(`${visId}_${constants.similarityTable}`).innerHTML = "";
+  document.getElementById(`${visId}_${constants.visDisplay}`).style.height = visHeight;
   // make force graph specific attributes visible
   if (interactive) {
-    document.getElementById(visId + "_" + "resetButton").style.display = "flex";
+    document.getElementById(`${visId}_${constants.resetButton}`).style.display = "flex";
   }
   force.generateForceDirected(options);
 }
 
+/**
+* Description. [?]
+* @param  alpha3  [?]
+* @return   Returns [?]
+*/
 export function alpha3ToCountryName(alpha3) {
   const countryFound = allCountries.filter(countryInfo => countryInfo["Alpha-3 code"] === alpha3);
   return countryFound.length > 0 ? countryFound[0]["Country"] : alpha3;
 }
 
+/**
+* Description. [?]
+* @param  countryName   [?]
+* @return   Returns [?]
+*/
 export function countryNameToAlpha3(countryName) {
   const countryFound = allCountries.filter(countryInfo => countryInfo["Country"] === countryName);
   return countryFound.length > 0 ? countryFound[0]["Alpha-3 code"] : constants.SELECTED_COUNTRY;
 }
 
-/* From an object where values are floats, returns a list
-
-   [[key, value], ...]
-
-   Sorted by value. */
+/** 
+* Description. From an object where values are floats, returns a list
+*    [[key, value], ...]
+* Sorted by value.
+* @param  obj   [?]
+* @return   Returns [?]
+*/
 function sortedObject (obj) {
   var sortable = [];
   for (var item in obj) {
@@ -214,9 +239,13 @@ function sortedObject (obj) {
   return sortable;
 }
 
-/* Given input data, creates a data object that will be passed into the chloropleth map
-  and used for special operations on highlighted / selected countries (e.g. hover text) */
-export function generateDataObj(inputData) {
+/**
+* Description. Given input data, creates a data object that will be passed into the chloropleth map
+* and used for special operations on highlighted / selected countries (e.g. hover text)
+* @param  inputData   [?]
+* @return   Returns [?]
+*/
+export function generateDataObj (inputData) {
   var dataObj = {};
   var countryA, countryB;
   var currSimilarity;
@@ -238,10 +267,15 @@ export function generateDataObj(inputData) {
   return dataObj;
 }
 
-/* Given a country and the similarities object containing pair similarity data (and any
-  other data attributes) generates a table displaying each row in the form
-
-  [alpha3 country code] | [similarity score] */
+/** 
+* Description. Given a country and the similarities object containing pair similarity data (and any
+* other data attributes) generates a table displaying each row in the form
+*   [alpha3 country code] | [similarity score]
+* @param  selectedCountryName   [?]
+* @param  similarities          [?]
+* @param  options               [?]
+* @return   Returns [?]
+*/
 function createTableHTML(selectedCountryName, similarities, options) {
   var tableProperties = options.tableProperties;
   var digitsRounded = options.digitsRounded;
@@ -279,6 +313,13 @@ function createTableHTML(selectedCountryName, similarities, options) {
   return html
 }
 
+/**
+* Description.
+* @param  dataObj               [?]
+* @param  selectedCountryName   [?]
+* @param  options               dictionary of user parameters to visualization
+* @return   Returns 
+*/
 export function selectCountry(dataObj, selectedCountryName, options) {
   var maxSimilarity = options.maxSimilarity;
   var minSimilarity = options.minSimilarity;
@@ -286,7 +327,7 @@ export function selectCountry(dataObj, selectedCountryName, options) {
   var visId = options.visId;
   var showTable = options.showTable;
   const currMode = options.currMode;
-  const modeProperties = options[currMode + 'Properties'];
+  const modeProperties = options[`${currMode}${constants.properties}`];
   var selectedFill = modeProperties.selectedFill;
 
   // check that the country has corresponding data
@@ -296,21 +337,30 @@ export function selectCountry(dataObj, selectedCountryName, options) {
   }
   
   // display selected country name
-  document.getElementById(`${visId}_selectedCountry`).innerHTML =
-    `Selected Country: <div class="countryName" id="${visId}_countryName">${selectedCountryName}</div>`;
-  document.getElementById(`${visId}_countryName`).style.color = selectedFill;
+  document.getElementById(`${visId}_${constants.selectedCountry}`).innerHTML =
+    `Selected Country: <div class="${constants.countryName}" id="${visId}_${constants.countryName}">${selectedCountryName}</div>`;
+  document.getElementById(`${visId}_${constants.countryName}`).style.color = selectedFill;
 
   // display selected country similarity data with other countries
   if (showTable) {
-    document.getElementById(`${visId}_similarityTable`).innerHTML =
+    document.getElementById(`${visId}_${constants.similarityTable}`).innerHTML =
       createTableHTML(selectedCountryName, selectedCountryData, options);
-    document.getElementById(`${visId}_similarityTable`).style.display = 'flex';
+    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'flex';
   }
 
   modeProperties.selectedCountry = selectedCountry;
   return selectedCountryData;
 }
 
+/**
+* Description. Given a similarity float value and the options dictionary defined by the user,
+* returns the legend color that the similarity falls into (given the number of increments and color
+* scheme)
+* @param  similarity  float value between 0 and 1 inclusive
+* @param  options     dictionary of user parameters to visualization
+* @return Returns hex color that matches the similarity rounded down to the nearest legend increment
+* color
+*/
 export function similarityToLegendColor(similarity, options) {
   var numIncrements = options.numIncrements;
   var minSimilarity = options.minSimilarity;
@@ -321,23 +371,25 @@ export function similarityToLegendColor(similarity, options) {
   return d3Color[colorScheme][numIncrements][incrementNumber];
 }
 
-/* Given input data in the following format, finds the min & max similarities of any country
-  in the dataset.
-
-  {
-    AND->AUT: {
-      Overall_Similarity: 0.646,
-      country_code_alpha2_A: "AD",
-      country_code_alpha2_B: "AT",
-      country_code_alpha3_A: "AND",
-      country_code_alpha3_B: "AUT"
-  }
-
-  Returns an array of the form
-    [minimum similarity, maximum similarity] */
+/** 
+* Description. Given input data in the following format, finds the min & max similarities of 
+* any country in the dataset.
+*  {
+*    AND->AUT: {
+*      Overall_Similarity: 0.646,
+*      country_code_alpha2_A: "AD",
+*      country_code_alpha2_B: "AT",
+*      country_code_alpha3_A: "AND",
+*      country_code_alpha3_B: "AUT"
+*  }
+* @param inputData  formatted dictionary mapping country pairs e.g. AND->AUT to a dictionary of 
+* calculated metrics
+* @return Returns an array of the form
+*    [minimum similarity, maximum similarity]
+*/
 export function findMinMaxSimilarity(inputData) {
-  var maxSimilarity = -Infinity
-  var minSimilarity = Infinity
+  var maxSimilarity = -Infinity;
+  var minSimilarity = Infinity;
   for (var [countryPair, metrics] of Object.entries(inputData)) {
     var similarityScore = metrics.Overall_Similarity;
     if (similarityScore < minSimilarity) {
@@ -350,26 +402,30 @@ export function findMinMaxSimilarity(inputData) {
   return [minSimilarity, maxSimilarity]
 }
 
-/* Given the min & max similarity of any country pair in the dataset, generates a legend with
-   numIncrements number of labels
-  */
+/**
+* Description. Generates a legend with numIncrements number of labels based on the bounds of the 
+* similarity values.
+* @param options  A dictionary object representing the parameters to the visualization. Contains
+* a set mininum and maximum similarity, and a number of legend increments.
+*/
 export function createLegendHTML(options) {
   // pull out necessary options attributes
-  var visId = options.visId;
-  var minSimilarity = options.minSimilarity;
-  var maxSimilarity = options.maxSimilarity;
-  var numIncrements = options.numIncrements;
-  var legendCreated = options.legendCreated;
-  var colorScheme = options.colorScheme;
-  var digitsRounded = options.digitsRounded;
+  const visId = options.visId;
+  const minSimilarity = options.minSimilarity;
+  const maxSimilarity = options.maxSimilarity;
+  const numIncrements = options.numIncrements;
+  const legendCreated = options.legendCreated;
+  const colorScheme = options.colorScheme;
+  const digitsRounded = options.digitsRounded;
 
+  // prevent legend from reloading if it has already been created, make the completed legend visible
   if (legendCreated) {
-    document.getElementById(`${visId}_visLegend`).style.display = "inline-block"; // make the completed legend visible
+    document.getElementById(`${visId}_${constants.visLegend}`).style.display = "inline-block";
     return;
   }
 
   // find colors at the top (max) and bottom (min) of the legend gradient
-  var legendColorScheme = d3Color[colorScheme][numIncrements];
+  const legendColorScheme = d3Color[colorScheme][numIncrements];
   
   // generates numIncrements number of legend labels at equidistant positions along the gradient
   var legendElemTag;
@@ -383,19 +439,18 @@ export function createLegendHTML(options) {
     legendElemText = document.createTextNode(incrementedSimilarity.toString());
     legendElemTag.appendChild(legendElemText);
     legendElemTag.style.flex = 1;
-    document.getElementById(`${visId}_visLegendLabels`).appendChild(legendElemTag);
+    document.getElementById(`${visId}_${constants.visLegendLabels}`).appendChild(legendElemTag);
 
     legendElemDiv = document.createElement("div");
     legendElemDiv.style.flex = 1;
     legendElemDiv.style["background-color"] = legendColorScheme[i];
-    document.getElementById(`${visId}_visLegendGradient`).appendChild(legendElemDiv);
+    document.getElementById(`${visId}_${constants.visLegendGradient}`).appendChild(legendElemDiv);
   }
   // add the final legend label (min) aligned to the bottom of the gradient
   legendElemTag = document.createElement("div");
   legendElemText = document.createTextNode(maxSimilarity.toFixed(digitsRounded).toString());
   legendElemTag.appendChild(legendElemText);
-  document.getElementById(`${visId}_visLegendLabels`).appendChild(legendElemTag);
+  document.getElementById(`${visId}_${constants.visLegendLabels}`).appendChild(legendElemTag);
 
-  var legendTitle = document.getElementById(`${visId}_visLegendTitle`);
   options.legendCreated = true;
 }

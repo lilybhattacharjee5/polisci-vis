@@ -18,9 +18,14 @@ import {
   createLegendHTML,
 } from './index.js';
 
+// import constants from external file
 const constants = require('./constants.js');
 
-/* Separate node and link data from global INPUT_DATA variable */
+/**
+* Description. Separate node and link data from global INPUT_DATA variable
+* @param  inputData   [?]
+* @return   Returns [?]
+*/
 function getNodesAndLinks(inputData) {
   var countryCodes = {}
   // construct a dict with the country code of every country as its key
@@ -60,8 +65,12 @@ function getNodesAndLinks(inputData) {
   return [nodes, links];
 }
 
-/* Calculate the average similarity value in the dataset to determine which edges will
-have high (low similarity, almost transparent) vs. low opacity (high similarity) */
+/** 
+* Description. Calculate the average similarity value in the dataset to determine which edges will
+* have high (low similarity, almost transparent) vs. low opacity (high similarity)
+* @param  links   [?]
+* @return   Returns [?]
+*/
 function calculateMeanSimilarity (links) {
   var count = 0;
   var similaritySum = 0;
@@ -72,7 +81,14 @@ function calculateMeanSimilarity (links) {
   return similaritySum / count;
 }
 
-/* Generate the SVG image holding the visualization */
+/**
+* Description. Generate the SVG image holding the visualization 
+* @param  width       [?]
+* @param  height      [?]
+* @param  marginLeft  [?]
+* @param  marginTop   [?]
+* @param  options     [?]
+*/
 function generateSvg (width, height, marginLeft, marginTop, options) {
   var visId = options.visId;
 
@@ -82,8 +98,12 @@ function generateSvg (width, height, marginLeft, marginTop, options) {
       .append("g")
 }
 
-/* Calculate the height of the force visualization as the max edge length * 2 
-(in case there are 2 such edge lengths that end up spanning the height after rebalancing) */
+/** 
+* Description. Calculate the height of the force visualization as the max edge length * 2 
+* (in case there are 2 such edge lengths that end up spanning the height after rebalancing)
+* @param  links   [?]
+* @return   Returns [?]
+*/
 function calculateHeight (links) {
   var maxLength = -Infinity;
   var currLength;
@@ -96,20 +116,29 @@ function calculateHeight (links) {
   return maxLength * 2;
 }
 
+/**
+* Description. [?]
+* @param  nodes   [?]
+* @param  alpha3  [?]
+* @return Returns [?]
+*/
 function findNode(nodes, alpha3) {
   const countryNode = nodes.filter(nodeInfo => nodeInfo.id === alpha3);
   return countryNode.length > 0 ? countryNode[0] : null;
 }
 
-/* Uses the global data variable to generate a force graph with undirected edges
-  between countries with corresponding edge lengths based on pairwise similarity */
+/**
+* Description. Uses the global data variable to generate a force graph with undirected edges
+* between countries with corresponding edge lengths based on pairwise similarity 
+* @param  options   [?]
+*/
 export function generateForceDirected(options) {
   // finds min & max similarity values between any country pair in the dataset
   var minSimilarity = options.minSimilarity;
   var maxSimilarity = options.maxSimilarity;
   var visId = options.visId;
   var numIncrements = options.numIncrements;
-  const forceProperties = options[constants.force + 'Properties'];
+  const forceProperties = options[`${constants.force}${constants.properties}`];
   var mapHeight = forceProperties.mapHeight;
   var multiplier = forceProperties.linkMultiplier;
   var selectedCountry = forceProperties.selectedCountry;
@@ -123,13 +152,9 @@ export function generateForceDirected(options) {
   const forceGraph = document.getElementById(`${visId}_${constants.visDisplay}`);
   var width = forceGraph.offsetWidth;
   var height = forceGraph.offsetHeight;
-  // the constant by which the similarity score is multiplied
-  // toggled based on whether or not a country node is selected
   
   // extract data from dataset
   var [nodes, links] = getNodesAndLinks(data);
-  // vary visualization height based on maximum edge length
-  // height = calculateHeight(links, multiplier);
   forceGraph.style.height = mapHeight;
 
   // create an SVG element and append it to the DOM
@@ -215,8 +240,8 @@ export function generateForceDirected(options) {
     }
 
     // make similarity table visible again
-    document.getElementById(`${visId}_similarityTable`).style.display = 'flex';
-    document.getElementById(`${visId}_selectedCountry`).style.display = 'block';
+    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'flex';
+    document.getElementById(`${visId}_${constants.selectedCountry}`).style.display = 'block';
 
     forceLayout.stop();
     var thisNode = d.id;
@@ -245,8 +270,6 @@ export function generateForceDirected(options) {
         return similarityToLegendColor(d.similarity / 100, options)
       })
       .attr("stroke-width", 1);
-    // height = calculateHeight(links, multiplier);
-    // document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
     
     flag = true;
     clickedNode = d;
@@ -307,10 +330,10 @@ export function generateForceDirected(options) {
   var oldLinks = jQuery.extend(true, [], links);
 
   // when the reset button is pressed, restore all of the links in the original dataset
-  d3.select(`#${visId}_resetButton`).on('click', function() {
+  d3.select(`#${visId}_${constants.resetButton}`).on('click', function() {
     // remove similarity table
-    document.getElementById(`${visId}_similarityTable`).style.display = 'none';
-    document.getElementById(`${visId}_selectedCountry`).style.display = 'none';
+    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'none';
+    document.getElementById(`${visId}_${constants.selectedCountry}`).style.display = 'none';
 
     links = oldLinks;
     link.remove();
@@ -328,7 +351,7 @@ export function generateForceDirected(options) {
       .enter()
       .append('g')
       .attr('class', 'node')
-      .call(force.drag);
+      .call(forceLayout.drag);
     label = node.append('text')
       .attr('dx', 12)
       .attr('dy', '0.35em')
@@ -339,8 +362,6 @@ export function generateForceDirected(options) {
       .on('mouseover', mouseover)
       .on('mouseout', mouseout);
     circle.on('click', selectCircle);
-    // height = calculateHeight(links);
-    // document.getElementById(`${visId}_${constants.visDisplay}`).style.height = height;
     flag = false
     forceLayout.links(links);
     forceLayout.nodes(nodes);
