@@ -1,8 +1,8 @@
 {
-  "name": "interoperability-demo",
-  "version": "1.0.0",
+  "name": "@lbhattac/interoperability-viz",
+  "version": "1.0.7",
   "description": "[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)",
-  "main": "server.js",
+  "main": "js/index.js",
   "scripts": {
     "start": "serve",
     "build": "webpack --config webpack.config.js"
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/lilybhattacharjee5/interoperability-demo.git"
   },
-  "author": "",
+  "author": "Lily Bhattacharjee",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/lilybhattacharjee5/interoperability-demo/issues"
@@ -22,7 +22,6 @@
     "css-loader": "^4.3.0",
     "d3": "^3.5.17",
     "d3-scale-chromatic": "^1.5.0",
-    "file-system": "^2.2.2",
     "html-webpack-plugin": "^4.4.1",
     "jquery": "^3.5.1",
     "json-loader": "^0.5.7",
