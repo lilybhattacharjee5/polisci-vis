@@ -1,6 +1,6 @@
 {
   "name": "@lbhattac/interoperability-viz",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)",
   "main": "js/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/lilybhattacharjee5/interoperability-demo.git"
   },
   "author": "Lily Bhattacharjee",
-  "license": "ISC",
+  "license": "BSD-3",
   "bugs": {
     "url": "https://github.com/lilybhattacharjee5/interoperability-demo/issues"
   },

@@ -1,6 +1,7 @@
-# Internationally Blocked Domains Demo
+# interoperability-viz 
+## Internationally Blocked Domains Demo
 
-[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)
+[Live Demo](https://lilybhattacharjee5.github.io/interoperability-viz-package-demo/index.html)
 
 This interactive demo visualizes countries with similar website blocking
 patterns. See [our data processing
@@ -9,39 +10,35 @@ generated our data source.
 
 ## Getting started
 
-The bundled visualization code is available at `dist/index.bundle.js`. This file is imported into the 
-main HTML page, so `index.html` can be opened in any browser.
+`interoperability-viz` is a Node.js module. It can be installed via npm:
 
-The visualization can also be started on a server:
-
-```sh
-# install dependencies
-npm install
-# start local webserver
-npm start
+```
+npm install @lbhattac/interoperability-viz
 ```
 
-## Building our webpack bundle
-To build the visualization webpack bundle, you can use either of the following commands: 
-`npx webpack` or `npm run build`. The resulting bundled Javascript is accessible in `dist/main.bundle.js` and `dist/vendors.bundle.js`.
+## Creating a visualization
 
-## Integrating our visualization
+Note: Refer to our [demo repository]() for an example implementation.
 
 To include this visualization on a webpage, take the following steps:
-1. Copy `dist/main.bundle.js` and `dist/vendors.bundle.js` into your project's directory.
-
-2. Import these bundled scripts in your main HTML page. Make sure to import `vendors` before `main` as `vendors` contains compressed library dependencies.
+1. Import the `InteroperabilityVisualization` function from `@lbhattac/interoperability-viz` in your JS file.
 ```
-<script src="js/vendors.bundle.js"></script>
-<script src="js/main.bundle.js"></script>
+import { InteroperabilityVisualization } from '@lbhattac/interoperability-viz';
 ```
 
-3. Create a div with an id in your webpage that will house the visualization.
-4. In a script tag, call the function `index.InteroperabilityVisualization` to initialize the display.
+2. Import your bundled JS file in your base HTML file below the div in which the visualization will appear:
+```
+<div id='visContainer'></div>
+
+<script src="index.bundle.js"></script>
+```
+
+4. Inside the JS file, call the function `index.InteroperabilityVisualization` to initialize the display.
 ```
 <script>
 index.InteroperabilityVisualization({
     visId: 'visContainer',
+    data: data,
     numIncrements: 5,
     minSimilarity: 0,
     maxSimilarity: 1,
@@ -73,6 +70,7 @@ index.InteroperabilityVisualization({
 The function accepts the following **required** parameters:
 - **visId**: string; the id of the div that the visualization will be in
 	- defaults to 'visContainer' (but will error if this id is not on the embedding page)
+- **data**: a JSON object that follows the formatting described in this [README](https://github.com/lilybhattacharjee5/interoperability-demo/tree/master/data)
 - **defaultMode**: string; the mode of the visualization that is initially visible to the user
 	- defaults to 'geomap'
 	- possible values: 'geomap', 'force'
@@ -128,7 +126,6 @@ Note: Parameter order doesn't matter, as all arguments are passed in map format.
 
 - `data/`: marshalled data produced by [our data processing
   repo](https://github.com/daylight-lab/uclab-data-processing)
-- `dist`: final bundled JS file that is imported into `index.html` to create the visualization
 - `js`: includes individual JS files for implementing specific visualization modes
 - `libraries`: code dependencies unavailable via `npm install`
 - `local_country_variables/`: logic for marshalling country names
