@@ -1,6 +1,8 @@
 // import visualization mode-specific files => 1 compressed output file
 const worldMap = require('./worldMap.js');
 const force = require('./force.js');
+
+// import constants from external file
 const constants = require('./constants.js');
 
 // import css
@@ -13,8 +15,8 @@ export const Datamap = require('../libraries/datamaps.js')
 export const d3Color = require('d3-scale-chromatic');
 export const jQuery = require('jquery');
 
-// import constants from external file
-export const data = JSON.parse(require('../data/data.json'));
+// import data from external file
+export var data = JSON.parse(require('../data/data.json'));
 
 const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
 
@@ -45,12 +47,15 @@ export const modeToEnableFunction = {
 *   tableProperties: data attributes that will be visible in the similarity table
 *   showTable: boolean determining whether or not the similarity table will be visible
 *   worldMapProperties: world map mode-specific properties (see README for details)
-*   forcePropeties: force mode-specific properties (see README for details)
+*   forceProperties: force mode-specific properties (see README for details)
 * }
 */
 export function InteroperabilityVisualization(options) {
     // modify default parameters according to passed-in options
     if (options.visId === undefined) options.visId = constants.VIS_ID;
+    if (options.data !== undefined) {
+      data = options.data;
+    }
     if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
     if (options.minSimilarity === undefined) options.minSimilarity = constants.MIN_SIMILARITY;
     if (options.numIncrements === undefined) options.numIncrements = constants.NUM_INCREMENTS;
