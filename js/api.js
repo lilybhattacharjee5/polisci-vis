@@ -4,6 +4,7 @@ import {
 	selectCountry as setSelectedCountry,
 	generateDataObj,
 	modeToEnableFunction,
+	toggleTable,
 } from './index.js';
 
 export function createVisualization(options) {
@@ -19,14 +20,10 @@ export function selectCountry(countryName, options) {
 	modeToEnableFunction[options.currMode]["enableFunction"](options);
 }
 
-export function resetVisualization() {
-
-}
-
 export function showDataTable() {
-
+	toggleTable(true);
 }
 
 export function hideDataTable() {
-
+	toggleTable(false);
 }

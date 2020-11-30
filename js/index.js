@@ -15,8 +15,7 @@ export const Datamap = require('../libraries/datamaps.js')
 export const d3Color = require('d3-scale-chromatic');
 export const jQuery = require('jquery');
 
-// import data from external file
-// export var data = JSON.parse(require('../data/data.json'));
+// tracks JSON data from external file
 export var data = {};
 const allCountries = require('../local_country_variables/countries_codes_and_coordinates.json')['countryData'];
 
@@ -387,15 +386,20 @@ export function selectCountry(dataObj, selectedCountryName, options) {
     `Selected Country: <div class="${constants.countryName}" id="${visId}_${constants.countryName}">${selectedCountryName}</div>`;
   document.getElementById(`${visId}_${constants.countryName}`).style.color = selectedFill;
 
-  // display selected country similarity data with other countries
+  toggleTable(showTable);
+
+  modeProperties.selectedCountry = selectedCountry;
+  return selectedCountryData;
+}
+
+export function toggleTable(showTable) {
   if (showTable) {
     document.getElementById(`${visId}_${constants.similarityTable}`).innerHTML =
       createTableHTML(selectedCountryName, selectedCountryData, options);
     document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'flex';
+  } else {
+    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'none';
   }
-
-  modeProperties.selectedCountry = selectedCountry;
-  return selectedCountryData;
 }
 
 /**
