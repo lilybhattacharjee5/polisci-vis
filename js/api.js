@@ -3,6 +3,7 @@ import {
 	setOption,
 	selectCountry as setSelectedCountry,
 	generateDataObj,
+	modeToEnableFunction,
 } from './index.js';
 
 export function createVisualization(options) {
@@ -15,6 +16,7 @@ export function loadData(options, data) {
 
 export function selectCountry(countryName, options) {
 	setSelectedCountry(generateDataObj(options.data), countryName, options);
+	modeToEnableFunction[options.currMode]["enableFunction"](options);
 }
 
 export function resetVisualization() {
