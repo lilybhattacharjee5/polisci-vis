@@ -1,6 +1,6 @@
 {
   "name": "@lbhattac/interoperability-viz",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)",
   "main": "js/api.js",
   "scripts": {
@@ -41,7 +41,9 @@
     "webpack-cli": "^3.3.12"
   },
   "jest": {
-    "moduleNameMapper": { "\\.(css|less)$": "<rootDir>/assets/css/__mocks__/styleMock.js" }
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/assets/css/__mocks__/styleMock.js"
+    }
   },
   "keywords": []
 }
