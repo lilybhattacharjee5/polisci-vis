@@ -2,7 +2,7 @@
   "name": "@lbhattac/interoperability-viz",
   "version": "1.0.9",
   "description": "[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)",
-  "main": "js/index.js",
+  "main": "js/api.js",
   "scripts": {
     "start": "serve",
     "build": "webpack --config webpack.config.js"
@@ -32,10 +32,16 @@
     "topojson": "^3.0.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.12.7",
+    "babel-jest": "^26.6.3",
     "csv-loader": "^3.0.3",
     "eslint": "^7.13.0",
+    "jest": "^26.6.3",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
+  },
+  "jest": {
+    "moduleNameMapper": { "\\.(css|less)$": "<rootDir>/assets/css/__mocks__/styleMock.js" }
   },
   "keywords": []
 }

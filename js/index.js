@@ -16,9 +16,9 @@ export const d3Color = require('d3-scale-chromatic');
 export const jQuery = require('jquery');
 
 // import data from external file
-export var data = JSON.parse(require('../data/data.json'));
-
-const allCountries = Datamap.prototype.worldTopo.objects.world.geometries;
+// export var data = JSON.parse(require('../data/data.json'));
+export var data = {};
+const allCountries = require('../local_country_variables/countries_codes_and_coordinates.json')['countryData'];
 
 export const modeToEnableFunction = {
   [constants.worldMap]: {
@@ -30,6 +30,13 @@ export const modeToEnableFunction = {
     "name": "Force"
   },
 };
+
+export function InteroperabilityVisualization(options) {
+  setAllOptions(options);
+
+  setupVisualizationStructure(options);
+  displayToggleMode(options);
+}
 
 /** 
 * Description. This method is called in a script tag in any html file to generate an interoperability
@@ -50,7 +57,7 @@ export const modeToEnableFunction = {
 *   forceProperties: force mode-specific properties (see README for details)
 * }
 */
-export function InteroperabilityVisualization(options) {
+export function setAllOptions(options) {
     // modify default parameters according to passed-in options
     if (options.visId === undefined) options.visId = constants.VIS_ID;
     if (options.data !== undefined) {
@@ -90,9 +97,10 @@ export function InteroperabilityVisualization(options) {
 
     options.currMode = options.defaultMode;
     options.legendCreated = false; // prevents legend from reloading every time a country is selected
+}
 
-    setupVisualizationStructure(options);
-    displayToggleMode(options);
+export function setOption(options, optionAttributeKey, optionAttributeValue) {
+  options[optionAttributeKey] = optionAttributeValue;
 }
 
 /** 
@@ -100,7 +108,7 @@ export function InteroperabilityVisualization(options) {
 * Adds listener to the resize button that allows the force graph (if enabled) to be reloaded on click.
 * @param  options   a dictionary of user-defined options (see README for details)
 */
-function setupVisualizationStructure(options) {
+export function setupVisualizationStructure(options) {
   // pull out necessary options attributes
   const visId = options.visId;
 
@@ -139,7 +147,7 @@ function setupVisualizationStructure(options) {
 * more than 1 enabled mode.
 * @param  options   a dictionary of user-defined options (see README for details)
 */
-function displayToggleMode(options) {
+export function displayToggleMode(options) {
   // pull out necessary options attributes
   const visId = options.visId;
   const enabledModes = options.enabledModes;
@@ -228,24 +236,24 @@ function enableForce(options) {
 
 /**
 * Description. Converts an alpha 3 country code e.g. USA to a country name i.e. United States using
-* an externally loaded csv mapper
+* an externally loaded JSON mapper
 * @param  alpha3  a 3-letter country code
 * @return   Returns the country name that matches the alpha 3 code
 */
 export function alpha3ToCountryName(alpha3) {
-  const countryFound = allCountries.filter(countryInfo => countryInfo.id === alpha3);
-  return countryFound.length > 0 ? countryFound[0].properties.name : alpha3;
+  const countryFound = allCountries.filter(countryInfo => countryInfo["Alpha-3 code"] === alpha3);
+  return countryFound.length > 0 ? countryFound[0]["Country"] : alpha3;
 }
 
 /**
 * Description. Converts a country name e.g. United States to an alpha 3 country code i.e. USA using
-* an externally loaded csv mapper
+* an externally loaded JSON mapper
 * @param  countryName   a country name
 * @return   Returns the 3-letter country code that matches the country name
 */
 export function countryNameToAlpha3(countryName) {
-  const countryFound = allCountries.filter(countryInfo => countryInfo.properties.name === countryName);
-  return countryFound.length > 0 ? countryFound[0].id : constants.SELECTED_COUNTRY;
+  const countryFound = allCountries.filter(countryInfo => countryInfo["Country"] === countryName);
+  return countryFound.length > 0 ? countryFound[0]["Alpha-3 code"] : constants.SELECTED_COUNTRY;
 }
 
 /** 
