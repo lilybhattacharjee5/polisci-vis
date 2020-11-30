@@ -20,10 +20,10 @@ export function selectCountry(countryName, options) {
 	modeToEnableFunction[options.currMode]["enableFunction"](options);
 }
 
-export function showDataTable() {
-	toggleTable(true);
+export function showDataTable(options) {
+	toggleTable(options, true);
 }
 
-export function hideDataTable() {
-	toggleTable(false);
+export function hideDataTable(options) {
+	toggleTable(options, false);
 }

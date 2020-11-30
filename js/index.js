@@ -386,13 +386,20 @@ export function selectCountry(dataObj, selectedCountryName, options) {
     `Selected Country: <div class="${constants.countryName}" id="${visId}_${constants.countryName}">${selectedCountryName}</div>`;
   document.getElementById(`${visId}_${constants.countryName}`).style.color = selectedFill;
 
-  toggleTable(showTable);
+  toggleTable(options);
 
   modeProperties.selectedCountry = selectedCountry;
   return selectedCountryData;
 }
 
-export function toggleTable(showTable) {
+export function toggleTable(options, showTable) {
+  const visId = options.visId;
+  const currMode = options.currMode;
+  const dataObj = generateDataObj(options.data);
+  const selectedCountryAlpha3 = options[`${currMode}Properties`].selectedCountry;
+  const selectedCountryName = alpha3ToCountryName(selectedCountryAlpha3);
+  const selectedCountryData = dataObj[`${selectedCountryAlpha3}`];
+
   if (showTable) {
     document.getElementById(`${visId}_${constants.similarityTable}`).innerHTML =
       createTableHTML(selectedCountryName, selectedCountryData, options);
@@ -400,6 +407,8 @@ export function toggleTable(showTable) {
   } else {
     document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'none';
   }
+
+  options.showTable = showTable;
 }
 
 /**
