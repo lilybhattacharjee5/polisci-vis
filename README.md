@@ -33,10 +33,10 @@ import { InteroperabilityVisualization } from '@lbhattac/interoperability-viz';
 <script src="index.bundle.js"></script>
 ```
 
-4. Inside the JS file, call the function `index.InteroperabilityVisualization` to initialize the display.
+4. Inside the JS file, call the function `InteroperabilityVisualization` to initialize the display.
 ```
 <script>
-index.InteroperabilityVisualization({
+InteroperabilityVisualization({
     visId: 'visContainer',
     data: data,
     numIncrements: 5,
