@@ -1,6 +1,8 @@
 // import visualization mode-specific files => 1 compressed output file
 const worldMap = require('./worldMap.js');
 const force = require('./force.js');
+
+// import constants from external file
 const constants = require('./constants.js');
 
 // import css
@@ -13,10 +15,9 @@ export const Datamap = require('../libraries/datamaps.js')
 export const d3Color = require('d3-scale-chromatic');
 export const jQuery = require('jquery');
 
-// import constants from external file
-export const data = JSON.parse(require('../data/data.json'));
-
-const allCountries = require('../data/country_codes_and_coordinates.csv');
+// tracks JSON data from external file
+export var data = {};
+const allCountries = require('../local_country_variables/countries_codes_and_coordinates.json')['countryData'];
 
 export const modeToEnableFunction = {
   [constants.worldMap]: {
@@ -28,6 +29,13 @@ export const modeToEnableFunction = {
     "name": "Force"
   },
 };
+
+export function InteroperabilityVisualization(options) {
+  setAllOptions(options);
+
+  setupVisualizationStructure(options);
+  displayToggleMode(options);
+}
 
 /** 
 * Description. This method is called in a script tag in any html file to generate an interoperability
@@ -45,12 +53,15 @@ export const modeToEnableFunction = {
 *   tableProperties: data attributes that will be visible in the similarity table
 *   showTable: boolean determining whether or not the similarity table will be visible
 *   worldMapProperties: world map mode-specific properties (see README for details)
-*   forcePropeties: force mode-specific properties (see README for details)
+*   forceProperties: force mode-specific properties (see README for details)
 * }
 */
-export function InteroperabilityVisualization(options) {
+export function setAllOptions(options) {
     // modify default parameters according to passed-in options
     if (options.visId === undefined) options.visId = constants.VIS_ID;
+    if (options.data !== undefined) {
+      data = options.data;
+    }
     if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
     if (options.minSimilarity === undefined) options.minSimilarity = constants.MIN_SIMILARITY;
     if (options.numIncrements === undefined) options.numIncrements = constants.NUM_INCREMENTS;
@@ -85,9 +96,10 @@ export function InteroperabilityVisualization(options) {
 
     options.currMode = options.defaultMode;
     options.legendCreated = false; // prevents legend from reloading every time a country is selected
+}
 
-    setupVisualizationStructure(options);
-    displayToggleMode(options);
+export function setOption(options, optionAttributeKey, optionAttributeValue) {
+  options[optionAttributeKey] = optionAttributeValue;
 }
 
 /** 
@@ -95,7 +107,7 @@ export function InteroperabilityVisualization(options) {
 * Adds listener to the resize button that allows the force graph (if enabled) to be reloaded on click.
 * @param  options   a dictionary of user-defined options (see README for details)
 */
-function setupVisualizationStructure(options) {
+export function setupVisualizationStructure(options) {
   // pull out necessary options attributes
   const visId = options.visId;
 
@@ -134,7 +146,7 @@ function setupVisualizationStructure(options) {
 * more than 1 enabled mode.
 * @param  options   a dictionary of user-defined options (see README for details)
 */
-function displayToggleMode(options) {
+export function displayToggleMode(options) {
   // pull out necessary options attributes
   const visId = options.visId;
   const enabledModes = options.enabledModes;
@@ -223,7 +235,7 @@ function enableForce(options) {
 
 /**
 * Description. Converts an alpha 3 country code e.g. USA to a country name i.e. United States using
-* an externally loaded csv mapper
+* an externally loaded JSON mapper
 * @param  alpha3  a 3-letter country code
 * @return   Returns the country name that matches the alpha 3 code
 */
@@ -234,7 +246,7 @@ export function alpha3ToCountryName(alpha3) {
 
 /**
 * Description. Converts a country name e.g. United States to an alpha 3 country code i.e. USA using
-* an externally loaded csv mapper
+* an externally loaded JSON mapper
 * @param  countryName   a country name
 * @return   Returns the 3-letter country code that matches the country name
 */
@@ -374,15 +386,29 @@ export function selectCountry(dataObj, selectedCountryName, options) {
     `Selected Country: <div class="${constants.countryName}" id="${visId}_${constants.countryName}">${selectedCountryName}</div>`;
   document.getElementById(`${visId}_${constants.countryName}`).style.color = selectedFill;
 
-  // display selected country similarity data with other countries
+  toggleTable(options);
+
+  modeProperties.selectedCountry = selectedCountry;
+  return selectedCountryData;
+}
+
+export function toggleTable(options, showTable) {
+  const visId = options.visId;
+  const currMode = options.currMode;
+  const dataObj = generateDataObj(options.data);
+  const selectedCountryAlpha3 = options[`${currMode}Properties`].selectedCountry;
+  const selectedCountryName = alpha3ToCountryName(selectedCountryAlpha3);
+  const selectedCountryData = dataObj[`${selectedCountryAlpha3}`];
+
   if (showTable) {
     document.getElementById(`${visId}_${constants.similarityTable}`).innerHTML =
       createTableHTML(selectedCountryName, selectedCountryData, options);
     document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'flex';
+  } else {
+    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'none';
   }
 
-  modeProperties.selectedCountry = selectedCountry;
-  return selectedCountryData;
+  options.showTable = showTable;
 }
 
 /**
