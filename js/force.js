@@ -13,7 +13,7 @@ import {
 import {
   alpha3ToCountryName,
   selectCountry,
-  similarityToLegendColor,
+  attrToLegendColor,
   generateDataObj,
   createLegendHTML,
 } from './index.js';
@@ -38,13 +38,13 @@ const constants = require('./constants.js');
 *     {
 *       source: alpha 3 code representing the node corresponding to the source country,
 *       target: alpha 3 code representing the node corresponding to the target country,
-*       similarity: float metric value between 0 and 1 inclusive,
+*       attr: float metric value between 0 and 1 inclusive,
 *       weight: attribute used to determine link distance,
 *     }
 *   ] 
 * ]
 */
-function getNodesAndLinks(inputData) {
+function getNodesAndLinks(inputData, attrName) {
   let countryCodes = {}
   // construct a dict with the country code of every country as its key
   for (let countryPair of Object.keys(inputData)) {
@@ -68,15 +68,17 @@ function getNodesAndLinks(inputData) {
   let links = []
   for (let [countryPair, metrics] of Object.entries(inputData)) {
     // TODO why do we need to *100? hidden constants?
-    let similarityScore = metrics.Overall_Similarity*100;
+    let attrVal = metrics[attrName]*100;
     let [countryA, countryB] = countryPair.split('->');
-    if (100 - similarityScore >= 0 && similarityScore > 0) {
-      links.push({
+    let newLink;
+    if (100 - attrVal >= 0 && attrVal > 0) {
+      newLink = {
         source: alphaToIndex[countryA],
         target: alphaToIndex[countryB],
-        similarity: similarityScore,
-        weight: 100 - similarityScore,
-      });
+        weight: 100 - attrVal,
+      };
+      newLink[attrName] = attrVal;
+      links.push(newLink);
     }
   }
 
@@ -84,28 +86,28 @@ function getNodesAndLinks(inputData) {
 }
 
 /** 
-* Description. Calculate the average similarity value in the dataset to determine which edges will
-* have high (low similarity, almost transparent) vs. low opacity (high similarity)
+* Description. Calculate the average attr value in the dataset to determine which edges will
+* have high (low attr value, almost transparent) vs. low opacity (high attr value)
 * @param  links   array of link objects of the following form:
 * [
 *   {
 *     source: alpha 3 code representing the node corresponding to the source country,
 *     target: alpha 3 code representing the node corresponding to the target country,
-*     similarity: float metric value between 0 and 1 inclusive,
+*     attr: float metric value between 0 and 1 inclusive,
 *     weight: attribute used to determine link distance,
 *   }
 * ]
-* @return   Returns a float value representing the mean similarity value between any two source,
+* @return   Returns a float value representing the mean attr value between any two source,
 * target pairs
 */
-function calculateMeanSimilarity (links) {
+function calculateMeanAttrVal(links, attrName) {
   let count = 0;
-  let similaritySum = 0;
+  let attrSum = 0;
   for (let link of links) {
-    similaritySum += link.similarity;
+    attrSum += link[attrName];
     count++;
   }
-  return similaritySum / count;
+  return attrSum / count;
 }
 
 /**
@@ -128,7 +130,7 @@ function generateSvg (width, height, marginLeft, marginTop, options) {
 /** 
 * Description. Calculate the height of the force visualization as the max edge length * 2 
 * (in case there are 2 such edge lengths that end up spanning the height after rebalancing)
-* @param  links   array of link objects with attributes including source, target, similarity, weight, etc.
+* @param  links   array of link objects with attributes including source, target, attr, weight, etc.
 * @return   Returns the maximum possible height (in px) for the visualization to properly fit visible
 * edges
 */
@@ -157,16 +159,17 @@ function findNode(nodes, alpha3) {
 
 /**
 * Description. Uses the global data variable to generate a force graph with undirected edges
-* between countries with corresponding edge lengths based on pairwise similarity 
+* between countries with corresponding edge lengths based on pairwise attr values 
 * @param  options   a dictionary of user-defined options (see README for details)
 */
 export function generateForceDirected(options) {
-  // finds min & max similarity values between any country pair in the dataset
+  // finds min & max attr values between any country pair in the dataset
   const visId = options.visId;
   const forceProperties = options[`${constants.force}${constants.properties}`];
   const mapHeight = forceProperties.mapHeight;
   const multiplier = forceProperties.linkMultiplier;
   const selectedCountry = forceProperties.selectedCountry;
+  const attrName = forceProperties.visibleProperty;
   let interactive = forceProperties.interactive;
   
   createLegendHTML(options);
@@ -179,7 +182,7 @@ export function generateForceDirected(options) {
   const height = forceGraph.offsetHeight;
   
   // extract data from dataset
-  let [nodes, links] = getNodesAndLinks(data);
+  let [nodes, links] = getNodesAndLinks(data, attrName);
   forceGraph.style.height = mapHeight;
 
   // create an SVG element and append it to the DOM
@@ -200,7 +203,7 @@ export function generateForceDirected(options) {
     .enter()
     .append("line")
     .attr("stroke", d => {
-      return similarityToLegendColor(d.similarity / 100, options)
+      return attrToLegendColor(d[attrName] / 100, options)
     })
     .attr("stroke-width", 1)
     .attr("class", "link");
@@ -261,8 +264,8 @@ export function generateForceDirected(options) {
       return;
     }
 
-    // make similarity table visible again
-    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'flex';
+    // make attr value table visible again
+    document.getElementById(`${visId}_${constants.attrTable}`).style.display = 'flex';
     document.getElementById(`${visId}_${constants.selectedCountry}`).style.display = 'block';
 
     forceLayout.stop();
@@ -289,7 +292,7 @@ export function generateForceDirected(options) {
       .enter().append('line')
       .attr("class", "link")
       .attr("stroke", d => {
-        return similarityToLegendColor(d.similarity / 100, options)
+        return attrToLegendColor(d[attrName] / 100, options)
       })
       .attr("stroke-width", 1);
     
@@ -332,7 +335,7 @@ export function generateForceDirected(options) {
         .attr("x2", d => nodes[d.target.index].x)
         .attr("y2", d => nodes[d.target.index].y)
         .attr("stroke", d => {
-          return similarityToLegendColor(d.similarity / 100, options)
+          return attrToLegendColor(d[attrName] / 100, options)
         });
     } else {
       link.attr("x1", d => d.source.x);
@@ -352,8 +355,10 @@ export function generateForceDirected(options) {
 
   // when the reset button is pressed, restore all of the links in the original dataset
   d3.select(`#${visId}_${constants.resetButton}`).on('click', function() {
-    // remove similarity table
-    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'none';
+    options.forceProperties.selectedCountry = undefined;
+
+    // remove attr value table
+    document.getElementById(`${visId}_${constants.attrTable}`).style.display = 'none';
     document.getElementById(`${visId}_${constants.selectedCountry}`).style.display = 'none';
 
     links = oldLinks;
@@ -364,7 +369,7 @@ export function generateForceDirected(options) {
       .enter().append('line')
       .attr('class', 'link')
       .attr("stroke", d => {
-        return similarityToLegendColor(d.similarity / 100, options)
+        return attrToLegendColor(d[attrName] / 100, options)
       })
       .attr('stroke-width', 1)
     node = svgElement.selectAll('.node')

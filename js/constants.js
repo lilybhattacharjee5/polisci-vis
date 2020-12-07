@@ -14,9 +14,11 @@ export const SELECTED_FILL = '#228B22'; // selected country color
 export const HIGHLIGHTED_FILL = 'orange'; // highlighted (moused-over) country color
 export const COLOR_SCHEME = 'schemeBlues';
 
-// maximum and minimum expected similarity scores
-export const MAX_SIMILARITY = 1
-export const MIN_SIMILARITY = 0
+export const VISIBLE_PROPERTY = 'similarity';
+
+// maximum and minimum expected attr values
+export const MAX_ATTR_VAL = 1
+export const MIN_ATTR_VAL = 0
 
 // highlight border width for countries with data
 export const HIGHLIGHT_BORDER_WIDTH = 2
@@ -41,13 +43,14 @@ export const content = 'content';
 export const selectedCountry = 'selectedCountry';
 export const visDisplay = 'visDisplay';
 export const resetButton = 'resetButton';
+export const dataLayerOptions = 'dataLayerOptions';
 export const visLegend = 'visLegend';
 export const visLegendTitle = 'visLegendTitle';
 export const visLegendBody = 'visLegendBody';
 export const visLegendGradient = 'visLegendGradient';
 export const visLegendLabels = 'visLegendLabels';
 export const visMode = 'visMode';
-export const similarityTable = 'similarityTable';
+export const attrTable = 'attrTable';
 export const modeInput = 'modeInput';
 export const properties = 'Properties';
 export const countryName = 'countryName';

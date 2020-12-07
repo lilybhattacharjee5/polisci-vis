@@ -11,7 +11,7 @@ import {
 // import general methods from root index file
 import {
   selectCountry,
-  similarityToLegendColor,
+  attrToLegendColor,
   generateDataObj,
   createLegendHTML,
   alpha3ToCountryName
@@ -21,25 +21,26 @@ import {
 const constants = require('./constants.js');
 
 /**
-* Description. Given a country and the similarities object containing pair similarity data (and any 
+* Description. Given a country and the attr values object containing pair attr value data (and any 
 * other data attributes) returns the fill keys for the chloropleth map. Country passed in will be 
 * given the SELECTED color.
 * @param  selectedCountryName name of selected country e.g. United States
-* @param  similarities        similarities data for all country pairs of the form USA->XXX
+* @param  attrVals        attr values data for all country pairs of the form USA->XXX
 * @param  options             a dictionary of user-defined options (see README for details)
 * @return Returns an object of the form
 *
 *   { UKR: "#f0f00", ...}
 */
-function getFillKeys (selectedCountryName, similarities, options) {
+function getFillKeys (selectedCountryName, attrVals, options) {
   const worldMapProperties = options[`${constants.worldMap}${constants.properties}`];
   const selectedCountry = worldMapProperties.selectedCountry;
   const selectedFill = worldMapProperties.selectedFill;
+  const attrName = worldMapProperties.visibleProperty;
 
   let fillKeys = {};
-  for (let [countryName, countryData] of Object.entries(similarities)) {
-    // color each country by similarity score
-    fillKeys[countryName] = similarityToLegendColor(countryData.similarity, options);
+  for (let [countryName, countryData] of Object.entries(attrVals)) {
+    // color each country by attr val
+    fillKeys[countryName] = attrToLegendColor(countryData[attrName], options);
   }
   // color selected country
   fillKeys[selectedCountry] = selectedFill;
@@ -87,6 +88,7 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, mousePos, ho
   const highlightedFill = worldMapProperties.highlightedFill;
   const highlightBorderWidth = worldMapProperties.highlightBorderWidth;
   const interactive = worldMapProperties.interactive;
+  const attrName = worldMapProperties.visibleProperty;
 
   const hoveredCountry = geography.id;
   const hoveredCountryData = dataObj[hoveredCountry];
@@ -99,7 +101,7 @@ function mouseoverCountry (dataObj, geography, selectedCountryName, mousePos, ho
     if (selectedCountry) {
       tooltip.innerHTML = `<div class='${constants.hoverinfo}'><center><b>` 
         + geography.properties.name + "</b></center>Similarity with " + selectedCountry + ": <b>" 
-        + selectedCountryData[hoveredCountry].similarity.toFixed(digitsRounded) + "</b></div>";
+        + selectedCountryData[hoveredCountry][attrName].toFixed(digitsRounded) + "</b></div>";
     }
     
     tooltip.style.display = "block";
@@ -200,6 +202,7 @@ function createMap(inputData, options) {
   let selectedCountry = worldMapProperties.selectedCountry;
   const defaultFill = worldMapProperties.defaultFill;
   const interactive = worldMapProperties.interactive;
+  const attrName = worldMapProperties.visibleProperty;
 
   const dataObj = generateDataObj(inputData); // creates data object for special operations on highlighted / selected map countries
 
@@ -212,13 +215,13 @@ function createMap(inputData, options) {
   createLegendHTML(options);
 
   new Datamap({
-		element: document.getElementById(`${visId}_${constants.visDisplay}`),
-		projection: "mercator",
+    element: document.getElementById(`${visId}_${constants.visDisplay}`),
+    projection: "mercator",
     data: dataObj,
     fills: {
       defaultFill: defaultFill,
     },
-		done: function(datamap) {
+    done: function(datamap) {
       document.getElementById(`${visId}_${constants.visDisplay}`).getElementsByTagName("svg")[0].style["position"] = "relative";
       let tooltip = document.createElement("div");
       tooltip.id = `${visId}_tooltip`;
@@ -232,16 +235,16 @@ function createMap(inputData, options) {
 
       let selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
       datamap.updateChoropleth(selectedFillKeys);
-			
+      
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
         if (!interactive) {
           return;
         }
         selectedCountryName = geography.properties.name;
         selectedCountry = geography.id;
-				let selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
+        let selectedFillKeys = selectCountryWorldMap(dataObj, selectedCountryName, options);
         datamap.updateChoropleth(selectedFillKeys);
-			})
+      })
 
       datamap.svg.selectAll('.datamaps-subunit').on('mouseover', function(geography) {
         hoverPriorColor = mouseoverCountry(dataObj, geography, selectedCountryName, mousePos, this, options);
@@ -257,17 +260,17 @@ function createMap(inputData, options) {
 
       datamap.svg.width = "100%";
       datamap.svg.height = "100%";
-		},
-		geographyConfig: {
-      // display country name & corresponding similarity with selected country on mouseover
+    },
+    geographyConfig: {
+      // display country name & corresponding attr value with selected country on mouseover
       popupTemplate: function(geography) {
         if (geography != null && selectedCountryData != null) {
           return `<div class="${constants.hoverinfo}"><b>` + geography.properties.name + '</b><br>' 
-            + selectedCountryData[geography.id].similarity.toFixed(digitsRounded) + '</div>'
+            + selectedCountryData[geography.id][attrName].toFixed(digitsRounded) + '</div>'
         }
       }
-		},
-	});
+    },
+  });
 }
 
 /** 

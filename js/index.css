@@ -11,7 +11,15 @@
 .resetButton {
   display: none;
   float: right;
-  margin-right: 100px;
+  margin-right: 10%;
+}
+
+.dataLayerOptions {
+  margin-left: 10%;
+}
+
+.dataLayerOptions .dataLayer {
+  margin-right: 10%;
 }
 
 .content .contentElem {

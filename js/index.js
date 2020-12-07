@@ -44,14 +44,14 @@ export function InteroperabilityVisualization(options) {
 * {
 *   visId: name of id containing visualization
 *   numIncrements: number of increments in legend
-*   minSimilarity: minimum similarity value to lower bound legend
-*   maxSimilarity: maximum similarity value to upper bound legend
+*   minAttrVal: minimum attr value to lower bound legend
+*   maxAttrVal: maximum attr value to upper bound legend
 *   digitsRounded: number of digits past the decimal point to round metric values to
 *   colorScheme: a d3 scale chromatic scheme name e.g. 'schemePurples'
 *   defaultMode: the default visualization view (e.g. 'worldMap')
 *   enabledModes: views that the user can toggle between in the visualization
-*   tableProperties: data attributes that will be visible in the similarity table
-*   showTable: boolean determining whether or not the similarity table will be visible
+*   tableProperties: data attributes that will be visible in the attr table
+*   showTable: boolean determining whether or not the attr table will be visible
 *   worldMapProperties: world map mode-specific properties (see README for details)
 *   forceProperties: force mode-specific properties (see README for details)
 * }
@@ -62,8 +62,8 @@ export function setAllOptions(options) {
     if (options.data !== undefined) {
       data = options.data;
     }
-    if (options.maxSimilarity === undefined) options.maxSimilarity = constants.MAX_SIMILARITY;
-    if (options.minSimilarity === undefined) options.minSimilarity = constants.MIN_SIMILARITY;
+    if (options.maxAttrVal === undefined) options.maxAttrVal = constants.MAX_ATTR_VAL;
+    if (options.minAttrVal === undefined) options.minAttrVal = constants.MIN_ATTR_VAL;
     if (options.numIncrements === undefined) options.numIncrements = constants.NUM_INCREMENTS;
     if (options.digitsRounded === undefined) options.digitsRounded = constants.DIGITS_ROUNDED;
     if (options.colorScheme === undefined) options.colorScheme = constants.COLOR_SCHEME;
@@ -75,6 +75,7 @@ export function setAllOptions(options) {
     // worldMap-specific parameters
     if (options.enabledModes.includes(constants.worldMap)) {
       let worldMapProperties = options.worldMapProperties;
+      if (worldMapProperties.visibleProperty === undefined) worldMapProperties.visibleProperty = constants.VISIBLE_PROPERTY;
       if (worldMapProperties.selectedCountry === undefined) worldMapProperties.selectedCountry = constants.SELECTED_COUNTRY;
       if (worldMapProperties.visHeight === undefined) worldMapProperties.visHeight = constants.VIS_HEIGHT;
       if (worldMapProperties.defaultFill === undefined) worldMapProperties.defaultFill = constants.DEFAULT_FILL;
@@ -88,6 +89,7 @@ export function setAllOptions(options) {
     // force graph-specific parameters
     if (options.enabledModes.includes(constants.force)) {
       let forceProperties = options.forceProperties;
+      if (forceProperties.visibleProperty === undefined) forceProperties.visibleProperty = constants.VISIBLE_PROPERTY;
       if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
       if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
       if (forceProperties.interactive === undefined) forceProperties.interactive = constants.INTERACTIVE;
@@ -110,11 +112,24 @@ export function setOption(options, optionAttributeKey, optionAttributeValue) {
 export function setupVisualizationStructure(options) {
   // pull out necessary options attributes
   const visId = options.visId;
+  const attrNames = options.tableColumnNames;
+  const visibleProperty = options[`${options.currMode}${constants.properties}`].visibleProperty;
+
+  let dataLayerHTML = '';
+  let index = 0;
+  for (let attrName of attrNames) {
+    dataLayerHTML += `<span class="dataLayer">
+      <input type="radio" id="${visId}_${options.tableProperties[index]}" name="dataLayerOption" value="${attrName}">
+      <label for="${attrName}">${attrName}</label>
+    </span>`;
+    index += 1;
+  }
 
   document.getElementById(visId).innerHTML = `
     <b><h3 class="${constants.content}" id="${visId}_${constants.selectedCountry}"></h3></b>
 
     <div class="${constants.resetButton}" id="${visId}_${constants.resetButton}"><button>Reset</button></div>
+    <div class="${constants.dataLayerOptions}" id="${visId}_${constants.dataLayerOptions}">${dataLayerHTML}</div>
     <div class="${constants.visDisplay}" id="${visId}_${constants.visDisplay}"></div>
     <br />
 
@@ -130,13 +145,22 @@ export function setupVisualizationStructure(options) {
     </div>
 
     <!-- Show selected country -->
-    <div class="${constants.content} ${constants.similarityTable}" id="${visId}_${constants.similarityTable}"></div>
+    <div class="${constants.content} ${constants.attrTable}" id="${visId}_${constants.attrTable}"></div>
   `;
 
   // reload the visualization when the window is resized so svg is redrawn
   window.addEventListener('resize', function() {
     modeToEnableFunction[options.currMode]["enableFunction"](options);
   });
+
+  attrNames.forEach((attrName, index) => {
+    document.getElementById(`${visId}_${options.tableProperties[index]}`).addEventListener("change", function() {
+      options[`${options.currMode}${constants.properties}`].visibleProperty = options.tableProperties[index];
+      modeToEnableFunction[options.currMode]["enableFunction"](options);
+    });
+  });
+
+  document.getElementById(`${visId}_${visibleProperty}`).checked = true;
 
   document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.worldMapProperties.visHeight;
 }
@@ -224,7 +248,7 @@ function enableForce(options) {
   document.getElementById(`${visId}_${constants.visDisplay}`).style.width = constants.VIS_WIDTH_FORCE;
   // make world map specific attributes invisible
   document.getElementById(`${visId}_${constants.selectedCountry}`).innerHTML = "";
-  document.getElementById(`${visId}_${constants.similarityTable}`).innerHTML = "";
+  document.getElementById(`${visId}_${constants.attrTable}`).innerHTML = "";
   document.getElementById(`${visId}_${constants.visDisplay}`).style.height = visHeight;
   // make force graph specific attributes visible
   if (interactive) {
@@ -300,10 +324,13 @@ export function generateDataObj (inputData) {
     if (!dataObj[countryB]) {
       dataObj[countryB] = {};
     }
-    
-    let pairDataObj = {
-      'similarity': inputData[countryPair].Overall_Similarity,
+
+    let pairDataObj = {};
+
+    for (let attr of Object.keys(inputData[countryPair])) {
+      pairDataObj[attr] = inputData[countryPair][attr];
     }
+    
     dataObj[countryA][countryB] = pairDataObj;
     dataObj[countryB][countryA] = pairDataObj;
   }
@@ -311,18 +338,19 @@ export function generateDataObj (inputData) {
 }
 
 /** 
-* Description. Given a country and the similarities object containing pair similarity data (and any
+* Description. Given a country and the attr values object containing pair attr data (and any
 * other data attributes) generates a table displaying each row in the form
-*   [alpha3 country code] | [similarity score]
+*   [alpha3 country code] | [attr value]
 * @param  selectedCountryName   name of selected country e.g. United States
-* @param  similarities          similarities data for all country pairs of the form USA->XXX
+* @param  attrVals          attr value data for all country pairs of the form USA->XXX
 * @param  options               a dictionary of user-defined options (see README for details)
-* @return   Returns the html corresponding to a similarity table that displays the sorted 
-* `similarities` data
+* @return   Returns the html corresponding to a attr table that displays the sorted 
+* attr values data
 */
-function createTableHTML(selectedCountryName, similarities, options) {
+function createTableHTML(selectedCountryName, attrVals, options) {
   const tableProperties = options.tableProperties;
   const digitsRounded = options.digitsRounded;
+  const attrNames = options.tableColumnNames;
 
   if (tableProperties.length < 1) {
     return ``;
@@ -331,14 +359,18 @@ function createTableHTML(selectedCountryName, similarities, options) {
   let html = `<table class="dataTable">
     <tr>
       <th>Country</th>
-      <th>Similarity to ${selectedCountryName}</th>
-    </tr>
   `;
 
-  for (let [countryName, similarityScore] of sortedObject(similarities)) {
+  for (let attrName of attrNames) {
+    html += `<th>${attrName} to ${selectedCountryName}</th>`;
+  }
+
+  html += '</tr>';
+
+  for (let [countryName, attrVal] of sortedObject(attrVals)) {
     let properties = ``;
     tableProperties.forEach(property => {
-      let value = similarityScore[property];
+      let value = attrVal[property];
       if (!value) {
         return;
       }
@@ -360,7 +392,7 @@ function createTableHTML(selectedCountryName, similarities, options) {
 /**
 * Description. Performs shared mode actions when a country in the main visualization view is selected, 
 * including checking if the country has country pair data, displaying the selected country name, 
-* and, if the similarity table is enabled, displaying the pair data
+* and, if the attr table is enabled, displaying the pair data
 * @param  dataObj               an object with alpha 3 country code keys e.g. USA, and values that 
 * are nested objects corresponding to each possible pair containing the key i.e. the form USA->XXX
 * @param  selectedCountryName   the selected country name
@@ -402,37 +434,37 @@ export function toggleTable(options, showTable) {
   const selectedCountryData = dataObj[`${selectedCountryAlpha3}`];
 
   if (showTable) {
-    document.getElementById(`${visId}_${constants.similarityTable}`).innerHTML =
+    document.getElementById(`${visId}_${constants.attrTable}`).innerHTML =
       createTableHTML(selectedCountryName, selectedCountryData, options);
-    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'flex';
+    document.getElementById(`${visId}_${constants.attrTable}`).style.display = 'flex';
   } else {
-    document.getElementById(`${visId}_${constants.similarityTable}`).style.display = 'none';
+    document.getElementById(`${visId}_${constants.attrTable}`).style.display = 'none';
   }
 
   options.showTable = showTable;
 }
 
 /**
-* Description. Given a similarity float value and the options dictionary defined by the user,
-* returns the legend color that the similarity falls into (given the number of increments and color
+* Description. Given a attr float value and the options dictionary defined by the user,
+* returns the legend color that the attr falls into (given the number of increments and color
 * scheme)
-* @param  similarity  float value between 0 and 1 inclusive
+* @param  attrVal  float value between 0 and 1 inclusive
 * @param  options     dictionary of user parameters to visualization
-* @return Returns hex color that matches the similarity rounded down to the nearest legend increment
+* @return Returns hex color that matches the attr value rounded down to the nearest legend increment
 * color
 */
-export function similarityToLegendColor(similarity, options) {
+export function attrToLegendColor(attrVal, options) {
   const numIncrements = options.numIncrements;
-  const minSimilarity = options.minSimilarity;
-  const maxSimilarity = options.maxSimilarity;
+  const minAttrVal = options.minAttrVal;
+  const maxAttrVal = options.maxAttrVal;
   const colorScheme = options.colorScheme;
 
-  const incrementNumber = Math.floor((similarity - minSimilarity) / (maxSimilarity - minSimilarity) * numIncrements);
+  const incrementNumber = Math.floor((attrVal - minAttrVal) / (maxAttrVal - minAttrVal) * numIncrements);
   return d3Color[colorScheme][numIncrements][incrementNumber];
 }
 
 /** 
-* Description. Given input data in the following format, finds the min & max similarities of 
+* Description. Given input data in the following format, finds the min & max attr values of 
 * any country in the dataset.
 *  {
 *    AND->AUT: {
@@ -445,34 +477,34 @@ export function similarityToLegendColor(similarity, options) {
 * @param inputData  formatted dictionary mapping country pairs e.g. AND->AUT to a dictionary of 
 * calculated metrics
 * @return Returns an array of the form
-*    [minimum similarity, maximum similarity]
+*    [minimum attr value, maximum attr value]
 */
-export function findMinMaxSimilarity(inputData) {
-  let maxSimilarity = -Infinity;
-  let minSimilarity = Infinity;
+export function findMinMaxAttrVal(inputData, attrName) {
+  let maxAttrVal = -Infinity;
+  let minAttrVal = Infinity;
   for (let metrics of Object.values(inputData)) {
-    const similarityScore = metrics.Overall_Similarity;
-    if (similarityScore < minSimilarity) {
-      minSimilarity = similarityScore;
+    const attrVal = metrics[attrName];
+    if (attrVal < minAttrVal) {
+      minAttrVal = attrVal;
     }
-    if (similarityScore > maxSimilarity) {
-      maxSimilarity = similarityScore;
+    if (attrVal > maxAttrVal) {
+      maxAttrVal = attrVal;
     }
   }
-  return [minSimilarity, maxSimilarity]
+  return [minAttrVal, maxAttrVal];
 }
 
 /**
 * Description. Generates a legend with numIncrements number of labels based on the bounds of the 
-* similarity values.
+* attr values.
 * @param options  A dictionary object representing the parameters to the visualization. Contains
-* a set mininum and maximum similarity, and a number of legend increments.
+* a set mininum and maximum attr values, and a number of legend increments.
 */
 export function createLegendHTML(options) {
   // pull out necessary options attributes
   const visId = options.visId;
-  const minSimilarity = options.minSimilarity;
-  const maxSimilarity = options.maxSimilarity;
+  const minAttrVal = options.minAttrVal;
+  const maxAttrVal = options.maxAttrVal;
   const numIncrements = options.numIncrements;
   const legendCreated = options.legendCreated;
   const colorScheme = options.colorScheme;
@@ -491,12 +523,12 @@ export function createLegendHTML(options) {
   let legendElemTag;
   let legendElemDiv;
   let legendElemText;
-  let incrementedSimilarity;
-  let incrementSize = (maxSimilarity - minSimilarity) / numIncrements;
+  let incrementedAttrVal;
+  let incrementSize = (maxAttrVal - minAttrVal) / numIncrements;
   for (let i = 0; i < numIncrements; i++) {
-    incrementedSimilarity = (minSimilarity + incrementSize * i).toFixed(digitsRounded);
+    incrementedAttrVal = (minAttrVal + incrementSize * i).toFixed(digitsRounded);
     legendElemTag = document.createElement("div");
-    legendElemText = document.createTextNode(incrementedSimilarity.toString());
+    legendElemText = document.createTextNode(incrementedAttrVal.toString());
     legendElemTag.appendChild(legendElemText);
     legendElemTag.style.flex = 1;
     document.getElementById(`${visId}_${constants.visLegendLabels}`).appendChild(legendElemTag);
@@ -508,7 +540,7 @@ export function createLegendHTML(options) {
   }
   // add the final legend label (min) aligned to the bottom of the gradient
   legendElemTag = document.createElement("div");
-  legendElemText = document.createTextNode(maxSimilarity.toFixed(digitsRounded).toString());
+  legendElemText = document.createTextNode(maxAttrVal.toFixed(digitsRounded).toString());
   legendElemTag.appendChild(legendElemText);
   document.getElementById(`${visId}_${constants.visLegendLabels}`).appendChild(legendElemTag);
 
