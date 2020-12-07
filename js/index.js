@@ -386,7 +386,8 @@ export function selectCountry(dataObj, selectedCountryName, options) {
     `Selected Country: <div class="${constants.countryName}" id="${visId}_${constants.countryName}">${selectedCountryName}</div>`;
   document.getElementById(`${visId}_${constants.countryName}`).style.color = selectedFill;
 
-  toggleTable(options);
+  options[`${currMode}${constants.properties}`].selectedCountry = selectedCountry;
+  toggleTable(options, options.showTable);
 
   modeProperties.selectedCountry = selectedCountry;
   return selectedCountryData;
@@ -396,7 +397,7 @@ export function toggleTable(options, showTable) {
   const visId = options.visId;
   const currMode = options.currMode;
   const dataObj = generateDataObj(options.data);
-  const selectedCountryAlpha3 = options[`${currMode}Properties`].selectedCountry;
+  const selectedCountryAlpha3 = options[`${currMode}${constants.properties}`].selectedCountry;
   const selectedCountryName = alpha3ToCountryName(selectedCountryAlpha3);
   const selectedCountryData = dataObj[`${selectedCountryAlpha3}`];
 
