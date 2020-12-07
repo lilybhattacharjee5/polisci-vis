@@ -7,6 +7,8 @@ import {
 	toggleTable,
 } from './index.js';
 
+const constants = require('./constants.js');
+
 export function createVisualization(options) {
 	InteroperabilityVisualization(options);
 }
@@ -26,4 +28,20 @@ export function showDataTable(options) {
 
 export function hideDataTable(options) {
 	toggleTable(options, false);
+}
+
+export function getState(options) {
+	const state = {};
+	state.currMode = options.currMode;
+	state.data = options.data;
+
+	const currModeOptions = options[`${state.currMode}${constants.properties}`];
+	state.selectedCountry = currModeOptions.selectedCountry;
+	state.visibleProperty = currModeOptions.visibleProperty;
+	
+	const dataObj = generateDataObj(options.data);
+	const selectedCountryData = dataObj[`${state.selectedCountry}`];
+	state.selectedCountryData = selectedCountryData;
+	
+	return state;
 }
