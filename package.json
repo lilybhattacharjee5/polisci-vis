@@ -1,6 +1,6 @@
 {
   "name": "@lbhattac/interoperability-viz",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)",
   "main": "js/api.js",
   "scripts": {
