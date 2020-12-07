@@ -75,7 +75,11 @@ export function setAllOptions(options) {
     // worldMap-specific parameters
     if (options.enabledModes.includes(constants.worldMap)) {
       let worldMapProperties = options.worldMapProperties;
-      if (worldMapProperties.visibleProperty === undefined) worldMapProperties.visibleProperty = constants.VISIBLE_PROPERTY;
+      worldMapProperties.defaultVisibleProperty = worldMapProperties.visibleProperty;
+      if (worldMapProperties.visibleProperty === undefined) {
+        worldMapProperties.visibleProperty = constants.VISIBLE_PROPERTY;
+        worldMapProperties.defaultVisibleProperty = constants.VISIBLE_PROPERTY;
+      }
       if (worldMapProperties.selectedCountry === undefined) worldMapProperties.selectedCountry = constants.SELECTED_COUNTRY;
       if (worldMapProperties.visHeight === undefined) worldMapProperties.visHeight = constants.VIS_HEIGHT;
       if (worldMapProperties.defaultFill === undefined) worldMapProperties.defaultFill = constants.DEFAULT_FILL;
@@ -89,7 +93,11 @@ export function setAllOptions(options) {
     // force graph-specific parameters
     if (options.enabledModes.includes(constants.force)) {
       let forceProperties = options.forceProperties;
-      if (forceProperties.visibleProperty === undefined) forceProperties.visibleProperty = constants.VISIBLE_PROPERTY;
+      forceProperties.defaultVisibleProperty = forceProperties.visibleProperty;
+      if (forceProperties.visibleProperty === undefined) {
+        forceProperties.visibleProperty = constants.VISIBLE_PROPERTY;
+        forceProperties.defaultVisibleProperty = constants.VISIBLE_PROPERTY;
+      }
       if (forceProperties.visHeight === undefined) forceProperties.visHeight = constants.VIS_HEIGHT;
       if (forceProperties.multiplier === undefined) forceProperties.multiplier = constants.MULTIPLIER;
       if (forceProperties.interactive === undefined) forceProperties.interactive = constants.INTERACTIVE;
@@ -113,7 +121,6 @@ export function setupVisualizationStructure(options) {
   // pull out necessary options attributes
   const visId = options.visId;
   const attrNames = options.tableColumnNames;
-  const visibleProperty = options[`${options.currMode}${constants.properties}`].visibleProperty;
 
   let dataLayerHTML = '';
   let index = 0;
@@ -160,8 +167,6 @@ export function setupVisualizationStructure(options) {
     });
   });
 
-  document.getElementById(`${visId}_${visibleProperty}`).checked = true;
-
   document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.worldMapProperties.visHeight;
 }
 
@@ -176,6 +181,7 @@ export function displayToggleMode(options) {
   const enabledModes = options.enabledModes;
   const currMode = options.currMode;
   const defaultMode = options.defaultMode;
+  const currModeVisibleProperty = options[`${currMode}${constants.properties}`].visibleProperty;
 
   if (enabledModes.length <= 1) {
     modeToEnableFunction[currMode]["enableFunction"](options);
@@ -203,11 +209,14 @@ export function displayToggleMode(options) {
   enabledModes.forEach(mode => {
     document.getElementById(`${visId}_${mode}`).addEventListener("change", function() {
       options.currMode = mode;
+      const visibleProperty = options[`${mode}${constants.properties}`].defaultVisibleProperty;
       options[options.currMode + 'Properties'].selectedCountry = options[options.currMode + 'Properties'].startCountry;
+      document.getElementById(`${visId}_${visibleProperty}`).checked = true;
       modeToEnableFunction[mode]["enableFunction"](options);
     });
   });
 
+  document.getElementById(`${visId}_${currModeVisibleProperty}`).checked = true;
   document.getElementById(`${visId}_${defaultMode}`).checked = true;
   modeToEnableFunction[defaultMode]["enableFunction"](options);
 }
