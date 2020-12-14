@@ -1,5 +1,6 @@
 import { 
 	InteroperabilityVisualization,
+	setAllOptions,
 	setOption,
 	selectCountry as setSelectedCountry,
 	generateDataObj,
@@ -45,3 +46,9 @@ export function getState(options) {
 	
 	return state;
 }
+
+export function setState(options) {
+	InteroperabilityVisualization(options);
+	modeToEnableFunction[options.currMode]["enableFunction"](options);
+}
+

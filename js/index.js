@@ -525,6 +525,10 @@ export function createLegendHTML(options) {
     return;
   }
 
+  // remove all children nodes that may remain from previous legends
+  document.getElementById(`${visId}_${constants.visLegendGradient}`).innerHTML = '';
+  document.getElementById(`${visId}_${constants.visLegendLabels}`).innerHTML = '';
+
   // find colors at the top (max) and bottom (min) of the legend gradient
   const legendColorScheme = d3Color[colorScheme][numIncrements];
   
