@@ -124,12 +124,14 @@ export function setupVisualizationStructure(options) {
 
   let dataLayerHTML = '';
   let index = 0;
-  for (let attrName of attrNames) {
-    dataLayerHTML += `<span class="dataLayer">
-      <input type="radio" id="${visId}_${options.tableProperties[index]}" name="dataLayerOption" value="${attrName}">
-      <label for="${attrName}">${attrName}</label>
-    </span>`;
-    index += 1;
+  if (attrNames.length > 1) {
+    for (let attrName of attrNames) {
+      dataLayerHTML += `<span class="dataLayer">
+        <input type="radio" id="${visId}_${options.tableProperties[index]}" name="dataLayerOption" value="${attrName}">
+        <label for="${attrName}">${attrName}</label>
+      </span>`;
+      index += 1;
+    }
   }
 
   document.getElementById(visId).innerHTML = `
@@ -160,14 +162,25 @@ export function setupVisualizationStructure(options) {
     modeToEnableFunction[options.currMode]["enableFunction"](options);
   });
 
-  attrNames.forEach((attrName, index) => {
-    document.getElementById(`${visId}_${options.tableProperties[index]}`).addEventListener("change", function() {
-      options[`${options.currMode}${constants.properties}`].visibleProperty = options.tableProperties[index];
-      modeToEnableFunction[options.currMode]["enableFunction"](options);
+  if (attrNames.length > 1) {
+    attrNames.forEach((attrName, index) => {
+      document.getElementById(`${visId}_${options.tableProperties[index]}`).addEventListener("change", function() {
+        const layer = options.tableProperties[index];
+        changeDataLayer(options, layer);
+      });
     });
-  });
+  }
 
   document.getElementById(`${visId}_${constants.visDisplay}`).style.height = options.worldMapProperties.visHeight;
+}
+
+export function changeDataLayer(options, layer) {
+  const layerRadioButton = document.getElementById(`${options.visId}_${layer}`);
+  if (layerRadioButton != null) {
+    layerRadioButton.checked = true;
+  }
+  options[`${options.currMode}${constants.properties}`].visibleProperty = layer;
+  modeToEnableFunction[options.currMode]["enableFunction"](options);
 }
 
 /**
@@ -210,14 +223,26 @@ export function displayToggleMode(options) {
     document.getElementById(`${visId}_${mode}`).addEventListener("change", function() {
       options.currMode = mode;
       const visibleProperty = options[`${mode}${constants.properties}`].defaultVisibleProperty;
+      options[`${options.currMode}${constants.properties}`].visibleProperty = visibleProperty;
       options[options.currMode + 'Properties'].selectedCountry = options[options.currMode + 'Properties'].startCountry;
-      document.getElementById(`${visId}_${visibleProperty}`).checked = true;
+      const visiblePropertyButton = document.getElementById(`${visId}_${visibleProperty}`);
+      if (visiblePropertyButton != null) {
+        visiblePropertyButton.checked = true;
+      }
       modeToEnableFunction[mode]["enableFunction"](options);
     });
   });
 
-  document.getElementById(`${visId}_${currModeVisibleProperty}`).checked = true;
-  document.getElementById(`${visId}_${defaultMode}`).checked = true;
+  const currModeVisiblePropertyButton = document.getElementById(`${visId}_${currModeVisibleProperty}`);
+  const defaultModeButton = document.getElementById(`${visId}_${defaultMode}`);
+  if (currModeVisiblePropertyButton != null) {
+    currModeVisiblePropertyButton.checked = true;
+  }
+  
+  if (defaultModeButton != null) {
+    defaultModeButton.checked = true;
+  }
+
   modeToEnableFunction[defaultMode]["enableFunction"](options);
 }
 

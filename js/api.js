@@ -6,6 +6,7 @@ import {
 	generateDataObj,
 	modeToEnableFunction,
 	toggleTable,
+	changeDataLayer,
 } from './index.js';
 
 const constants = require('./constants.js');
@@ -31,6 +32,32 @@ export function hideDataTable(options) {
 	toggleTable(options, false);
 }
 
+export function changeLayer(options, layer) {
+	changeDataLayer(options, layer);
+}
+
+export function disableLayering(options, layer) {
+	options.tableProperties = [layer];
+	options.tableColumnNames = [layer];
+	InteroperabilityVisualization(options);
+}
+
+export function enableLayering(options, layers, layerNames) {
+	options.tableProperties = layers;
+	options.tableColumnNames = layerNames;
+	InteroperabilityVisualization(options);
+}
+
+export function disableInteractive(options, mode) {
+	options[`${mode}${constants.properties}`].interactive = false;
+	modeToEnableFunction[options.currMode]["enableFunction"](options);
+}
+
+export function enableInteractive(options, mode) {
+	options[`${mode}${constants.properties}`].interactive = false;
+	modeToEnableFunction[options.currMode]["enableFunction"](options);
+}
+
 export function getState(options) {
 	const state = {};
 	state.currMode = options.currMode;
@@ -51,4 +78,3 @@ export function setState(options) {
 	InteroperabilityVisualization(options);
 	modeToEnableFunction[options.currMode]["enableFunction"](options);
 }
-
