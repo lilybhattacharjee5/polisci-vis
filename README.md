@@ -21,9 +21,9 @@ npm install @lbhattac/interoperability-viz
 Note: Refer to our [demo repository]() for an example implementation.
 
 To include this visualization on a webpage, take the following steps:
-1. Import the `InteroperabilityVisualization` function from `@lbhattac/interoperability-viz` in your JS file.
+1. Import the `createVisualization` function from `@lbhattac/interoperability-viz` in your JS file.
 ```
-import { InteroperabilityVisualization } from '@lbhattac/interoperability-viz';
+import { createVisualization } from '@lbhattac/interoperability-viz';
 ```
 
 2. Import your bundled JS file in your base HTML file below the div in which the visualization will appear:
@@ -33,10 +33,10 @@ import { InteroperabilityVisualization } from '@lbhattac/interoperability-viz';
 <script src="index.bundle.js"></script>
 ```
 
-4. Inside the JS file, call the function `InteroperabilityVisualization` to initialize the display.
+4. Inside the JS file, call the function `createVisualization` to initialize the display.
 ```
 <script>
-InteroperabilityVisualization({
+createVisualization({
     visId: 'visContainer',
     data: data,
     numIncrements: 5,
@@ -132,12 +132,138 @@ It is not necessary to pass in mode-specific properties if the mode is not withi
 
 Note: Parameter order doesn't matter, as all arguments are passed in map format.
 
+## API
+
+You can also call other functions to manipulate visualization state after initializing with `createVisualization`:
+
+**`loadData(options, data)`**
+*Description*: Changes the data object that populates the visualization. The new data object should follow the formatting directions specified in the `data/` directory README.
+*Parameters:*
+- options: the current options object
+- data: the new data object
+
+*Example call:*
+```
+const newData = JSON.parse(require('./new_data.json'));
+
+loadData(options, newData);
+```
+
+**`selectCountry(countryName, options)`**
+*Description:* Sets the selected country in the current mode.
+*Parameters:*
+- countryName: the name of the country to be selected e.g. 'Norway', 'United States', etc.
+- options: the current options object
+
+*Example call:*
+```
+selectCountry("United States", options);
+```
+
+**`showDataTable(options)`**
+*Description:* Shows the data table with country-pair properties under the visualization.
+*Parameters:*
+- options: the current options object
+
+*Example call:*
+```
+showDataTable(options);
+```
+
+**`hideDataTable(options)`**
+*Description:* Hides the data table with country-pair properties under the visualization.
+*Parameters:*
+- options: the current options object
+
+*Example call:*
+```
+hideDataTable(options);
+```
+
+**`changeLayer(options, layer)`**
+*Description:* Changes the visible data layer in the current mode.
+*Parameters:*
+- options: the current options object
+- layer: the property name that will be visible in the current mode
+
+*Example call:*
+```
+changeLayer(options, 'similarity');
+```
+
+**`disableLayering(options, layer, layerName)`**
+*Description*: Disables data layering, leaving only a specified layer visible without toggle options.
+*Parameters:*
+- options: the current options object
+- layer: the property name that will be the *only* property visible in the visualization
+- layerName: the column label name corresponding to layer
+
+*Example call:*
+```
+disableLayering(options, 'similarity', 'Similarity');
+```
+
+**`enableLayering(options, layers, layerNames)`**
+*Description*: Enables data layering, with toggling available between specified layers.
+*Parameters:*
+- options: the current options object
+- layers: an array of property names that can be toggled in the visualization
+- layerNames: the column label names corresponding to layers
+
+*Example call:*
+```
+enableLayering(options, ['similarity', 'x'], ['Similarity', 'X_Prop']);
+```
+
+**`disableInteractive(options, mode)`**
+*Description*: Disables clickable changes / interactivity in the specified mode.
+*Parameters:*
+- options: the current options object
+- mode: the mode to disable interactivity
+
+*Example call:*
+```
+disableInteractive(options, 'force');
+```
+
+**`enableInteractive(options, mode)`**
+*Description*: Enables clickable changes / interactivity in the specified mode.
+*Parameters:*
+- options: the current options object
+- mode: the mode to enable interactivity
+
+*Example call:*
+```
+enableInteractive(options, 'force');
+```
+
+**`getState(options)`**
+*Description*: Returns a condensed current state of the visualization, containing some manipulated options attributes. Useful for testing.
+*Parameters:*
+- options: the current options object
+
+*Example call:*
+```
+getState(options)
+```
+
+**`setState(options)`**
+*Description*: Sets the state of the visualization to the specified options object and reloads the visualization.
+*Parameters:*
+- options: the new options object
+
+*Example call:*
+```
+setState(options)
+```
+
 ## Repository structure
 
 - `data/`: marshalled data produced by [our data processing
   repo](https://github.com/daylight-lab/uclab-data-processing)
-- `js`: includes individual JS files for implementing specific visualization modes
-- `libraries`: code dependencies unavailable via `npm install`
+- `js/`: includes individual JS files for implementing specific visualization modes
+- `css/`: includes CSS styling files
+- `libraries/`: code dependencies unavailable via `npm install`
 - `local_country_variables/`: logic for marshalling country names
 
 ## License
