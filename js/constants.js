@@ -31,6 +31,7 @@ export const ENABLED_MODES = [worldMap, force];
 export const DEFAULT_MODE = worldMap;
 
 export const TABLE_PROPERTIES = [];
+export const TABLE_COLUMN_NAMES = [];
 export const SHOW_TABLE = true;
 
 export const MULTIPLIER = 5;

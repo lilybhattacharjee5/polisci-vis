@@ -6,7 +6,7 @@ const force = require('./force.js');
 const constants = require('./constants.js');
 
 // import css
-import css from './index.css';
+import css from './css/index.css';
 
 // load required libraries that can be imported into other visualization-specific files
 export const d3 = require('d3');
@@ -51,6 +51,7 @@ export function InteroperabilityVisualization(options) {
 *   defaultMode: the default visualization view (e.g. 'worldMap')
 *   enabledModes: views that the user can toggle between in the visualization
 *   tableProperties: data attributes that will be visible in the attr table
+*   tableColumnNames: corresponding column labels for the attr table
 *   showTable: boolean determining whether or not the attr table will be visible
 *   worldMapProperties: world map mode-specific properties (see README for details)
 *   forceProperties: force mode-specific properties (see README for details)
@@ -70,6 +71,7 @@ export function setAllOptions(options) {
     if (options.defaultMode === undefined) options.defaultMode = constants.DEFAULT_MODE;
     if (options.enabledModes === undefined) options.enabledModes = constants.ENABLED_MODES;
     if (options.tableProperties === undefined) options.tableProperties = constants.TABLE_PROPERTIES;
+    if (options.tableColumnNames === undefined) options.tableColumnNames = constants.TABLE_COLUMN_NAMES;
     if (options.showTable === undefined) options.showTable = constants.SHOW_TABLE;
 
     // worldMap-specific parameters
@@ -383,10 +385,11 @@ export function generateDataObj (inputData) {
 */
 function createTableHTML(selectedCountryName, attrVals, options) {
   const tableProperties = options.tableProperties;
+  const tableColumnNames = options.tableColumnNames;
   const digitsRounded = options.digitsRounded;
   const attrNames = options.tableColumnNames;
 
-  if (tableProperties.length < 1) {
+  if (tableProperties.length < 1 || tableColumnNames.length < 1) {
     return ``;
   }
 

@@ -47,8 +47,10 @@ InteroperabilityVisualization({
     defaultMode: 'force',
     enabledModes: ['force'],
     tableProperties: ['similarity'],
+    tableColumnNames: ['Similarity'],
     showTable: true,
     worldMapProperties: {
+    	visibleProperty: 'similarity',
         visHeight: '750px',
         defaultFill: '#d3d3d3',
         selectedFill: '#228B22',
@@ -58,6 +60,7 @@ InteroperabilityVisualization({
         interactive: true,
     },
     forceProperties: {
+    	visibleProperty: 'similarity',
         visHeight: '750px',
         selectedCountry: 'CHN',
         linkMultiplier: 5,
@@ -72,8 +75,8 @@ The function accepts the following **required** parameters:
 	- defaults to 'visContainer' (but will error if this id is not on the embedding page)
 - **data**: a JSON object that follows the formatting described in this [README](https://github.com/lilybhattacharjee5/interoperability-demo/tree/master/data)
 - **defaultMode**: string; the mode of the visualization that is initially visible to the user
-	- defaults to 'geomap'
-	- possible values: 'geomap', 'force'
+	- defaults to 'worldMap'
+	- possible values: 'worldMap', 'force'
 
 The following parameters are **optional**:
 - **numIncrements**: int; the number of increments in the visualization legend
@@ -89,14 +92,20 @@ The following parameters are **optional**:
 	- sequential color scales are recommended for the most meaningful visual results
 	- defaults to 'schemeBlues'
 - **enabledModes**: list of strings; the modes of the visualization that the user can toggle between
-	- defaults to ['geomap', 'force']
-	- only supports combinations of 'geomap', 'force' (the 2 currently supported modes)
+	- defaults to ['worldMap', 'force']
+	- only supports combinations of 'worldMap', 'force' (the 2 currently supported modes)
 - **tableProperties**: list of strings; the input data country-pair-specific properties that will be visible in the similarity table
 	- defaults to []
 	- if `tableProperties` = [], the similarity table will not appear
+- **tableColumnNames**: list of strings; the corresponding column labels that will be visible in the similarity table, and radio button labels for displaying layered data
+	- defaults to []
+	- if `tableColumnNames` = [], the similarity table will not appear
 - **showTable**: boolean; determines whether or not the similarity table is visible
-- **geomapProperties**: geomap-specific properties
-	- *visHeight*: string; height in pixels of the visualization's geomap mode e.g. '750px'
+- **worldMapProperties**: worldMap-specific properties
+	- *visibleProperty*: the country-pair property that will be visible by default in the current mode
+		- should be specified even if there is only one unique pair property in the dataset
+		- defaults to 'similarity'
+	- *visHeight*: string; height in pixels of the visualization's worldMap mode e.g. '750px'
 		- defaults to '750px'
 	- *defaultFill*: string (hex or color name); color of countries on map for which no data is available
 		- defaults to '#d3d3d3'
@@ -111,6 +120,7 @@ The following parameters are **optional**:
 	- *interactive*: boolean; determines whether viewers can interact with the visualization to change its appearance (e.g. clicking)
 		- defaults to true
 - **forceProperties**: force graph-specific properties
+	- *visibleProperty*
 	- *visHeight*
 	- *selectedCountry*: initially selected country in force mode
 		- no default value -- if not passed in, the full force graph with all input data will be visible
