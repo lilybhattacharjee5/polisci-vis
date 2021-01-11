@@ -6,7 +6,7 @@ const force = require('./force.js');
 const constants = require('./constants.js');
 
 // import css
-import css from './css/index.css';
+import css from '../assets/css/index.css';
 
 // load required libraries that can be imported into other visualization-specific files
 export const d3 = require('d3');
