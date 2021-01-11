@@ -36,9 +36,9 @@ export function changeLayer(options, layer) {
 	changeDataLayer(options, layer);
 }
 
-export function disableLayering(options, layer) {
+export function disableLayering(options, layer, layerName) {
 	options.tableProperties = [layer];
-	options.tableColumnNames = [layer];
+	options.tableColumnNames = [layerName];
 	InteroperabilityVisualization(options);
 }
 
@@ -54,7 +54,7 @@ export function disableInteractive(options, mode) {
 }
 
 export function enableInteractive(options, mode) {
-	options[`${mode}${constants.properties}`].interactive = false;
+	options[`${mode}${constants.properties}`].interactive = true;
 	modeToEnableFunction[options.currMode]["enableFunction"](options);
 }
 
