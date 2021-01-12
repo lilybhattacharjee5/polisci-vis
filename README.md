@@ -1,7 +1,5 @@
 # polisci-vis
-## Internationally Blocked Domains Demo
-
-[Live Demo](https://lilybhattacharjee5.github.io/polisci-vis-live-demo/index.html)
+[View a demo!](https://lilybhattacharjee5.github.io/polisci-vis-live-demo/index.html)
 
 This interactive demo visualizes countries with similar website blocking
 patterns. See [our data processing
