@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lilybhattacharjee5/interoperability-demo.git"
+    "url": "git+https://github.com/lilybhattacharjee5/polisci-vis.git"
   },
   "author": "Lily Bhattacharjee",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/lilybhattacharjee5/interoperability-demo/issues"
+    "url": "https://github.com/lilybhattacharjee5/polisci-vis/issues"
   },
-  "homepage": "https://github.com/lilybhattacharjee5/interoperability-demo#readme",
+  "homepage": "https://github.com/lilybhattacharjee5/polisci-vis#readme",
   "dependencies": {
     "connect": "^3.7.0",
     "css-loader": "^4.3.0",

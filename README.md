@@ -13,17 +13,17 @@ generated our data source.
 `polisci-vis` is a Node.js module. It can be installed via npm:
 
 ```
-npm install @polisci-vis
+npm install polisci-vis
 ```
 
 ## Creating a visualization
 
-Note: Refer to our [demo repository](https://lilybhattacharjee5.github.io/polisci-vis-live-demo/index.html) for an example implementation.
+Note: Refer to our [demo repository](https://github.com/lilybhattacharjee5/polisci-vis-live-demo) for an example implementation.
 
 To include this visualization on a webpage, take the following steps:
-1. Import the `createVisualization` function from `@polisci-vis` in your JS file.
+1. Import the `createVisualization` function from `polisci-vis` in your JS file.
 ```
-import { createVisualization } from '@polisci-vis';
+import { createVisualization } from 'polisci-vis';
 ```
 
 2. Import your bundled JS file in your base HTML file below the div in which the visualization will appear:
