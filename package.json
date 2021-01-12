@@ -1,6 +1,6 @@
 {
   "name": "polisci-vis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Node.js module that simplifies creating visualizations for pairwise metrics between countries",
   "main": "js/api.js",
   "scripts": {
