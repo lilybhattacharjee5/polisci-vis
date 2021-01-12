@@ -1,19 +1,19 @@
 {
-  "name": "@lbhattac/interoperability-viz",
-  "version": "1.0.18",
-  "description": "[Live Demo](https://lilybhattacharjee5.github.io/interoperability-demo/)",
+  "name": "polisci-vis",
+  "version": "1.0.0",
+  "description": "A Node.js module that simplifies creating visualizations for pairwise metrics between countries",
   "main": "js/api.js",
   "scripts": {
     "start": "serve",
     "build": "webpack --config webpack.config.js",
-    "test": "mocha js/*.test.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lilybhattacharjee5/interoperability-demo.git"
   },
   "author": "Lily Bhattacharjee",
-  "license": "BSD-3",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/lilybhattacharjee5/interoperability-demo/issues"
   },

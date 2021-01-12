@@ -30,6 +30,8 @@ export const modeToEnableFunction = {
   },
 };
 
+const supportedModes = ['worldMap', 'force'];
+
 export function InteroperabilityVisualization(options) {
   setAllOptions(options);
 
@@ -58,6 +60,11 @@ export function InteroperabilityVisualization(options) {
 * }
 */
 export function setAllOptions(options) {
+    const errors = validateOptions(options);
+    if (errors.length > 0) {
+      return errors;
+    }
+
     // modify default parameters according to passed-in options
     if (options.visId === undefined) options.visId = constants.VIS_ID;
     if (options.data !== undefined) {
@@ -108,6 +115,34 @@ export function setAllOptions(options) {
 
     options.currMode = options.defaultMode;
     options.legendCreated = false; // prevents legend from reloading every time a country is selected
+}
+
+function validateOptions(options) {
+  let errors = [];
+
+  // required parameters must be defined
+  if (options.visId == undefined || options.data == undefined || options.defaultMode == undefined) {
+    errors.push('Required options `visId`, `data`, and `defaultMode` must be defined.');
+  }
+
+  // check that mode parameters are supported
+  if (!supportedModes.includes(options.defaultMode)) {
+    errors.push('Required option `defaultMode` must be a supported mode.')
+  }
+
+  if (options.enabledModes != undefined) {
+    for (let i = 0; i < options.enabledModes.length; i++) {
+      if (!supportedModes.includes(options.enabledModes[i])) {
+        errors.push('All modes in `enabledModes` must be supported modes.');
+      }
+    }
+  }
+
+  // validate data object
+
+  // validate integer parameters
+
+  return errors;
 }
 
 export function setOption(options, optionAttributeKey, optionAttributeValue) {

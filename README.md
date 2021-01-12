@@ -1,7 +1,7 @@
-# interoperability-viz 
+# polisci-vis
 ## Internationally Blocked Domains Demo
 
-[Live Demo](https://lilybhattacharjee5.github.io/interoperability-viz-package-demo/index.html)
+[Live Demo](https://lilybhattacharjee5.github.io/polisci-vis-live-demo/index.html)
 
 This interactive demo visualizes countries with similar website blocking
 patterns. See [our data processing
@@ -10,20 +10,20 @@ generated our data source.
 
 ## Getting started
 
-`interoperability-viz` is a Node.js module. It can be installed via npm:
+`polisci-vis` is a Node.js module. It can be installed via npm:
 
 ```
-npm install @lbhattac/interoperability-viz
+npm install @polisci-vis
 ```
 
 ## Creating a visualization
 
-Note: Refer to our [demo repository]() for an example implementation.
+Note: Refer to our [demo repository](https://lilybhattacharjee5.github.io/polisci-vis-live-demo/index.html) for an example implementation.
 
 To include this visualization on a webpage, take the following steps:
-1. Import the `createVisualization` function from `@lbhattac/interoperability-viz` in your JS file.
+1. Import the `createVisualization` function from `@polisci-vis` in your JS file.
 ```
-import { createVisualization } from '@lbhattac/interoperability-viz';
+import { createVisualization } from '@polisci-vis';
 ```
 
 2. Import your bundled JS file in your base HTML file below the div in which the visualization will appear:
@@ -73,7 +73,7 @@ createVisualization({
 The function accepts the following **required** parameters:
 - **visId**: string; the id of the div that the visualization will be in
 	- defaults to 'visContainer' (but will error if this id is not on the embedding page)
-- **data**: a JSON object that follows the formatting described in this [README](https://github.com/lilybhattacharjee5/interoperability-demo/tree/master/data)
+- **data**: a JSON object that follows the formatting described in this [README](https://github.com/lilybhattacharjee5/polisci-vis/tree/master/data)
 - **defaultMode**: string; the mode of the visualization that is initially visible to the user
 	- defaults to 'worldMap'
 	- possible values: 'worldMap', 'force'
