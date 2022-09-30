@@ -22,7 +22,7 @@
     "connect": "^3.7.0",
     "css-loader": "^4.3.0",
     "d3": "^3.5.17",
-    "d3-scale-chromatic": "^1.5.0",
+    "d3-scale-chromatic": "^3.0.0",
     "html-webpack-plugin": "^4.5.1",
     "jquery": "^3.5.1",
     "json-loader": "^0.5.7",
